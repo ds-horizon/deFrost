@@ -7,19 +7,45 @@ import com.facebook.react.bridge.Promise
 
 class FrozenFrameModule(reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
-
+  var logger: FileLogger = FileLogger()
   override fun getName(): String {
     return NAME
   }
-
+  init {
+    TimerSingleton.getInstance().start();
+  }
   // Example method
   // See https://reactnative.dev/docs/native-modules-android
   @ReactMethod
   fun multiply(a: Double, b: Double, promise: Promise) {
     promise.resolve(a * b)
   }
+  @ReactMethod
+  fun writeInLogFiles(timestamp: String?, tree: ReadableMap?) {
+    try {
+      val hm: HashMap<String, Long> = TimerSingleton.getInstance().getTimeStampMap()
+      Log.d("TimerThread timestamp", timestamp)
+      val uptimeStamp: Long = hm.get(timestamp) * 1000000
+      Log.d("TimerThread upTime", uptimeStamp.toString() + "")
+      logger.log(uptimeStamp, tree)
+    } catch (e: Exception) {
+      e.printStackTrace()
+    }
+  }
+
+  @ReactMethod
+  fun sendPerformanceEvent(timestamp: String?, event: String?) {
+    try {
+      val hm: HashMap<String, Long> = TimerSingleton.getInstance().getTimeStampMap()
+      Log.d("TimerThread timestamp", timestamp)
+      val uptimeStamp: Long = hm.get(timestamp) * 1000000
+      logger.log(uptimeStamp.toString() + "", event)
+    } catch (e: Exception) {
+      e.printStackTrace()
+    }
+  }
 
   companion object {
-    const val NAME = "FrozenFrame"
+    const val NAME = "Bridge"
   }
 }
