@@ -1,5 +1,5 @@
 {
-  "name": "react-native-frozen-frame",
+  "name": "@sarthak-d11/de-frost",
   "version": "0.1.0",
   "description": "To detect frozen frame in react native app",
   "source": "./src/index.tsx",
