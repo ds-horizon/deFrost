@@ -1,4 +1,18 @@
+import React, { useState } from 'react';
+import MixedChart from './MixedChart/MixedChart';
+import ModalDescription from './Modal/Modal';
+
 const App = () => {
-  return <div style={{ height: 20, width: 10, backgroundColor: 'pink' }}></div>;
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalData, setModalData] = useState<any>({});
+  return (
+    <div>
+      <MixedChart />
+      {/* <ModalDescription
+        modalIsOpen={modalIsOpen}
+        setModalIsOpen={setModalIsOpen}
+      /> */}
+    </div>
+  );
 };
 export default App;

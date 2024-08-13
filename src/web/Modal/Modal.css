@@ -1,0 +1,47 @@
+.chart-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px;
+  }
+  
+  /* Style for the modal overlay */
+  .ReactModal__Overlay {
+    background-color: rgba(0, 0, 0, 0.5) !important; /* Dark overlay */
+  }
+  
+  /* Style for the modal content */
+  .modal-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 500px;
+    width: 100%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Style for the modal header */
+  .modal-header {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+  }
+  
+  /* Style for the modal body */
+  .modal-body {
+    margin-bottom: 20px;
+  }
+  
+  /* Style for the close button */
+  .close-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+  }

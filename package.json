@@ -54,16 +54,17 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sarthak-d11/react-native-frozen-frame.git"
+    "url": "git+https://github.com/dream11/de-frost"
   },
   "author": "DS Labs <xyz@gmail.com> (https://github.com/sarthak-d11)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/sarthak-d11/react-native-frozen-frame/issues"
+    "url": "https://github.com/dream11/de-frost/issues"
   },
-  "homepage": "https://github.com/sarthak-d11/react-native-frozen-frame#readme",
+  "homepage": "https://github.com/dream11/de-frost/#readme",
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "access": "restricted",
+    "registry": "https://npm.pkg.github.com/"
   },
   "devDependencies": {
     "@babel/core": "^7.20.12",
@@ -75,22 +76,32 @@
     "@react-native/eslint-config": "^0.73.1",
     "@release-it/conventional-changelog": "^5.0.0",
     "@types/jest": "^29.5.5",
+    "@types/papaparse": "5.3.14",
     "@types/react": "^18.2.44",
     "@types/react-dom": "18.2.0",
+    "@types/react-modal": "3.16.3",
     "babel-loader": "^8.2.5",
+    "chart.js": "4.4.3",
+    "chartjs-plugin-annotation": "3.0.1",
+    "chartjs-plugin-zoom": "2.0.1",
     "commitlint": "^17.0.2",
+    "css-loader": "7.1.2",
     "del-cli": "^5.1.0",
     "eslint": "^8.51.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.1",
     "fast-csv": "5.0.1",
     "jest": "^29.7.0",
+    "papaparse": "5.4.1",
     "prettier": "^3.0.3",
     "react": "18.2.0",
+    "react-chartjs-2": "5.2.0",
     "react-dom": "18.2.0",
+    "react-modal": "3.16.1",
     "react-native": "0.74.4",
     "react-native-builder-bob": "^0.29.0",
     "release-it": "^15.0.0",
+    "style-loader": "4.0.0",
     "turbo": "^1.10.7",
     "typescript": "^5.2.2",
     "webpack": "^5.75.0",
