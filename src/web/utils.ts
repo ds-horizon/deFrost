@@ -29,8 +29,11 @@ export const colors = {
   },
 };
 
-export const options = {
+export const options = (
+  handleOnClick: (event: React.MouseEvent, elements: any[]) => void
+) => ({
   responsive: true,
+  onClick: handleOnClick,
   plugins: {
     annotation: {
       annotations: {
@@ -106,4 +109,4 @@ export const options = {
       min: 0,
     },
   },
-};
+});

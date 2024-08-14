@@ -37,7 +37,7 @@ const moveReactNativePatch = () => {
   const nodeModulesPath = path.resolve(process.cwd(), 'node_modules');
   const patchLocation = path.resolve(
     nodeModulesPath,
-    'react-native-frozen-frame/patches_to_ship/react-native+0.72.5.patch'
+    '@sarthak-d11/de-frost/src/patches_to_ship/react-native+0.72.5.patch'
   );
   const mainPatchLocation = path.resolve(process.cwd(), 'patches');
   if (!fs.existsSync(mainPatchLocation)) {

@@ -1,7 +1,12 @@
 // MixedChart.js
 import React, { memo, useEffect, useState } from 'react';
-import { Chart, registerables } from 'chart.js';
-import { Scatter, Bar } from 'react-chartjs-2';
+import {
+  Chart,
+  registerables,
+  type ChartData,
+  type ChartOptions,
+} from 'chart.js';
+import { Bar } from 'react-chartjs-2';
 import Papa from 'papaparse';
 import { colors, options } from '../utils';
 import './MixedChart.css';
@@ -47,7 +52,10 @@ const MixedChart = () => {
   const labels: any[] = [];
   let maxSum = 0;
   const csvSortedData = csvData.sort((a, b) => a.timestamp - b.timestamp);
-
+  const handleOnClick = (event: React.MouseEvent, elements: any[]) => {
+    console.log('------------event', event);
+    console.log('------------elements', elements);
+  };
   csvSortedData.forEach((element, index) => {
     const elementKeys = Object.keys(element);
     let sum = 0;
@@ -102,7 +110,10 @@ const MixedChart = () => {
 
   return (
     <div>
-      <Bar data={data} options={options} />
+      <Bar
+        data={data as ChartData<any, any, any>}
+        options={options(handleOnClick) as ChartOptions<any>}
+      />
     </div>
   );
 };

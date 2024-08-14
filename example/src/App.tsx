@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useEffect } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { multiply } from 'react-native-frozen-frame';
