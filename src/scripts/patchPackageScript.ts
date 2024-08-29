@@ -1,6 +1,11 @@
-import fs from 'fs';
-import path from 'path';
-import { execSync } from 'child_process';
+#!/usr/bin/env ts-node
+// import fs from 'fs';
+// import path from 'path';
+// import { execSync } from 'child_process';
+
+const fs = require('fs');
+const path = require('path');
+const { execSync } = require('child_process');
 
 let isPatchPackageInstalled = false;
 const checkAndInstallPatchPackage = () => {
@@ -51,9 +56,8 @@ const createBuild = () => {
     process.cwd(),
     'android/app/build/outputs/apk/release/app-release.apk'
   );
-  execSync('cd android');
-  execSync('./gradlew app:assembleRelease');
-  execSync('cd ..');
+  execSync('yarn');
+  execSync('cd android && ./gradlew app:assembleProStagingDebug && cd ..');
   execSync('mkdir ff_apks');
   execSync(`cp ${androidBuild} ff_apks`);
 };

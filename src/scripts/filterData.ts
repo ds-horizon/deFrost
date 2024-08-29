@@ -1,9 +1,8 @@
 #!/usr/bin/env ts-node
 
-import * as fs from 'fs';
-import * as path from 'path';
-import * as csv from 'fast-csv';
-
+const fs = require('fs');
+const path = require('path');
+const csv = require('fast-csv');
 function checkRowExistence(csvFile: string, rowToCheck: number[]): boolean {
   console.log('row_to_check');
   console.log(rowToCheck);
@@ -12,8 +11,10 @@ function checkRowExistence(csvFile: string, rowToCheck: number[]): boolean {
     return false;
   }
   const file = fs.readFileSync(csvFile, 'utf-8');
-  const rows = file.split('\n').map((row) => row.split(','));
-  return rows.some((row) => JSON.stringify(row) === JSON.stringify(strList));
+  const rows = file.split('\n').map((row: any) => row.split(','));
+  return rows.some(
+    (row: any) => JSON.stringify(row) === JSON.stringify(strList)
+  );
 }
 
 function ensureDirectoryExists(directory: string): void {
@@ -65,7 +66,7 @@ function parseFramestats(line: string, validOnly = false): number[] {
 
 // Globals
 let hasHeader = false;
-let inProfileSection = false;
+let inProfileSection = true;
 let inActivity = false;
 let inTable = false;
 let inFramestats = false;
@@ -78,108 +79,16 @@ let numCols = 0;
 
 const inputString = process.argv[2] || '';
 
-const allLines = inputString.split('\n');
+const decodedInputString = inputString.replace(/\\n/g, '\n');
+const profileData = inputString.split('---PROFILEDATA---');
 
-for (const line of allLines) {
-  const strippedLine = line.trim();
+if (profileData.length < 2) process.exit(0);
 
-  if (inProfileSection) {
-    if (strippedLine === 'View hierarchy:') {
-      inProfileSection = false;
-      inActivity = false;
-      inTable = false;
+// console.log('----------------profileData?.[1]', profileData?.[1]);
 
-      if (gfxinfo.length === 0 && framestats.length > 0) {
-        if (!hasHeader) {
-          console.log(
-            'misc',
-            'input',
-            'animations',
-            'measure',
-            'draw',
-            'sync',
-            'gpu',
-            'timestamp'
-          );
-          hasHeader = true;
-        }
-
-        framestats.forEach((frame) => console.log(...parseFramestats(frame)));
-      } else if (gfxinfo.length > 0 && framestats.length === 0) {
-        if (!hasHeader) {
-          if ((gfxinfo[0] as string).split('\t').length === 3) {
-            console.log('draw', 'execute', 'process');
-          } else if ((gfxinfo[0] as string).split('\t').length === 4) {
-            console.log('draw', 'prepare', 'execute', 'process');
-          }
-          hasHeader = true;
-        }
-
-        gfxinfo.forEach((info) => console.log(info));
-      } else if (gfxinfo.length > 0 && gfxinfo.length === framestats.length) {
-        if (!hasHeader) {
-          console.log(
-            'misc',
-            'input',
-            'animations',
-            'measure',
-            'draw',
-            'sync',
-            'execute',
-            'process'
-          );
-          hasHeader = true;
-        }
-
-        gfxinfo.forEach((gfx, index) => {
-          try {
-            const cpu = framestats[index];
-            console.log(
-              ...parseFramestats(cpu ?? '')
-                .slice(0, -2)
-                .concat(gfx.split('\t').slice(-3).map(Number))
-            );
-          } catch (e) {
-            console.log(...[0, 0, 0, 0].concat(gfx.split('\t').map(Number)));
-          }
-        });
-      }
-
-      gfxinfo = [];
-    } else {
-      if (strippedLine.includes('/') && strippedLine.split('/').length === 3) {
-        if (inActivity) {
-          inActivity = false;
-        } else if (
-          strippedLine.includes('visibility=') ||
-          !strippedLine.includes('visibility')
-        ) {
-          inActivity = true;
-        }
-      } else if (inActivity) {
-        const tableCols = strippedLine.split('\t').length;
-
-        if (
-          inTable &&
-          tableCols === numCols &&
-          !strippedLine.includes('Execute')
-        ) {
-          gfxinfo.push(strippedLine);
-        } else if (strippedLine.includes('Execute')) {
-          inTable = true;
-          numCols = tableCols;
-        } else if (strippedLine === '---PROFILEDATA---') {
-          inFramestats = !inFramestats;
-        } else if (inFramestats && !strippedLine.includes('Flags')) {
-          framestats.push(strippedLine);
-        }
-      }
-    }
-  } else if (strippedLine === 'Profile data in ms:') {
-    inProfileSection = true;
-  }
-}
-
+const allLines =
+  profileData?.[1]?.split('\n').filter((str) => str.trim() !== '') || [];
+framestats = allLines;
 const fileExists = fs.existsSync(path.join(pathDir, csvPath));
 ensureDirectoryExists(pathDir);
 
@@ -230,6 +139,9 @@ if (!fileExists) {
 }
 
 framestats.forEach((line) => {
+  if (line.includes('Flags')) {
+    return;
+  }
   const values = parseFramestats(line);
   const rawValues = line.slice(0, -1).split(',').map(Number);
   const hasNegative = values.some((x) => x < 0);
