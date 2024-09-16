@@ -4,6 +4,9 @@ import com.facebook.react.bridge.ReactApplicationContext
 import com.facebook.react.bridge.ReactContextBaseJavaModule
 import com.facebook.react.bridge.ReactMethod
 import com.facebook.react.bridge.Promise
+import com.facebook.react.bridge.ReadableMap
+import android.util.Log
+
 
 class FrozenFrameModule(reactContext: ReactApplicationContext) :
   ReactContextBaseJavaModule(reactContext) {
@@ -21,11 +24,11 @@ class FrozenFrameModule(reactContext: ReactApplicationContext) :
     promise.resolve(a * b)
   }
   @ReactMethod
-  fun writeInLogFiles(timestamp: String?, tree: ReadableMap?) {
+  fun writeInLogFiles(timestamp: String, tree: ReadableMap?) {
     try {
       val hm: HashMap<String, Long> = TimerSingleton.getInstance().getTimeStampMap()
-      Log.d("TimerThread timestamp", timestamp)
-      val uptimeStamp: Long = hm.get(timestamp) * 1000000
+      // Log.d("TimerThread timestamp", timestamp ? : "")
+      val uptimeStamp: Long = (hm.get(timestamp) ?: 0) * 1000000
       Log.d("TimerThread upTime", uptimeStamp.toString() + "")
       logger.log(uptimeStamp, tree)
     } catch (e: Exception) {
@@ -37,8 +40,8 @@ class FrozenFrameModule(reactContext: ReactApplicationContext) :
   fun sendPerformanceEvent(timestamp: String?, event: String?) {
     try {
       val hm: HashMap<String, Long> = TimerSingleton.getInstance().getTimeStampMap()
-      Log.d("TimerThread timestamp", timestamp)
-      val uptimeStamp: Long = hm.get(timestamp) * 1000000
+      // Log.d("TimerThread timestamp", timestamp ? : "")
+      val uptimeStamp: Long = (hm.get(timestamp) ?: 0) * 1000000
       logger.log(uptimeStamp.toString() + "", event)
     } catch (e: Exception) {
       e.printStackTrace()

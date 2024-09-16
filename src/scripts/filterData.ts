@@ -1,16 +1,16 @@
 #!/usr/bin/env ts-node
 
-const fs = require('fs');
-const path = require('path');
+const fsFilerData = require('fs');
+const pathFilterData = require('path');
 const csv = require('fast-csv');
 function checkRowExistence(csvFile: string, rowToCheck: number[]): boolean {
   console.log('row_to_check');
   console.log(rowToCheck);
   const strList = rowToCheck.map(String);
-  if (!fs.existsSync(csvFile)) {
+  if (!fsFilerData.existsSync(csvFile)) {
     return false;
   }
-  const file = fs.readFileSync(csvFile, 'utf-8');
+  const file = fsFilerData.readFileSync(csvFile, 'utf-8');
   const rows = file.split('\n').map((row: any) => row.split(','));
   return rows.some(
     (row: any) => JSON.stringify(row) === JSON.stringify(strList)
@@ -18,8 +18,8 @@ function checkRowExistence(csvFile: string, rowToCheck: number[]): boolean {
 }
 
 function ensureDirectoryExists(directory: string): void {
-  if (!fs.existsSync(directory)) {
-    fs.mkdirSync(directory, { recursive: true });
+  if (!fsFilerData.existsSync(directory)) {
+    fsFilerData.mkdirSync(directory, { recursive: true });
     console.log(`Directory '${directory}' created.`);
   } else {
     console.log(`Directory '${directory}' already exists.`);
@@ -89,14 +89,16 @@ if (profileData.length < 2) process.exit(0);
 const allLines =
   profileData?.[1]?.split('\n').filter((str) => str.trim() !== '') || [];
 framestats = allLines;
-const fileExists = fs.existsSync(path.join(pathDir, csvPath));
+const fileExists = fsFilerData.existsSync(
+  pathFilterData.join(pathDir, csvPath)
+);
 ensureDirectoryExists(pathDir);
 
-const framestatsPath = path.join(pathDir, `framestats_${csvPath}`);
-const filePath = path.join(pathDir, csvPath);
+const framestatsPath = pathFilterData.join(pathDir, `framestats_${csvPath}`);
+const filePath = pathFilterData.join(pathDir, csvPath);
 
-const fileStream = fs.createWriteStream(filePath, { flags: 'a' });
-const fileFramestatsStream = fs.createWriteStream(framestatsPath, {
+const fileStream = fsFilerData.createWriteStream(filePath, { flags: 'a' });
+const fileFramestatsStream = fsFilerData.createWriteStream(framestatsPath, {
   flags: 'a',
 });
 

@@ -1,4 +1,4 @@
-package com.frozenframe
+package com.frozenframe;
 
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableMapKeySetIterator;

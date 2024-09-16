@@ -1,7 +1,7 @@
 buildscript {
   // Buildscript is evaluated before everything else so we can't use getExtOrDefault
   def kotlin_version = rootProject.ext.has("kotlinVersion") ? rootProject.ext.get("kotlinVersion") : project.properties["FrozenFrame_kotlinVersion"]
-
+  System.out.println("kotlin_version "+kotlin_version)
   repositories {
     google()
     mavenCentral()
@@ -17,6 +17,10 @@ buildscript {
 def reactNativeArchitectures() {
   def value = rootProject.getProperties().get("reactNativeArchitectures")
   return value ? value.split(",") : ["armeabi-v7a", "x86", "x86_64", "arm64-v8a"]
+}
+
+def getEnvironmentVariable(String varName, String defaultValue) {
+    return System.getenv(varName) ? System.getenv(varName) : defaultValue
 }
 
 def isNewArchitectureEnabled() {
@@ -64,11 +68,20 @@ android {
   defaultConfig {
     minSdkVersion getExtOrIntegerDefault("minSdkVersion")
     targetSdkVersion getExtOrIntegerDefault("targetSdkVersion")
-    buildConfigField "Boolean", "isFrozenToolEnable", isEnabled()
+    kotlinOptions {
+            jvmTarget = JavaVersion.VERSION_11.toString()
+            freeCompilerArgs += [
+                    "-Xjvm-default=all",
+            ]
+        }
   }
 
   buildTypes {
+    debug {
+        buildConfigField "Boolean", "defrost_enable", getEnvironmentVariable("DEFROST_ENABLE", "false")
+      }
     release {
+      buildConfigField "Boolean", "defrost_enable", getEnvironmentVariable("DEFROST_ENABLE", "false")
       minifyEnabled false
     }
   }
@@ -78,8 +91,8 @@ android {
   }
 
   compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
+    sourceCompatibility JavaVersion.VERSION_11
+    targetCompatibility JavaVersion.VERSION_11
   }
 }
 

@@ -1,4 +1,4 @@
-package com.frozenframe
+package com.frozenframe;
 
 
 import android.os.Handler;

@@ -3,28 +3,34 @@
 // import path from 'path';
 // import { execSync } from 'child_process';
 
-const fs = require('fs');
-const path = require('path');
-const { execSync } = require('child_process');
+const fsPatchPackage = require('fs');
+const pathPatchPackage = require('path');
+const { execSync: execSyncPatchPackage } = require('child_process');
 
 let isPatchPackageInstalled = false;
 const checkAndInstallPatchPackage = () => {
-  const nodeModulesPath = path.resolve(process.cwd(), 'node_modules');
-  const packageJsonPath = path.resolve(process.cwd(), 'package.json');
-  const hasPatchPackage = fs.existsSync(
-    path.join(nodeModulesPath, 'patch-package')
+  const nodeModulesPath = pathPatchPackage.resolve(
+    process.cwd(),
+    'node_modules'
+  );
+  const packageJsonPath = pathPatchPackage.resolve(
+    process.cwd(),
+    'package.json'
+  );
+  const hasPatchPackage = fsPatchPackage.existsSync(
+    pathPatchPackage.join(nodeModulesPath, 'patch-package')
   );
 
   if (!hasPatchPackage) {
     console.log('patch-package is not installed. Installing...');
 
-    if (!fs.existsSync(packageJsonPath)) {
+    if (!fsPatchPackage.existsSync(packageJsonPath)) {
       console.error('package.json not found. Are you in a Node.js project?');
       return false;
     }
 
     try {
-      execSync('yarn add patch-package', { stdio: 'inherit' });
+      execSyncPatchPackage('yarn add patch-package', { stdio: 'inherit' });
       console.log('patch-package has been installed.');
       return true;
     } catch (error) {
@@ -39,37 +45,44 @@ const checkAndInstallPatchPackage = () => {
 };
 
 const moveReactNativePatch = () => {
-  const nodeModulesPath = path.resolve(process.cwd(), 'node_modules');
-  const patchLocation = path.resolve(
+  const nodeModulesPath = pathPatchPackage.resolve(
+    process.cwd(),
+    'node_modules'
+  );
+  const patchLocation = pathPatchPackage.resolve(
     nodeModulesPath,
     '@sarthak-d11/de-frost/src/patches_to_ship/react-native+0.72.5.patch'
   );
-  const mainPatchLocation = path.resolve(process.cwd(), 'patches');
-  if (!fs.existsSync(mainPatchLocation)) {
-    execSync('mkdir patches');
+  const mainPatchLocation = pathPatchPackage.resolve(process.cwd(), 'patches');
+  if (!fsPatchPackage.existsSync(mainPatchLocation)) {
+    execSyncPatchPackage('mkdir patches');
   }
-  execSync(`cp ${patchLocation} ${mainPatchLocation}`);
+  execSyncPatchPackage(`cp ${patchLocation} ${mainPatchLocation}`);
 };
 
 const createBuild = () => {
-  const androidBuild = path.resolve(
+  const androidBuild = pathPatchPackage.resolve(
     process.cwd(),
     'android/app/build/outputs/apk/release/app-release.apk'
   );
-  execSync('yarn');
-  execSync('cd android && ./gradlew app:assembleProStagingDebug && cd ..');
-  execSync('mkdir ff_apks');
-  execSync(`cp ${androidBuild} ff_apks`);
+  const envVariable = `export DEFROST_ENABLE=true`;
+  execSyncPatchPackage('yarn');
+
+  execSyncPatchPackage(
+    `cd android && ${envVariable} &&./gradlew app:assembleProStagingRelease && cd ..`
+  );
+  execSyncPatchPackage('mkdir ff_apks');
+  execSyncPatchPackage(`cp ${androidBuild} ff_apks`);
 };
 
 const cleanUp = () => {
   if (!isPatchPackageInstalled) {
     try {
-      execSync('yarn remove patch-package', { stdio: 'inherit' });
-      execSync('rm -rf patches');
+      execSyncPatchPackage('yarn remove patch-package', { stdio: 'inherit' });
+      execSyncPatchPackage('rm -rf patches');
     } catch (error) {}
   } else {
-    execSync('rm -rf patches/react-native+0.72.5.patch');
+    execSyncPatchPackage('rm -rf patches/react-native+0.72.5.patch');
   }
 };
 

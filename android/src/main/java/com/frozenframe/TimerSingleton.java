@@ -1,4 +1,4 @@
-package com.frozenframe
+package com.frozenframe;
 
 public class TimerSingleton {
   private static TimerThread th;
