@@ -17,7 +17,7 @@ import annotationPlugin from 'chartjs-plugin-annotation';
 Chart.register(...registerables);
 Chart.register(zoomPlugin);
 Chart.register(annotationPlugin);
-const MixedChart = () => {
+const MixedChart = ({ openModal }: { openModal: (data: any[]) => void }) => {
   const [csvData, setcsvData] = useState<any[]>([]);
   const [reactEvents, setReactEvents] = useState<any[]>([]);
   useEffect(() => {
@@ -52,10 +52,7 @@ const MixedChart = () => {
   const labels: any[] = [];
   let maxSum = 0;
   const csvSortedData = csvData.sort((a, b) => a.timestamp - b.timestamp);
-  const handleOnClick = (event: React.MouseEvent, elements: any[]) => {
-    console.log('------------event', event);
-    console.log('------------elements', elements);
-  };
+
   csvSortedData.forEach((element, index) => {
     const elementKeys = Object.keys(element);
     let sum = 0;
@@ -80,6 +77,7 @@ const MixedChart = () => {
         x: `${index}`,
         y: 200,
         label: `${reactEvents[indexReact].event?.change?.name}`,
+        data: reactEvents[indexReact].event?.list,
       });
       indexReact++;
     }
@@ -107,7 +105,22 @@ const MixedChart = () => {
       },
     ],
   };
-
+  const handleOnClick = (_: React.MouseEvent, elements: any[]) => {
+    const dataToSend: any[] = [];
+    if (elements.length > 0) {
+      elements.forEach((element: any) => {
+        if (element.datasetIndex === 7) {
+          dataToSend.push({
+            label: reactData[element.index].label,
+            data: reactData[element.index].data,
+          });
+        }
+      });
+      if (dataToSend.length > 0) {
+        openModal(dataToSend);
+      }
+    }
+  };
   return (
     <div>
       <Bar

@@ -1,13 +1,14 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { StyleSheet, View, Text } from 'react-native';
-import { multiply } from 'react-native-frozen-frame';
 
 export default function App() {
   const [result, setResult] = useState<number | undefined>();
-
+  const multiply = (a: number, b: number) => {
+    return a * b;
+  };
   useEffect(() => {
-    multiply(3, 7).then(setResult);
+    setResult(multiply(3, 7));
   }, []);
 
   return (

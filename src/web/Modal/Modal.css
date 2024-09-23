@@ -7,21 +7,29 @@
   
   /* Style for the modal overlay */
   .ReactModal__Overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
     background-color: rgba(0, 0, 0, 0.5) !important; /* Dark overlay */
   }
   
   /* Style for the modal content */
   .modal-content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
     padding: 20px;
-    border-radius: 10px;
-    max-width: 500px;
-    width: 100%;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: auto;
+    background: white;
   }
   
   /* Style for the modal header */
@@ -34,7 +42,18 @@
   .modal-body {
     margin-bottom: 20px;
   }
-  
+  .title {
+    height: 20px;
+    margin-top: 10px;
+    margin-left: 10px;
+  }
+  .list-of-components {
+    padding-left: 20px;
+    margin-left: 5px;
+  }
+  .margin10 {
+    margin-left: 10px;
+  }
   /* Style for the close button */
   .close-button {
     background-color: #007bff;

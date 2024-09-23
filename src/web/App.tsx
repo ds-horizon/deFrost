@@ -4,14 +4,24 @@ import ModalDescription from './Modal/Modal';
 
 const App = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  // const [modalData, setModalData] = useState<any>([]);
+  const [modalData, setModalData] = useState<any>([]);
+  const openModal = (data: any[]) => {
+    if (data.length > 0) {
+      setModalData(data);
+      setModalIsOpen(true);
+    }
+  };
+
   return (
     <div>
-      <MixedChart />
-      <ModalDescription
-        modalIsOpen={modalIsOpen}
-        setModalIsOpen={setModalIsOpen}
-      />
+      <MixedChart openModal={openModal} />
+      {modalIsOpen && (
+        <ModalDescription
+          modalIsOpen={modalIsOpen}
+          setModalIsOpen={setModalIsOpen}
+          modalData={modalData}
+        />
+      )}
     </div>
   );
 };

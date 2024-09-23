@@ -1,12 +1,14 @@
 {
   "name": "@sarthak-d11/de-frost",
-  "version": "0.1.5",
+  "version": "0.1.7",
   "description": "To detect frozen frame in react native app",
   "source": "./src/index.tsx",
   "main": "./lib/commonjs/index.js",
   "module": "./lib/module/index.js",
   "bin": {
-    "create-build": "./src/scripts/patchPackageScript.ts"
+    "create-build": "./src/scripts/patchPackageScript.ts",
+    "record": "./src/scripts/recordAdbScript.ts",
+    "show-web": "./src/scripts/showWeb.ts"
   },
   "exports": {
     ".": {
@@ -48,8 +50,8 @@
     "release": "release-it",
     "create-build": "ts-node src/scripts/patchPackageScript.ts",
     "record": "ts-node src/scripts/recordAdbScript.ts",
-    "web": "webpack serve --mode production --config webpack.config.js",
-    "build-web": "webpack --mode production --config webpack.config.js"
+    "web": "webpack serve --mode development --config webpack.config.js",
+    "build-web": "webpack --mode development --config webpack.config.js"
   },
   "keywords": [
     "react-native",

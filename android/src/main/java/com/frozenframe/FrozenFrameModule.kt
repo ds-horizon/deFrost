@@ -24,7 +24,7 @@ class FrozenFrameModule(reactContext: ReactApplicationContext) :
     promise.resolve(a * b)
   }
   @ReactMethod
-  fun writeInLogFiles(timestamp: String, tree: ReadableMap?) {
+  fun writeInLogFiles(timestamp: String?, tree: ReadableMap?) {
     try {
       val hm: HashMap<String, Long> = TimerSingleton.getInstance().getTimeStampMap()
       // Log.d("TimerThread timestamp", timestamp ? : "")
