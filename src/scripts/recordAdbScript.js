@@ -1,7 +1,7 @@
-#!/usr/bin/env ts-node
-
+#!/usr/bin/env node
 const { execSync } = require('child_process');
 const path = require('path');
+const fs = require('fs');
 
 const packageName = process.argv[2] || 'com.app.dream11staging';
 
@@ -15,35 +15,29 @@ const pullChangesTxt = 'adb pull /sdcard/Dream11Log/changes.txt ./data/';
 const copyToWeb = 'cp -r ./data ./web/data';
 
 const intervalSeconds = 1.5;
-const processedData = new Set<string>();
-const rawDataForFile = new Set<string>();
-const timestampsDump = new Set<string>();
-const fsFilerData = require('fs');
+const processedData = new Set();
+const rawDataForFile = new Set();
+const timestampsDump = new Set();
 let flag = true;
+
 const writeValuesInFiles = () => {
   const csv = require('fast-csv');
-  const pathFilterData = path;
   const csvPath = 'data.csv';
   const pathDir = './data/';
-  const fileExists = fsFilerData.existsSync(
-    pathFilterData.join(pathDir, csvPath)
-  );
+  const fileExists = fs.existsSync(path.join(pathDir, csvPath));
   ensureDirectoryExists(pathDir);
 
-  const framestatsPath = pathFilterData.join(pathDir, `framestats_${csvPath}`);
-  const filePath = pathFilterData.join(pathDir, csvPath);
-  const fileStream = fsFilerData.createWriteStream(filePath);
-  const fileFramestatsStream = fsFilerData.createWriteStream(framestatsPath);
+  const framestatsPath = path.join(pathDir, `framestats_${csvPath}`);
+  const filePath = path.join(pathDir, csvPath);
+  const fileStream = fs.createWriteStream(filePath);
+  const fileFramestatsStream = fs.createWriteStream(framestatsPath);
 
-  const writer = csv.format({
-    headers: !fileExists,
-  });
-  const writerFramestats = csv.format({
-    headers: !fileExists,
-  });
+  const writer = csv.format({ headers: !fileExists });
+  const writerFramestats = csv.format({ headers: !fileExists });
 
   writer.pipe(fileStream);
   writerFramestats.pipe(fileFramestatsStream).on('end', () => {});
+
   if (!fileExists) {
     writer.write([
       'misc',
@@ -75,27 +69,30 @@ const writeValuesInFiles = () => {
       'GpuCompleted',
     ]);
   }
+
   for (let row of processedData) {
     writer.write(row.split(','));
   }
   for (let row of rawDataForFile) {
     writerFramestats.write(row.split(','));
   }
+
   writer.end();
   writerFramestats.end();
 };
-function ensureDirectoryExists(directory: string): void {
-  if (!fsFilerData.existsSync(directory)) {
-    fsFilerData.mkdirSync(directory, { recursive: true });
+
+const ensureDirectoryExists = (directory) => {
+  if (!fs.existsSync(directory)) {
+    fs.mkdirSync(directory, { recursive: true });
     console.log(`Directory '${directory}' created.`);
   } else {
     console.log(`Directory '${directory}' already exists.`);
   }
-}
-const frameRecording = (inputString: string = '') => {
-  function parseFramestats(line: string, validOnly = false): number[] {
-    const framestats = line.slice(0, -1).split(',').map(Number) as number[];
+};
 
+const frameRecording = (inputString = '') => {
+  const parseFramestats = (line, validOnly = false) => {
+    const framestats = line.slice(0, -1).split(',').map(Number);
     let start = 0;
     let handleInput = 0;
     let animations = 0;
@@ -105,17 +102,13 @@ const frameRecording = (inputString: string = '') => {
     let gpu = 0;
 
     if (framestats.length >= 16) {
-      start = ((framestats[5] as number) - (framestats[1] as number)) / 1000000;
-      handleInput =
-        ((framestats[6] as number) - (framestats[5] as number)) / 1000000;
-      animations =
-        ((framestats[7] as number) - (framestats[6] as number)) / 1000000;
-      traversals =
-        ((framestats[8] as number) - (framestats[7] as number)) / 1000000;
-      draw = ((framestats[10] as number) - (framestats[8] as number)) / 1000000;
-      sync =
-        ((framestats[11] as number) - (framestats[10] as number)) / 1000000;
-      gpu = ((framestats[13] as number) - (framestats[11] as number)) / 1000000;
+      start = (framestats[5] - framestats[1]) / 1000000;
+      handleInput = (framestats[6] - framestats[5]) / 1000000;
+      animations = (framestats[7] - framestats[6]) / 1000000;
+      traversals = (framestats[8] - framestats[7]) / 1000000;
+      draw = (framestats[10] - framestats[8]) / 1000000;
+      sync = (framestats[11] - framestats[10]) / 1000000;
+      gpu = (framestats[13] - framestats[11]) / 1000000;
     } else if (validOnly) {
       throw new Error('Invalid frame.');
     }
@@ -128,21 +121,18 @@ const frameRecording = (inputString: string = '') => {
       draw,
       sync,
       gpu,
-      framestats[1] as number,
+      framestats[1],
     ];
-  }
+  };
 
-  let framestats: string[] = [];
-
-  // const inputString = rawInput.replace(/\n/g, '\\n');
   const decodedInputString = inputString.replace(/\\n/g, '\n');
   const profileData = decodedInputString.split('---PROFILEDATA---');
   if (profileData.length < 2) return;
 
-  const allLines =
-    profileData?.[1]?.split('\n').filter((str) => str.trim() !== '') || [];
-  framestats = allLines;
-  framestats.forEach((line) => {
+  const allLines = profileData[1]
+    .split('\n')
+    .filter((str) => str.trim() !== '');
+  allLines.forEach((line) => {
     if (line.includes('Flags')) {
       return;
     }
@@ -158,7 +148,7 @@ const frameRecording = (inputString: string = '') => {
   });
 };
 
-const recordFrameRate = (packageName: string) => {
+const recordFrameRate = (packageName) => {
   const output = execSync(
     `adb shell dumpsys gfxinfo ${packageName} framestats`,
     {
@@ -168,12 +158,12 @@ const recordFrameRate = (packageName: string) => {
   frameRecording(output);
 };
 
-const runBashCommandInterval = (intervalSeconds: number) => {
+const runBashCommandInterval = (intervalSeconds) => {
   console.log('---  Record FrameRate Starting ---');
   setInterval(() => {
     try {
       if (flag) recordFrameRate(packageName);
-    } catch (exception: any) {
+    } catch (exception) {
       console.log('----ex', exception);
     }
   }, intervalSeconds * 1000);
@@ -184,42 +174,47 @@ const startTrace = () => {
 };
 
 const stopTrace = () => {
-  runCommandWithExceptionHadling(
+  runCommandWithExceptionHandling(
     'adb shell atrace --async_stop > ./data/my_trace.trace'
   );
 };
-const runCommandWithExceptionHadling = (command: string) => {
+
+const runCommandWithExceptionHandling = (command) => {
   try {
     execSync(command);
   } catch (exception) {
-    console.log('Exception Occured while cleanup ');
+    console.log('Exception occurred while cleanup');
   }
 };
+
 const cleanUpRecord = () => {
   try {
-    runCommandWithExceptionHadling(removeCommand);
-    runCommandWithExceptionHadling(removeCommand2);
-    runCommandWithExceptionHadling(removeCommand3);
+    runCommandWithExceptionHandling(removeCommand);
+    runCommandWithExceptionHandling(removeCommand2);
+    runCommandWithExceptionHandling(removeCommand3);
   } catch (exception) {
-    console.log('Exception Occured while cleanup ', exception);
+    console.log('Exception occurred while cleanup', exception);
   }
 };
+
 const pullDocs = () => {
-  runCommandWithExceptionHadling(pullLogTxt);
-  runCommandWithExceptionHadling(pullEventsTxt);
-  runCommandWithExceptionHadling(pullChangesTxt);
+  runCommandWithExceptionHandling(pullLogTxt);
+  runCommandWithExceptionHandling(pullEventsTxt);
+  runCommandWithExceptionHandling(pullChangesTxt);
 };
 
 const moveToWebDir = () => {
   execSync(copyToWeb);
 };
-const exitAfterDelay = (delay: number) => {
+
+const exitAfterDelay = (delay) => {
   setTimeout(() => {
     console.log('Exiting the program...');
     moveToWebDir();
     process.exit(0);
   }, delay);
 };
+
 process.on('SIGINT', () => {
   console.log('Received SIGINT (Ctrl + C)');
   stopTrace();
@@ -229,5 +224,6 @@ process.on('SIGINT', () => {
   cleanUpRecord();
   exitAfterDelay(1000);
 });
+
 startTrace();
 runBashCommandInterval(intervalSeconds);
