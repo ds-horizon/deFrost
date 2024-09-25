@@ -78,7 +78,7 @@ android {
 
   buildTypes {
     debug {
-        buildConfigField "Boolean", "defrost_enable", getEnvironmentVariable("DEFROST_ENABLE", "false")
+        buildConfigField "Boolean", "defrost_enable", "false"
       }
     release {
       buildConfigField "Boolean", "defrost_enable", getEnvironmentVariable("DEFROST_ENABLE", "false")

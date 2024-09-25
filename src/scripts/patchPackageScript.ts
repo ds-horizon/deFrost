@@ -71,11 +71,16 @@ const createBuild = () => {
   execSyncPatchPackage(
     `cd android && ${envVariable} &&./gradlew app:assembleProStagingRelease && cd ..`
   );
-  execSyncPatchPackage('mkdir ff_apks');
+  try {
+    execSyncPatchPackage('mkdir ff_apks');
+  } catch (ex) {
+    console.log('ff_apks already exists');
+  }
   execSyncPatchPackage(`cp ${androidBuild} ff_apks`);
 };
 
 const cleanUp = () => {
+  const envVariable = `export DEFROST_ENABLE=false`;
   if (!isPatchPackageInstalled) {
     try {
       execSyncPatchPackage('yarn remove patch-package', { stdio: 'inherit' });
@@ -84,9 +89,11 @@ const cleanUp = () => {
   } else {
     execSyncPatchPackage('rm -rf patches/react-native+0.72.5.patch');
   }
+  execSyncPatchPackage(envVariable);
 };
-
-checkAndInstallPatchPackage();
-moveReactNativePatch();
-createBuild();
+try {
+  checkAndInstallPatchPackage();
+  moveReactNativePatch();
+  createBuild();
+} catch (ex) {}
 cleanUp();
