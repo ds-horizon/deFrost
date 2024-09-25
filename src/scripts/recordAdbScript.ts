@@ -76,11 +76,9 @@ const writeValuesInFiles = () => {
     ]);
   }
   for (let row of processedData) {
-    console.log('--------------row1', row);
     writer.write(row.split(','));
   }
   for (let row of rawDataForFile) {
-    console.log('--------------row2', row);
     writerFramestats.write(row.split(','));
   }
   writer.end();
@@ -95,20 +93,6 @@ function ensureDirectoryExists(directory: string): void {
   }
 }
 const frameRecording = (inputString: string = '') => {
-  // function checkRowExistence(csvFile: string, rowToCheck: number[]): boolean {
-  //   const strList = rowToCheck.map(String);
-  //   if (!fsFilerData.existsSync(csvFile)) {
-  //     return false;
-  //   }
-  //   const file = fsFilerData.readFileSync(csvFile, 'utf-8');
-  //   const rows = file.split('\n').map((row: any) => row.split(','));
-  //   return rows.some((row: any) => {
-  //     console.log('---------------checkRowExistance1', row.join(','));
-  //     console.log('---------------checkRowExistance2', strList.join(','));
-  //     return row.join(',').slice(0, -1) === strList.join(',');
-  //   });
-  // }
-
   function parseFramestats(line: string, validOnly = false): number[] {
     const framestats = line.slice(0, -1).split(',').map(Number) as number[];
 
