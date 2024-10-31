@@ -2,6 +2,34 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const readline = require('readline');
+
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
+
+const askQuestion = (question) => {
+  return new Promise((resolve) => {
+    rl.question(question, resolve);
+  });
+};
+
+const askQuestionSync = (question) => {
+  let isExecuted = true;
+  let ans = '';
+  askQuestion(question).then((answer) => {
+    ans = answer;
+    isExecuted = false;
+  });
+  while (isExecuted) {}
+  return ans;
+};
+
+function capitalizeFirstLetter(str) {
+  if (str.length === 0) return str; // Return empty string if input is empty
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
 
 let isPatchPackageInstalled = false;
 
@@ -58,8 +86,14 @@ const createBuild = () => {
   const envVariable = `export DEFROST_ENABLE=true`;
 
   execSync('yarn');
+  const flavour = capitalizeFirstLetter(
+    askQuestionSync('Please Enter Flavour of your app')
+  );
+  const variant = capitalizeFirstLetter(
+    askQuestionSync('Please Enter Variant of your app')
+  );
   execSync(
-    `cd android && ${envVariable} && ./gradlew app:assembleProStagingRelease && cd ..`
+    `cd android && ${envVariable} && ./gradlew app:assemble${flavour}${variant}Release && cd ..`
   );
 
   try {

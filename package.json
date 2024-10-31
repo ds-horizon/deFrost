@@ -48,8 +48,8 @@
     "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build lib",
     "prepare": "bob build",
     "release": "release-it",
-    "create-build": "ts-node src/scripts/patchPackageScript.ts",
-    "record": "ts-node src/scripts/recordAdbScript.ts",
+    "create-build": "node src/scripts/patchPackageScript.js",
+    "record": "node src/scripts/recordAdbScript.js",
     "web": "webpack serve --mode development --config webpack.config.js",
     "build-web": "webpack --mode development --config webpack.config.js"
   },
