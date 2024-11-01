@@ -3218,6 +3218,10 @@ __metadata:
   peerDependencies:
     react: "*"
     react-native: "*"
+  bin:
+    create-build: ./src/scripts/patchPackageScript.js
+    record: ./src/scripts/recordAdbScript.js
+    show-web: ./src/scripts/showWeb.js
   languageName: unknown
   linkType: soft
 

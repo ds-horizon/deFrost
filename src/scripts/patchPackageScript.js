@@ -2,33 +2,25 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
-const readline = require('readline');
 
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-});
+const args = process.argv.slice(2);
 
-const askQuestion = (question) => {
-  return new Promise((resolve) => {
-    rl.question(question, resolve);
-  });
-};
-
-const askQuestionSync = (question) => {
-  let isExecuted = true;
-  let ans = '';
-  askQuestion(question).then((answer) => {
-    ans = answer;
-    isExecuted = false;
-  });
-  while (isExecuted) {}
-  return ans;
-};
+let flavour = '';
+let variant = '';
 
 function capitalizeFirstLetter(str) {
   if (str.length === 0) return str; // Return empty string if input is empty
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
+
+for (let i = 0; i < args.length; i++) {
+  if (args[i] === '-f' || args[i] === '--flavour') {
+    flavour = capitalizeFirstLetter(args[i + 1]);
+    i++;
+  } else if (args[i] === '-v' || args[i] === '--variant') {
+    variant = capitalizeFirstLetter(args[i + 1]);
+    i++;
+  }
 }
 
 let isPatchPackageInstalled = false;
@@ -85,15 +77,10 @@ const createBuild = () => {
   );
   const envVariable = `export DEFROST_ENABLE=true`;
 
-  execSync('yarn');
-  const flavour = capitalizeFirstLetter(
-    askQuestionSync('Please Enter Flavour of your app')
-  );
-  const variant = capitalizeFirstLetter(
-    askQuestionSync('Please Enter Variant of your app')
-  );
+  execSync('yarn', { stdio: 'inherit' });
   execSync(
-    `cd android && ${envVariable} && ./gradlew app:assemble${flavour}${variant}Release && cd ..`
+    `cd android && ${envVariable} && ./gradlew app:assemble${flavour}${variant}Release && cd ..`,
+    { stdio: 'inherit' }
   );
 
   try {
@@ -121,9 +108,19 @@ const cleanUp = () => {
 };
 
 try {
+  console.log(
+    '-----------------Checking and Installing PatchPackage: Start -------------'
+  );
   checkAndInstallPatchPackage();
+  console.log(
+    '-----------------Checking and Installing PatchPackage: Done -------------'
+  );
+  console.log('-----------------Applying RN Patch: Start -------------');
   moveReactNativePatch();
+  console.log('-----------------Applying RN Patch: Done -------------');
+  console.log('-----------------Creating the build: Start -------------');
   createBuild();
+  console.log('-----------------Creating the build: Done -------------');
 } catch (ex) {}
 
 cleanUp();
