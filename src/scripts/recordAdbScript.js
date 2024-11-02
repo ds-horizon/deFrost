@@ -2,9 +2,17 @@
 const { execSync } = require('child_process');
 const path = require('path');
 const fs = require('fs');
+const args = process.argv.slice(2);
+let packageName = 'com.app.dream11staging';
 
-const packageName = process.argv[2] || 'com.app.dream11staging';
-
+for (let i = 0; i < args.length; i++) {
+  if (args[i] === '-p' || args[i] === '--packageName') {
+    packageName = args[i + 1];
+    i++;
+  }
+}
+const nodeModulesRepo = './node_modules/@sarthak-d11/de-frost';
+const removeData = `rm -rf ./data && rm -rf ${nodeModulesRepo}/web/data`;
 const removeCommand = 'adb shell rm /sdcard/Dream11Log/ff.txt';
 const removeCommand2 = 'adb shell rm /sdcard/Dream11Log/changes.txt';
 const removeCommand3 = 'adb shell rm /sdcard/Dream11Log/log.txt';
@@ -12,7 +20,7 @@ const removeCommand3 = 'adb shell rm /sdcard/Dream11Log/log.txt';
 const pullLogTxt = 'adb pull /sdcard/Dream11Log/log.txt ./data/';
 const pullEventsTxt = 'adb pull /sdcard/Dream11Log/ff.txt ./data/';
 const pullChangesTxt = 'adb pull /sdcard/Dream11Log/changes.txt ./data/';
-const copyToWeb = 'cp -r ./data ./web/data';
+const copyToWeb = `cp -r ./data ${nodeModulesRepo}/web/data`;
 
 const intervalSeconds = 1.5;
 const processedData = new Set();
@@ -215,6 +223,10 @@ const exitAfterDelay = (delay) => {
   }, delay);
 };
 
+const removeDataFolderLocal = () => {
+  execSync(removeData);
+};
+
 process.on('SIGINT', () => {
   console.log('Received SIGINT (Ctrl + C)');
   stopTrace();
@@ -224,6 +236,6 @@ process.on('SIGINT', () => {
   cleanUpRecord();
   exitAfterDelay(1000);
 });
-
+removeDataFolderLocal();
 startTrace();
 runBashCommandInterval(intervalSeconds);
