@@ -22,6 +22,9 @@ def reactNativeArchitectures() {
 def getEnvironmentVariable(String varName, String defaultValue) {
     return System.getenv(varName) ? System.getenv(varName) : defaultValue
 }
+def isDefrostEnable() {
+  return rootProject.hasProperty("enable_defrost") ? rootProject.getProperty("enable_defrost") == "true": (getEnvironmentVariable("DEFROST_ENABLE", "false") == "true")
+}
 
 def isNewArchitectureEnabled() {
   return rootProject.hasProperty("newArchEnabled") && rootProject.getProperty("newArchEnabled") == "true"
@@ -37,9 +40,7 @@ if (isNewArchitectureEnabled()) {
 def getExtOrDefault(name) {
   return rootProject.ext.has(name) ? rootProject.ext.get(name) : project.properties["FrozenFrame_" + name]
 }
-def isEnabled() {
-  return rootProject.ext.has("isFrozenToolEnable") ? rootProject.ext.get("isFrozenToolEnable"): false
-}
+
 def getExtOrIntegerDefault(name) {
   return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties["FrozenFrame_" + name]).toInteger()
 }
@@ -60,6 +61,12 @@ android {
     sourceSets {
       main {
         manifest.srcFile "src/main/AndroidManifestNew.xml"
+        if(isDefrostEnable()) {
+          java.srcDirs += ["src/de-frost-module"]
+        }
+        else {
+          java.srcDirs += ["src/dummy"]
+        }
       }
     }
   }
@@ -81,7 +88,7 @@ android {
         buildConfigField "Boolean", "defrost_enable", "false"
       }
     release {
-      buildConfigField "Boolean", "defrost_enable", getEnvironmentVariable("DEFROST_ENABLE", "false")
+      buildConfigField "Boolean", "defrost_enable", "${isDefrostEnable()}"
       minifyEnabled false
     }
   }
