@@ -20,10 +20,6 @@ class FrozenFrameModule(reactContext: ReactApplicationContext) :
   // Example method
   // See https://reactnative.dev/docs/native-modules-android
   @ReactMethod
-  fun multiply(a: Double, b: Double, promise: Promise) {
-    promise.resolve(a * b)
-  }
-  @ReactMethod
   fun writeInLogFiles(timestamp: String?, tree: ReadableMap?) {
     try {
       val hm: HashMap<String, Long> = TimerSingleton.getInstance().getTimeStampMap()

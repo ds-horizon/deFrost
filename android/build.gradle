@@ -61,12 +61,12 @@ android {
     sourceSets {
       main {
         manifest.srcFile "src/main/AndroidManifestNew.xml"
-        if(isDefrostEnable()) {
-          java.srcDirs += ["src/de-frost-module"]
-        }
-        else {
-          java.srcDirs += ["src/dummy"]
-        }
+          if(isNewArchitectureEnabled()){
+            java.srcDirs += ["src/newarch"]
+          }
+          else {
+            java.srcDirs += ["src/oldarch"]
+          }
       }
     }
   }
@@ -85,10 +85,12 @@ android {
 
   buildTypes {
     debug {
-        buildConfigField "Boolean", "defrost_enable", "false"
+        buildConfigField "Boolean", "defrost_enable", "${isDefrostEnable()}"
+      buildConfigField "Boolean", "IS_NEW_ARCHITECTURE_ENABLED", "${isNewArchitectureEnabled()}"
       }
     release {
       buildConfigField "Boolean", "defrost_enable", "${isDefrostEnable()}"
+      buildConfigField "Boolean", "IS_NEW_ARCHITECTURE_ENABLED", "${isNewArchitectureEnabled()}"
       minifyEnabled false
     }
   }

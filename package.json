@@ -210,8 +210,16 @@
       ]
     ]
   },
+  "codegenConfig": {
+    "name": "RTNDefrostSpec",
+    "type": "modules",
+    "jsSrcsDir": "src",
+    "android": {
+      "javaPackageName": "com.frozenframe"
+    }
+  },
   "create-react-native-library": {
-    "type": "module-legacy",
+    "type": "module-mixed",
     "languages": "kotlin-swift",
     "version": "0.40.0"
   }
