@@ -20,6 +20,7 @@ Chart.register(annotationPlugin);
 const MixedChart = ({ openModal }: { openModal: (data: any[]) => void }) => {
   const [csvData, setcsvData] = useState<any[]>([]);
   const [reactEvents, setReactEvents] = useState<any[]>([]);
+  const [logtEvents, setLogEvents] = useState<any[]>([]);
   useEffect(() => {
     fetch('data/data.csv')
       .then((res) => res.text())
@@ -44,11 +45,27 @@ const MixedChart = ({ openModal }: { openModal: (data: any[]) => void }) => {
         });
         setReactEvents(allEvents);
       });
+    fetch('data/ff.txt')
+      .then((res) => res.text())
+      .then((textRes) => {
+        const allEventString = textRes.replaceAll(' ', '').trim().split('\n');
+        console.log('-----------allEventString', textRes, allEventString);
+        const allEvents = allEventString.map((event) => {
+          const [eventString, timestamp] = event.split(',');
+          return {
+            timestamp: timestamp?.replaceAll(' ', '').replaceAll('\n', ''),
+            event: eventString?.replaceAll(' ', '').replaceAll('\n', ''),
+          };
+        });
+        setLogEvents(allEvents);
+      });
   }, []);
 
   let allData: any = {};
   let reactData: any[] = [];
   let indexReact = 0;
+  let logData: any[] = [];
+  let indexLog = 0;
   const labels: any[] = [];
   let maxSum = 0;
   const csvSortedData = csvData.sort((a, b) => a.timestamp - b.timestamp);
@@ -81,6 +98,22 @@ const MixedChart = ({ openModal }: { openModal: (data: any[]) => void }) => {
       });
       indexReact++;
     }
+
+    while (
+      logtEvents.length > 0 &&
+      indexLog < logtEvents.length &&
+      element['timestamp'] > logtEvents[indexLog].timestamp
+    ) {
+      console.log('---------Evvents', logtEvents[indexLog].event);
+      logData.push({
+        x: `${index}`,
+        y: 300,
+        label: logtEvents[indexLog].event,
+        data: logtEvents[indexLog].event,
+      });
+      indexLog++;
+    }
+
     if (maxSum < sum) maxSum = sum;
     labels.push(`${index}`);
   });
@@ -91,8 +124,10 @@ const MixedChart = ({ openModal }: { openModal: (data: any[]) => void }) => {
       label: datasetName,
       borderWidth: 1,
       ...colors[datasetName as keyof typeof colors],
+      stack: 'stack1',
     };
   });
+  console.log('------------logData', logtEvents);
   const data = {
     labels: labels,
     datasets: [
@@ -102,6 +137,14 @@ const MixedChart = ({ openModal }: { openModal: (data: any[]) => void }) => {
         type: 'scatter',
         data: reactData,
         backgroundColor: 'rgb(10, 99, 132, 0.5)',
+        stack: 'stack2',
+      },
+      {
+        label: 'Log',
+        type: 'scatter',
+        data: logData,
+        backgroundColor: 'rgb(132, 99, 10, 0.5)',
+        stack: 'stack3',
       },
     ],
   };
