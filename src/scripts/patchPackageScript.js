@@ -77,7 +77,7 @@ const createBuild = () => {
   );
   const envVariable = `export DEFROST_ENABLE=true`;
 
-  execSync('yarn', { stdio: 'inherit' });
+  execSync('yarn patch-package', { stdio: 'inherit' });
   execSync(
     `cd android && ${envVariable} && ./gradlew app:assemble${flavour}${variant}Release && cd ..`,
     { stdio: 'inherit' }
@@ -94,7 +94,8 @@ const createBuild = () => {
 
 const cleanUp = () => {
   const envVariable = `export DEFROST_ENABLE=false`;
-
+  const removeRNNodeModules = `rm -rf node_modules/react-native`;
+  execSync(removeRNNodeModules);
   if (!isPatchPackageInstalled) {
     try {
       execSync('yarn remove patch-package', { stdio: 'inherit' });
@@ -103,7 +104,7 @@ const cleanUp = () => {
   } else {
     execSync('rm -rf patches/react-native+0.72.5.patch');
   }
-
+  execSync('yarn install --ignore-scripts');
   execSync(envVariable);
 };
 
