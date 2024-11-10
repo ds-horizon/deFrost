@@ -6,11 +6,15 @@ const { execSync } = require('child_process');
 const args = process.argv.slice(2);
 
 let flavour = '';
-let variant = '';
+let variant = 'Debug';
 
 function capitalizeFirstLetter(str) {
   if (str.length === 0) return str; // Return empty string if input is empty
-  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+function loweCaseFirstLetter(str) {
+  if (str.length === 0) return str; // Return empty string if input is empty
+  return str.charAt(0).toLowerCase() + str.slice(1);
 }
 
 for (let i = 0; i < args.length; i++) {
@@ -71,15 +75,20 @@ const moveReactNativePatch = () => {
 };
 
 const createBuild = () => {
+  const flavourPath = flavour ? `${loweCaseFirstLetter(flavour)}/` : '';
+  const variantPath = `${loweCaseFirstLetter(variant)}`;
+
+  const flavourAppName = flavour ? `${loweCaseFirstLetter(flavour)}-` : '';
+  const variantAppName = `${loweCaseFirstLetter(variant)}`;
   const androidBuild = path.resolve(
     process.cwd(),
-    'android/app/build/outputs/apk/release/app-release.apk'
+    `android/app/build/outputs/apk/${flavourPath}${variantPath}/app-${flavourAppName}${variantAppName}.apk`
   );
   const envVariable = `export DEFROST_ENABLE=true`;
 
   execSync('yarn patch-package', { stdio: 'inherit' });
   execSync(
-    `cd android && ${envVariable} && ./gradlew app:assemble${flavour}${variant}Release && cd ..`,
+    `cd android && ${envVariable} && ./gradlew app:assemble${flavour}${variant} && cd ..`,
     { stdio: 'inherit' }
   );
 
