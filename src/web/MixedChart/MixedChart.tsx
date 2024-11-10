@@ -49,7 +49,6 @@ const MixedChart = ({ openModal }: { openModal: (data: any[]) => void }) => {
       .then((res) => res.text())
       .then((textRes) => {
         const allEventString = textRes.replaceAll(' ', '').trim().split('\n');
-        console.log('-----------allEventString', textRes, allEventString);
         const allEvents = allEventString.map((event) => {
           const [eventString, timestamp] = event.split(',');
           return {
@@ -89,7 +88,6 @@ const MixedChart = ({ openModal }: { openModal: (data: any[]) => void }) => {
       indexReact < reactEvents.length &&
       element['timestamp'] > reactEvents[indexReact].timestamp
     ) {
-      console.log('---------', reactEvents[indexReact].event?.change?.name);
       reactData.push({
         x: `${index}`,
         y: 200,
@@ -104,7 +102,6 @@ const MixedChart = ({ openModal }: { openModal: (data: any[]) => void }) => {
       indexLog < logtEvents.length &&
       element['timestamp'] > logtEvents[indexLog].timestamp
     ) {
-      console.log('---------Evvents', logtEvents[indexLog].event);
       logData.push({
         x: `${index}`,
         y: 300,
@@ -127,7 +124,6 @@ const MixedChart = ({ openModal }: { openModal: (data: any[]) => void }) => {
       stack: 'stack1',
     };
   });
-  console.log('------------logData', logtEvents);
   const data = {
     labels: labels,
     datasets: [
