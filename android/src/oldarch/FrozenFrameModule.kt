@@ -15,6 +15,7 @@ class FrozenFrameModule(reactContext: ReactApplicationContext) :
     return NAME
   }
   init {
+    if(TimerSingleton.getInstance().state == Thread.State.NEW)
     TimerSingleton.getInstance().start();
   }
   // Example method
