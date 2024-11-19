@@ -60,7 +60,12 @@ android {
 
     sourceSets {
       main {
-        manifest.srcFile "src/main/AndroidManifest.xml"
+        if(isDefrostEnable()){
+           manifest.srcFile "src/main/AndroidManifest.xml"
+        }
+        else {
+          manifest.srcFile "src/main/AndroidManifestNew.xml"
+        }
           if(isNewArchitectureEnabled()){
             java.srcDirs += ["src/newarch"]
           }
