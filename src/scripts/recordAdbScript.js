@@ -196,13 +196,9 @@ const runCommandWithExceptionHandling = (command) => {
 };
 
 const cleanUpRecord = () => {
-  try {
-    runCommandWithExceptionHandling(removeCommand);
-    runCommandWithExceptionHandling(removeCommand2);
-    runCommandWithExceptionHandling(removeCommand3);
-  } catch (exception) {
-    console.log('Exception occurred while cleanup', exception);
-  }
+  runCommandWithExceptionHandling(removeCommand);
+  runCommandWithExceptionHandling(removeCommand2);
+  runCommandWithExceptionHandling(removeCommand3);
 };
 
 const pullDocs = () => {

@@ -7,7 +7,48 @@ const args = process.argv.slice(2);
 
 let flavour = '';
 let variant = 'Debug';
+let oldBabelConfig = null;
+function addBabelPlugin() {
+  console.log('---------------------process.cwd()', process.cwd());
+  const appBabelConfigPath = path.resolve(process.cwd(), 'babel.config.js');
+  const pluginPath = path.resolve(
+    process.cwd(),
+    'node_modules/@sarthak-d11/de-frost/plugins/babel-plugin-transform-memo-component.js'
+  );
+  if (fs.existsSync(appBabelConfigPath)) {
+    const babelConfig = require(appBabelConfigPath);
+    oldBabelConfig = babelConfig;
+    if (!babelConfig.plugins) {
+      babelConfig.plugins = [];
+    }
 
+    if (!babelConfig.plugins.some((plugin) => plugin.includes('defrost'))) {
+      babelConfig.plugins.push([pluginPath]);
+
+      fs.writeFileSync(
+        appBabelConfigPath,
+        `module.exports = ${JSON.stringify(babelConfig, null, 2)};\n`
+      );
+      console.log('Custom Babel plugin added to babel.config.js');
+    } else {
+      console.log('Custom Babel plugin is already applied.');
+    }
+  } else {
+    console.error('babel.config.js not found in the current directory.');
+  }
+}
+function removeBablePlugin() {
+  const appBabelConfigPath = path.resolve(process.cwd(), 'babel.config.js');
+
+  if (fs.existsSync(appBabelConfigPath)) {
+    fs.writeFileSync(
+      appBabelConfigPath,
+      `module.exports = ${JSON.stringify(oldBabelConfig, null, 2)};\n`
+    );
+  } else {
+    console.error('babel.config.js not found in the current directory.');
+  }
+}
 function capitalizeFirstLetter(str) {
   if (str.length === 0) return str; // Return empty string if input is empty
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -103,6 +144,7 @@ const createBuild = () => {
 
 const cleanUp = () => {
   const envVariable = `export DEFROST_ENABLE=false`;
+  removeBablePlugin();
   const removeRNNodeModules = `rm -rf node_modules/react-native`;
   execSync(removeRNNodeModules);
   if (!isPatchPackageInstalled) {
@@ -113,7 +155,9 @@ const cleanUp = () => {
   } else {
     execSync('rm -rf patches/react-native+0.72.5.patch');
   }
-  execSync('yarn install --ignore-scripts');
+  execSync('yarn install --ignore-scripts --prefer-offline', {
+    stdio: 'inherit',
+  });
   execSync(envVariable);
 };
 
@@ -129,6 +173,11 @@ try {
   moveReactNativePatch();
   console.log('-----------------Applying RN Patch: Done -------------');
   console.log('-----------------Creating the build: Start -------------');
+  try {
+    addBabelPlugin();
+  } catch (ex) {
+    console.log('-------------Exception', ex);
+  }
   createBuild();
   console.log('-----------------Creating the build: Done -------------');
 } catch (ex) {}
