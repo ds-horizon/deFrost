@@ -17,7 +17,7 @@ function addBabelPlugin() {
   );
   if (fs.existsSync(appBabelConfigPath)) {
     const babelConfig = require(appBabelConfigPath);
-    oldBabelConfig = babelConfig;
+    oldBabelConfig = JSON.parse(JSON.stringify(babelConfig));
     if (!babelConfig.plugins) {
       babelConfig.plugins = [];
     }
@@ -41,6 +41,7 @@ function removeBablePlugin() {
   const appBabelConfigPath = path.resolve(process.cwd(), 'babel.config.js');
 
   if (fs.existsSync(appBabelConfigPath)) {
+    console.log('------------------oldBabelConfig', oldBabelConfig);
     fs.writeFileSync(
       appBabelConfigPath,
       `module.exports = ${JSON.stringify(oldBabelConfig, null, 2)};\n`

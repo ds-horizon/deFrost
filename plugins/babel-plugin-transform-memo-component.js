@@ -1,4 +1,4 @@
-module.exports = function ({types: t}) {
+module.exports = function ({ types: t }) {
   return {
     visitor: {
       CallExpression(path) {
@@ -14,8 +14,8 @@ module.exports = function ({types: t}) {
               functionName = memoArg.id.name;
               return;
             } else {
-              const parent = path.findParent(parentPath =>
-                parentPath.isVariableDeclarator(),
+              const parent = path.findParent((parentPath) =>
+                parentPath.isVariableDeclarator()
               );
               if (parent && parent.node.id && parent.node.id.name) {
                 functionName = parent.node.id.name;
