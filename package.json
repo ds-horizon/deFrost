@@ -41,7 +41,7 @@
     "create-build": "node src/scripts/patchPackageScript.js",
     "record": "node src/scripts/recordAdbScript.js",
     "web": "webpack serve --mode production --config webpack.config.js",
-    "build-web": "webpack --mode development --config webpack.config.js"
+    "build-web": "webpack --mode production --config webpack.config.js"
   },
   "keywords": [
     "react-native",
