@@ -232,6 +232,7 @@ process.on('SIGINT', () => {
   cleanUpRecord();
   exitAfterDelay(1000);
 });
+cleanUpRecord();
 removeDataFolderLocal();
 startTrace();
 runBashCommandInterval(intervalSeconds);

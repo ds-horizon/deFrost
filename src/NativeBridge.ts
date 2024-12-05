@@ -1,7 +1,7 @@
 import type { TurboModule } from 'react-native';
 import { TurboModuleRegistry } from 'react-native';
 
-export interface Spec extends TurboModule {
+export interface DefrostType {
   sendPerformanceEvent: (timestamp: string, event: string) => Promise<void>;
   writeInLogFiles: (
     timestamp: string,
@@ -12,4 +12,5 @@ export interface Spec extends TurboModule {
   ) => Promise<void>;
 }
 
+export interface Spec extends TurboModule, DefrostType {}
 export default TurboModuleRegistry.get<Spec>('Bridge');

@@ -1,9 +1,10 @@
 import { NativeModules } from 'react-native';
+import type { DefrostType } from './NativeBridge';
 
 const isTurboModuleEnabled = (global as any).__turboModuleProxy != null;
 
 const FrozenFrameModule = isTurboModuleEnabled
-  ? require('./NativeBridge')
+  ? require('./NativeBridge').default
   : NativeModules.Bridge;
 
 const FrozenFrame = FrozenFrameModule
@@ -17,4 +18,4 @@ const FrozenFrame = FrozenFrameModule
       },
     };
 
-export default FrozenFrame;
+export default FrozenFrame as DefrostType;
