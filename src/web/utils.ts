@@ -76,6 +76,9 @@ export const options = (
           if (label === 'React') {
             return `componentName : ${point.label}`;
           }
+          if (label === 'Log') {
+            return `Log: ${point.label}`;
+          }
           return `${label}: ${point}`;
         },
       },

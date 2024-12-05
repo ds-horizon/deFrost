@@ -15,14 +15,11 @@ class FrozenFrameModule(reactContext: ReactApplicationContext) :
     return NAME
   }
   init {
+    if(TimerSingleton.getInstance().state == Thread.State.NEW)
     TimerSingleton.getInstance().start();
   }
   // Example method
   // See https://reactnative.dev/docs/native-modules-android
-  @ReactMethod
-  fun multiply(a: Double, b: Double, promise: Promise) {
-    promise.resolve(a * b)
-  }
   @ReactMethod
   fun writeInLogFiles(timestamp: String?, tree: ReadableMap?) {
     try {

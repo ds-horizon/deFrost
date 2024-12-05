@@ -1,13 +1,21 @@
 import { NativeModules } from 'react-native';
+import type { DefrostType } from './NativeBridge';
 
-const FrozenFrame = NativeModules.Bridge
-  ? NativeModules.Bridge
+const isTurboModuleEnabled = (global as any).__turboModuleProxy != null;
+
+const FrozenFrameModule = isTurboModuleEnabled
+  ? require('./NativeBridge').default
+  : NativeModules.Bridge;
+
+const FrozenFrame = FrozenFrameModule
+  ? FrozenFrameModule
   : {
       sendPerformanceData: (timestamp: string, event: string) => {
-        console.log(`Native Module for Defrost not found `, timestamp, event);
+        console.log(`Defrost is not enabled `, timestamp, event);
+      },
+      writeInLogFiles: (timestamp: string, tree: any) => {
+        console.log(`Defrost is not enabled `, timestamp, tree);
       },
     };
 
-export function sendPerformanceData(timestamp: string, event: string) {
-  FrozenFrame.sendPerformanceData(timestamp, event);
-}
+export default FrozenFrame as DefrostType;
