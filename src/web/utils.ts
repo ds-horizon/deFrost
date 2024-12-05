@@ -113,3 +113,26 @@ export const options = (
     },
   },
 });
+
+export const removeDefrost = (componentName?: string) => {
+  if (componentName?.includes('Defrost')) {
+    const newName = componentName.split('Defrost')[0];
+    return `memo(${newName})`;
+  } else {
+    return componentName;
+  }
+};
+
+type ListEvent = {
+  flags: number | null;
+  key: string | null;
+  componentName?: string;
+};
+
+export const removeDefrostFromList = (list?: ListEvent[]) => {
+  const res: ListEvent[] = [];
+  list?.forEach((item) => {
+    res.push({ ...item, componentName: removeDefrost(item.componentName) });
+  });
+  return res;
+};

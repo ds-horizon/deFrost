@@ -8,7 +8,12 @@ import {
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import Papa from 'papaparse';
-import { colors, options } from '../utils';
+import {
+  colors,
+  options,
+  removeDefrost,
+  removeDefrostFromList,
+} from '../utils';
 import './MixedChart.css';
 import zoomPlugin from 'chartjs-plugin-zoom';
 import annotationPlugin from 'chartjs-plugin-annotation';
@@ -91,8 +96,8 @@ const MixedChart = ({ openModal }: { openModal: (data: any[]) => void }) => {
       reactData.push({
         x: `${index}`,
         y: 200,
-        label: `${reactEvents[indexReact].event?.change?.name}`,
-        data: reactEvents[indexReact].event?.list,
+        label: `${removeDefrost(reactEvents[indexReact].event?.change?.name)}`,
+        data: removeDefrostFromList(reactEvents[indexReact].event?.list),
       });
       indexReact++;
     }
