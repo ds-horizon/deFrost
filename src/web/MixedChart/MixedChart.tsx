@@ -7,12 +7,9 @@ import {
   type ChartOptions,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
-import Papa from 'papaparse';
 import {
   colors,
   options,
-  removeDefrost,
-  removeDefrostFromList,
   type CsvDataType,
   type LogEvent,
   type LogItem,
@@ -23,6 +20,13 @@ import {
 import './MixedChart.css';
 import zoomPlugin from 'chartjs-plugin-zoom';
 import annotationPlugin from 'chartjs-plugin-annotation';
+import {
+  CSV_TEXT,
+  fetchFromCsv,
+  formatDataForGraph,
+  getLogsTextFile,
+  getReactChangesTextFile,
+} from './MixedChartUtils';
 
 // Register the necessary Chart.js components
 Chart.register(...registerables);
@@ -37,98 +41,22 @@ const MixedChart = ({
   const [reactEvents, setReactEvents] = useState<ReactEventType[]>([]);
   const [logtEvents, setLogEvents] = useState<LogEvent[]>([]);
   useEffect(() => {
-    fetch('data/data.csv')
-      .then((res) => res.text())
-      .then((text) => {
-        Papa.parse(text, {
-          header: true,
-          complete: (result: Papa.ParseResult<CsvDataType>) => {
-            setcsvData(result.data);
-          },
-        });
-      });
-    fetch('data/changes.txt')
-      .then((res) => res.text())
-      .then((textRes) => {
-        const allEventString = textRes.split('---------------------');
-        const allEvents = allEventString.map((event) => {
-          const [timestamp, eventString] = event.split('$$$');
-          return {
-            timestamp: timestamp?.replaceAll(' ', '').replaceAll('\n', ''),
-            event: JSON.parse(eventString ?? '{}'),
-          };
-        });
-        setReactEvents(allEvents as ReactEventType[]);
-      });
-    fetch('data/ff.txt')
-      .then((res) => res.text())
-      .then((textRes) => {
-        const allEventString = textRes.replaceAll(' ', '').trim().split('\n');
-        const allEvents = allEventString.map((event) => {
-          const [eventString, timestamp] = event.split(',');
-          return {
-            timestamp: timestamp?.replaceAll(' ', '').replaceAll('\n', ''),
-            event: eventString?.replaceAll(' ', '').replaceAll('\n', ''),
-          };
-        });
-        setLogEvents(allEvents as LogEvent[]);
-      });
-  }, []);
-
-  let allData: Record<string, string[]> = {};
-  let reactData: ReactItemType[] = [];
-  let indexReact = 0;
-  let logData: LogItem[] = [];
-  let indexLog = 0;
-  const labels: string[] = [];
-  let maxSum = 0;
-  const csvSortedData = csvData.sort((a, b) => +a.timestamp - +b.timestamp);
-
-  csvSortedData.forEach((element, index) => {
-    const elementKeys = Object.keys(element);
-    let sum = 0;
-    elementKeys.forEach((eleKeyTemp) => {
-      const eleKey = eleKeyTemp as keyof typeof element;
-      if (eleKey === 'timestamp') return;
-      if (eleKey in allData) {
-        allData[eleKey]?.push(element[eleKey]);
-      } else {
-        allData[eleKey] = [];
-        allData[eleKey].push(element[eleKey]);
-      }
-      sum = sum + +element[eleKey];
+    fetchFromCsv<CsvDataType>(CSV_TEXT).then((res) => {
+      setcsvData(res);
+    });
+    getReactChangesTextFile<ReactEventType[]>().then((res) => {
+      setReactEvents(res);
     });
 
-    while (
-      reactEvents.length > 0 &&
-      indexReact < reactEvents.length &&
-      element['timestamp'] > (reactEvents?.[indexReact]?.timestamp || 0)
-    ) {
-      reactData.push({
-        x: `${index}`,
-        y: 200,
-        label: `${removeDefrost(reactEvents[indexReact]?.event.change?.name || '')}`,
-        data: removeDefrostFromList(reactEvents[indexReact]?.event.list),
-      });
-      indexReact++;
-    }
+    getLogsTextFile<LogEvent[]>().then((res) => {
+      setLogEvents(res);
+    });
+  }, []);
 
-    while (
-      logtEvents.length > 0 &&
-      indexLog < logtEvents.length &&
-      element['timestamp'] > (logtEvents?.[indexLog]?.timestamp || 0)
-    ) {
-      logData.push({
-        x: `${index}`,
-        y: 300,
-        label: logtEvents[indexLog]?.event || '',
-        data: logtEvents[indexLog]?.event || '',
-      });
-      indexLog++;
-    }
-
-    if (maxSum < sum) maxSum = sum;
-    labels.push(`${index}`);
+  const { allData, labels, reactData, logData } = formatDataForGraph({
+    csvData,
+    reactEvents,
+    logtEvents,
   });
   const allDataSetName = Object.keys(allData);
   const dataSets = allDataSetName.map((datasetName) => {
@@ -182,7 +110,13 @@ const MixedChart = ({
   return (
     <div>
       <Bar
-        data={data as ChartData<any, any, any>}
+        data={
+          data as ChartData<
+            'bar',
+            string[] | ReactItemType[] | LogItem[],
+            string
+          >
+        }
         options={options(handleOnClick) as ChartOptions<any>}
       />
     </div>

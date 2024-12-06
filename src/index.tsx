@@ -16,8 +16,8 @@ const FrozenFrame = FrozenFrameModule
       sendPerformanceData: (timestamp: string, event: string) => {
         console.log(`Defrost is not enabled `, timestamp, event);
       },
-      writeInLogFiles: (timestamp: string, tree: string) => {
-        console.log(`Defrost is not enabled `, timestamp, tree);
+      writeInLogFiles: (timestamp: string, _: string) => {
+        console.log(`Defrost is not enabled `, timestamp);
       },
     };
 
