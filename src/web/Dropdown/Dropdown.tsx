@@ -2,7 +2,15 @@
 import React, { useState } from 'react';
 import './Dropdown.css';
 
-const Dropdown = ({ options, onSelect, placeholder }: any) => {
+const Dropdown = ({
+  options,
+  onSelect,
+  placeholder,
+}: {
+  options: string[];
+  onSelect: (value: string) => void;
+  placeholder: string;
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState('');
 
@@ -10,7 +18,7 @@ const Dropdown = ({ options, onSelect, placeholder }: any) => {
     setIsOpen(!isOpen);
   };
 
-  const handleOptionClick = (option: any) => {
+  const handleOptionClick = (option: string) => {
     setSelectedOption(option);
     onSelect(option); // Call the onSelect callback
     setIsOpen(false);
@@ -24,7 +32,7 @@ const Dropdown = ({ options, onSelect, placeholder }: any) => {
       </div>
       {isOpen && (
         <ul className="dropdown-list">
-          {options.map((option: any, index: number) => (
+          {options.map((option: string, index: number) => (
             <li
               key={index}
               className="dropdown-item"

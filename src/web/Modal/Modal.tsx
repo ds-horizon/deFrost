@@ -2,23 +2,32 @@ import React, { useState } from 'react';
 import Modal from 'react-modal';
 import './Modal.css';
 import Dropdown from '../Dropdown/Dropdown';
+import type { ModalDataType } from '../utils';
 
-const ModalDescription = ({ modalIsOpen, modalData, setModalIsOpen }: any) => {
+const ModalDescription = ({
+  modalIsOpen,
+  modalData,
+  setModalIsOpen,
+}: {
+  modalIsOpen: boolean;
+  modalData: ModalDataType[];
+  setModalIsOpen: (value: boolean) => void;
+}) => {
   const [state, setState] = useState(0);
-  const componentString: any[] = [];
-  let options: any[] = [];
-  let onSelect = (element: any) => {
+  const componentString: string[] = [];
+  let options: string[] = [];
+  let onSelect = (element: string) => {
     const index = options.indexOf(element);
     if (index >= 0) {
       setState(index);
     }
   };
   if (modalData.length > 0) {
-    options = modalData.map((ele: any) => {
-      return ele.label;
+    options = modalData.map((ele) => {
+      return ele.label || '';
     });
-    modalData[state]?.data?.forEach((component: any) => {
-      componentString.push(component.componentName);
+    modalData[state]?.data?.forEach((component) => {
+      componentString.push(component.componentName || '');
     });
   }
   const onClose = () => {
@@ -37,7 +46,7 @@ const ModalDescription = ({ modalIsOpen, modalData, setModalIsOpen }: any) => {
         <Dropdown
           options={options}
           onSelect={onSelect}
-          placeholder={options[0]}
+          placeholder={options[0] || ''}
         />
       </div>
       <div className="modal-body">

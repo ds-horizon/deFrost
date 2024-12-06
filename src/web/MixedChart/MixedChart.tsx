@@ -13,6 +13,12 @@ import {
   options,
   removeDefrost,
   removeDefrostFromList,
+  type CsvDataType,
+  type LogEvent,
+  type LogItem,
+  type ModalDataType,
+  type ReactEventType,
+  type ReactItemType,
 } from '../utils';
 import './MixedChart.css';
 import zoomPlugin from 'chartjs-plugin-zoom';
@@ -22,17 +28,21 @@ import annotationPlugin from 'chartjs-plugin-annotation';
 Chart.register(...registerables);
 Chart.register(zoomPlugin);
 Chart.register(annotationPlugin);
-const MixedChart = ({ openModal }: { openModal: (data: any[]) => void }) => {
-  const [csvData, setcsvData] = useState<any[]>([]);
-  const [reactEvents, setReactEvents] = useState<any[]>([]);
-  const [logtEvents, setLogEvents] = useState<any[]>([]);
+const MixedChart = ({
+  openModal,
+}: {
+  openModal: (data: ModalDataType[]) => void;
+}) => {
+  const [csvData, setcsvData] = useState<CsvDataType[]>([]);
+  const [reactEvents, setReactEvents] = useState<ReactEventType[]>([]);
+  const [logtEvents, setLogEvents] = useState<LogEvent[]>([]);
   useEffect(() => {
     fetch('data/data.csv')
       .then((res) => res.text())
       .then((text) => {
         Papa.parse(text, {
           header: true,
-          complete: (result) => {
+          complete: (result: Papa.ParseResult<CsvDataType>) => {
             setcsvData(result.data);
           },
         });
@@ -48,7 +58,7 @@ const MixedChart = ({ openModal }: { openModal: (data: any[]) => void }) => {
             event: JSON.parse(eventString ?? '{}'),
           };
         });
-        setReactEvents(allEvents);
+        setReactEvents(allEvents as ReactEventType[]);
       });
     fetch('data/ff.txt')
       .then((res) => res.text())
@@ -61,26 +71,27 @@ const MixedChart = ({ openModal }: { openModal: (data: any[]) => void }) => {
             event: eventString?.replaceAll(' ', '').replaceAll('\n', ''),
           };
         });
-        setLogEvents(allEvents);
+        setLogEvents(allEvents as LogEvent[]);
       });
   }, []);
 
-  let allData: any = {};
-  let reactData: any[] = [];
+  let allData: Record<string, string[]> = {};
+  let reactData: ReactItemType[] = [];
   let indexReact = 0;
-  let logData: any[] = [];
+  let logData: LogItem[] = [];
   let indexLog = 0;
-  const labels: any[] = [];
+  const labels: string[] = [];
   let maxSum = 0;
-  const csvSortedData = csvData.sort((a, b) => a.timestamp - b.timestamp);
+  const csvSortedData = csvData.sort((a, b) => +a.timestamp - +b.timestamp);
 
   csvSortedData.forEach((element, index) => {
     const elementKeys = Object.keys(element);
     let sum = 0;
-    elementKeys.forEach((eleKey) => {
+    elementKeys.forEach((eleKeyTemp) => {
+      const eleKey = eleKeyTemp as keyof typeof element;
       if (eleKey === 'timestamp') return;
       if (eleKey in allData) {
-        allData[eleKey].push(element[eleKey]);
+        allData[eleKey]?.push(element[eleKey]);
       } else {
         allData[eleKey] = [];
         allData[eleKey].push(element[eleKey]);
@@ -91,13 +102,13 @@ const MixedChart = ({ openModal }: { openModal: (data: any[]) => void }) => {
     while (
       reactEvents.length > 0 &&
       indexReact < reactEvents.length &&
-      element['timestamp'] > reactEvents[indexReact].timestamp
+      element['timestamp'] > (reactEvents?.[indexReact]?.timestamp || 0)
     ) {
       reactData.push({
         x: `${index}`,
         y: 200,
-        label: `${removeDefrost(reactEvents[indexReact].event?.change?.name)}`,
-        data: removeDefrostFromList(reactEvents[indexReact].event?.list),
+        label: `${removeDefrost(reactEvents[indexReact]?.event.change?.name || '')}`,
+        data: removeDefrostFromList(reactEvents[indexReact]?.event.list),
       });
       indexReact++;
     }
@@ -105,13 +116,13 @@ const MixedChart = ({ openModal }: { openModal: (data: any[]) => void }) => {
     while (
       logtEvents.length > 0 &&
       indexLog < logtEvents.length &&
-      element['timestamp'] > logtEvents[indexLog].timestamp
+      element['timestamp'] > (logtEvents?.[indexLog]?.timestamp || 0)
     ) {
       logData.push({
         x: `${index}`,
         y: 300,
-        label: logtEvents[indexLog].event,
-        data: logtEvents[indexLog].event,
+        label: logtEvents[indexLog]?.event || '',
+        data: logtEvents[indexLog]?.event || '',
       });
       indexLog++;
     }
@@ -149,14 +160,17 @@ const MixedChart = ({ openModal }: { openModal: (data: any[]) => void }) => {
       },
     ],
   };
-  const handleOnClick = (_: React.MouseEvent, elements: any[]) => {
-    const dataToSend: any[] = [];
+  const handleOnClick = (
+    _: React.MouseEvent,
+    elements: { datasetIndex: number; index: number }[]
+  ) => {
+    const dataToSend: ModalDataType[] = [];
     if (elements.length > 0) {
-      elements.forEach((element: any) => {
+      elements.forEach((element) => {
         if (element.datasetIndex === 7) {
           dataToSend.push({
-            label: reactData[element.index].label,
-            data: reactData[element.index].data,
+            label: reactData[element.index]?.label,
+            data: reactData[element.index]?.data,
           });
         }
       });
