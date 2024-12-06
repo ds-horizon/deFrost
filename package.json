@@ -19,6 +19,7 @@
     "web",
     "plugins",
     "*.podspec",
+    "!src/web",
     "!ios/build",
     "!android/build",
     "!android/gradle",
