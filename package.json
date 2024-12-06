@@ -6,9 +6,9 @@
   "main": "./src/index.tsx",
   "module": "./src/index.tsx",
   "bin": {
-    "create-build": "./src/scripts/patchPackageScript.js",
-    "record": "./src/scripts/recordAdbScript.js",
-    "show-web": "./src/scripts/showWeb.js"
+    "defrost-create-build": "./src/scripts/patchPackageScript.js",
+    "defrost-record": "./src/scripts/recordAdbScript.js",
+    "defrost-show-web": "./src/scripts/showWeb.js"
   },
   "files": [
     "src",
