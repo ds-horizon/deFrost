@@ -7,7 +7,7 @@ index 2f47b2a..a6fa392 100644
  
  'use strict';
 -
-+import defrost from '@sarthak-d11/de-frost'
++import defrost from '@d11/de-frost'
  if (__DEV__) {
    (function() {
  
@@ -67,7 +67,7 @@ index 7821c74..ede61a2 100644
  
  "use strict";
  require("react-native/Libraries/ReactPrivate/ReactNativePrivateInitializeCore");
-+import defrost from '@sarthak-d11/de-frost'
++import defrost from '@d11/de-frost'
  var ReactNativePrivateInterface = require("react-native/Libraries/ReactPrivate/ReactNativePrivateInterface"),
    React = require("react"),
    Scheduler = require("scheduler");
@@ -122,7 +122,7 @@ index 6c7116e..819c24d 100644
  
  'use strict';
 -
-+import defrost from '@sarthak-d11/de-frost'
++import defrost from '@d11/de-frost'
  if (__DEV__) {
    (function() {
  
@@ -182,7 +182,7 @@ index 2bdbbc1..cce6e46 100644
   */
  
  "use strict";
-+import defrost from '@sarthak-d11/de-frost'
++import defrost from '@d11/de-frost'
  require("react-native/Libraries/ReactPrivate/ReactNativePrivateInitializeCore");
  var ReactNativePrivateInterface = require("react-native/Libraries/ReactPrivate/ReactNativePrivateInterface"),
    React = require("react"),

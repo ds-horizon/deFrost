@@ -7,7 +7,7 @@ const runCommandWithOutput = (command) => {
 const args = process.argv.slice(2);
 const folderPath = path.resolve(
   process.cwd(),
-  'node_modules/@sarthak-d11/de-frost/web'
+  'node_modules/@d11/de-frost/web'
 );
 let dataPath = '';
 const buildWebCommand = `cd ${folderPath} && npx http-server`;
