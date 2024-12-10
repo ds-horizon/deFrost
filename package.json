@@ -210,6 +210,7 @@
       "javaPackageName": "com.frozenframe"
     }
   },
+  "packageManager": "yarn@3.6.1",
   "create-react-native-library": {
     "type": "module-mixed",
     "languages": "kotlin-swift",
