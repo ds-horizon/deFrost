@@ -13,13 +13,13 @@ for (let i = 0; i < args.length; i++) {
 }
 const nodeModulesRepo = './node_modules/@sarthak-d11/de-frost';
 const removeData = `rm -rf ./data && rm -rf ${nodeModulesRepo}/web/data`;
-const removeCommand = 'adb shell rm /sdcard/Dream11Log/ff.txt';
-const removeCommand2 = 'adb shell rm /sdcard/Dream11Log/changes.txt';
-const removeCommand3 = 'adb shell rm /sdcard/Dream11Log/log.txt';
+const removeCommand = 'adb shell rm /sdcard/DefrostLog/userLogs.txt';
+const removeCommand2 = 'adb shell rm /sdcard/DefrostLog/reactCommits.txt';
+const removeCommand3 = 'adb shell rm /sdcard/DefrostLog/log.txt';
 
-const pullLogTxt = 'adb pull /sdcard/Dream11Log/log.txt ./data/';
-const pullEventsTxt = 'adb pull /sdcard/Dream11Log/ff.txt ./data/';
-const pullChangesTxt = 'adb pull /sdcard/Dream11Log/changes.txt ./data/';
+const pullLogTxt = 'adb pull /sdcard/DefrostLog/log.txt ./data/';
+const pullEventsTxt = 'adb pull /sdcard/DefrostLog/userLogs.txt ./data/';
+const pullChangesTxt = 'adb pull /sdcard/DefrostLog/reactCommits.txt ./data/';
 const copyToWeb = `cp -r ./data ${nodeModulesRepo}/web/data`;
 
 const intervalSeconds = 1.5;

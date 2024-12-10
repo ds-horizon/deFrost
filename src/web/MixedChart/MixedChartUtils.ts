@@ -9,8 +9,8 @@ import {
   type ReactItemType,
 } from '../utils';
 export const CSV_TEXT = 'data/data.csv';
-const CHANGES_TXT = 'data/changes.txt';
-const LOGS_TXT = 'data/ff.txt';
+const CHANGES_TXT = 'data/reactCommits.txt';
+const LOGS_TXT = 'data/userLogs.txt';
 export const fetchFromFile = (fileUrl: string) => {
   return new Promise<string>((res, rej) => {
     fetch(fileUrl)
