@@ -93,7 +93,7 @@ const moveReactNativePatch = () => {
   const nodeModulesPath = path.resolve(process.cwd(), 'node_modules');
   const patchLocation = path.resolve(
     nodeModulesPath,
-    '@sarthak-d11/de-frost/src/patches_to_ship/react-native+0.72.5.patch'
+    '@sarthak-d11/de-frost/src/patches/react-native+0.72.5.patch'
   );
   const mainPatchLocation = path.resolve(process.cwd(), 'patches');
 

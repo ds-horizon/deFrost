@@ -11,10 +11,11 @@ import com.facebook.react.module.annotations.ReactModule
 @ReactModule(name = FrozenFrameModule.NAME)
 class FrozenFrameModule(reactContext: ReactApplicationContext) :
     NativeDefrostModuleSpec(reactContext) {
-    private var logger: FileLogger = FileLogger()
+    private var frozenFrameModuleImpl: FrozenFrameModuleImpl = FrozenFrameModuleImpl()
 
     init {
-        TimerSingleton.getInstance().start()
+        if (TimerSingleton.getInstance().state == Thread.State.NEW)
+            TimerSingleton.getInstance().start()
     }
 
     override fun getName(): String {
@@ -23,32 +24,16 @@ class FrozenFrameModule(reactContext: ReactApplicationContext) :
 
     @ReactMethod
     override fun sendPerformanceEvent(timestamp: String?, event: String?, promise: Promise?) {
-        try {
-            val systemTimeToUptimeMapping: HashMap<String, Long> =
-                TimerSingleton.getInstance().getTimeStampMap()
-            val uptimeStamp: Long = (systemTimeToUptimeMapping[timestamp] ?: 0) * 1000000
-            logger.writeToLogFile(uptimeStamp.toString(), event)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        promise?.resolve(null)
+        frozenFrameModuleImpl.sendPerformanceEvent(timestamp, event, promise)
     }
 
     @ReactMethod
     override fun writeInLogFiles(timestamp: String?, tree: ReadableMap?, promise: Promise?) {
-        try {
-            val systemTimeToUptimeMapping: HashMap<String, Long> =
-                TimerSingleton.getInstance().getTimeStampMap()
-            val uptimeStamp: Long = (systemTimeToUptimeMapping[timestamp] ?: 0) * 1000000
-            logger.writeToLogFile(uptimeStamp, tree)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        promise?.resolve(null)
+        frozenFrameModuleImpl.writeInLogFiles(timestamp, tree, promise)
     }
 
     companion object {
-        const val NAME = "DefrostModule"
+        const val NAME = FrozenFrameModuleImpl.NAME
     }
 
 }

@@ -9,7 +9,7 @@ import com.facebook.react.bridge.ReadableMap
 
 class FrozenFrameModule(reactContext: ReactApplicationContext) :
     ReactContextBaseJavaModule(reactContext) {
-    private var logger: FileLogger = FileLogger()
+    private var frozenFrameModuleImpl: FrozenFrameModuleImpl = FrozenFrameModuleImpl()
     override fun getName(): String {
         return NAME
     }
@@ -21,27 +21,15 @@ class FrozenFrameModule(reactContext: ReactApplicationContext) :
 
     @ReactMethod
     fun writeInLogFiles(timestamp: String?, tree: ReadableMap?) {
-        try {
-            val systemTimeToUptimeMapping: HashMap<String, Long> = TimerSingleton.getInstance().getTimeStampMap()
-            val uptimeStamp: Long = (systemTimeToUptimeMapping[timestamp] ?: 0) * 1000000
-            logger.writeToLogFile(uptimeStamp, tree)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+        frozenFrameModuleImpl.writeInLogFiles(timestamp, tree, null);
     }
 
     @ReactMethod
     fun sendPerformanceEvent(timestamp: String?, event: String?) {
-        try {
-            val systemTimeToUptimeMapping: HashMap<String, Long> = TimerSingleton.getInstance().getTimeStampMap()
-            val uptimeStamp: Long = (systemTimeToUptimeMapping[timestamp] ?: 0) * 1000000
-            logger.writeToLogFile(uptimeStamp.toString() + "", event)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+        frozenFrameModuleImpl.sendPerformanceEvent(timestamp, event, null);
     }
 
     companion object {
-        const val NAME = "DefrostModule"
+        const val NAME = FrozenFrameModuleImpl.NAME
     }
 }
