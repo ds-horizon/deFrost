@@ -8,8 +8,9 @@ const args = process.argv.slice(2);
 let flavour = '';
 let variant = 'Debug';
 let oldBabelConfig = null;
+let isPatchPackageInstalled = false;
+
 function addBabelPlugin() {
-  console.log('---------------------process.cwd()', process.cwd());
   const appBabelConfigPath = path.resolve(process.cwd(), 'babel.config.js');
   const pluginPath = path.resolve(
     process.cwd(),
@@ -41,7 +42,6 @@ function removeBablePlugin() {
   const appBabelConfigPath = path.resolve(process.cwd(), 'babel.config.js');
 
   if (fs.existsSync(appBabelConfigPath)) {
-    console.log('------------------oldBabelConfig', oldBabelConfig);
     fs.writeFileSync(
       appBabelConfigPath,
       `module.exports = ${JSON.stringify(oldBabelConfig, null, 2)};\n`
@@ -58,18 +58,6 @@ function loweCaseFirstLetter(str) {
   if (str.length === 0) return str; // Return empty string if input is empty
   return str.charAt(0).toLowerCase() + str.slice(1);
 }
-
-for (let i = 0; i < args.length; i++) {
-  if (args[i] === '-f' || args[i] === '--flavour') {
-    flavour = capitalizeFirstLetter(args[i + 1]);
-    i++;
-  } else if (args[i] === '-v' || args[i] === '--variant') {
-    variant = capitalizeFirstLetter(args[i + 1]);
-    i++;
-  }
-}
-
-let isPatchPackageInstalled = false;
 
 const checkAndInstallPatchPackage = () => {
   const nodeModulesPath = path.resolve(process.cwd(), 'node_modules');
@@ -162,6 +150,16 @@ const cleanUp = () => {
   execSync(envVariable);
 };
 
+for (let i = 0; i < args.length; i++) {
+  if (args[i] === '-f' || args[i] === '--flavour') {
+    flavour = capitalizeFirstLetter(args[i + 1]);
+    i++;
+  } else if (args[i] === '-v' || args[i] === '--variant') {
+    variant = capitalizeFirstLetter(args[i + 1]);
+    i++;
+  }
+}
+
 try {
   console.log(
     '-----------------Checking and Installing PatchPackage: Start -------------'
@@ -173,12 +171,14 @@ try {
   console.log('-----------------Applying RN Patch: Start -------------');
   moveReactNativePatch();
   console.log('-----------------Applying RN Patch: Done -------------');
+  console.log(
+    '-----------------Applying Babel Plugin for memo: Start -------------'
+  );
+  addBabelPlugin();
+  console.log(
+    '-----------------Applying Babel Plugin for memo: Done -------------'
+  );
   console.log('-----------------Creating the build: Start -------------');
-  try {
-    addBabelPlugin();
-  } catch (ex) {
-    console.log('-------------Exception', ex);
-  }
   createBuild();
   console.log('-----------------Creating the build: Done -------------');
 } catch (ex) {}

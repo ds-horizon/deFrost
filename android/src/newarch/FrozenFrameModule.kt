@@ -9,41 +9,46 @@ import android.util.Log
 import com.facebook.react.module.annotations.ReactModule
 
 @ReactModule(name = FrozenFrameModule.NAME)
-class FrozenFrameModule(reactContext: ReactApplicationContext): NativeBridgeSpec(reactContext) {
-  private var logger: FileLogger = com.frozenframe.FileLogger()
+class FrozenFrameModule(reactContext: ReactApplicationContext) :
+    NativeDefrostModuleSpec(reactContext) {
+    private var logger: FileLogger = FileLogger()
 
-  init {
-    TimerSingleton.getInstance().start()
-  }
+    init {
+        TimerSingleton.getInstance().start()
+    }
 
-  override fun getName(): String {
-    return NAME
-  }
+    override fun getName(): String {
+        return NAME
+    }
+
     @ReactMethod
     override fun sendPerformanceEvent(timestamp: String?, event: String?, promise: Promise?) {
         try {
-            val hm: HashMap<String, Long> = TimerSingleton.getInstance().getTimeStampMap()
-            val uptimeStamp: Long = (hm.get(timestamp) ?: 0) * 1000000
-            logger.log(uptimeStamp.toString(), event)
+            val systemTimeToUptimeMapping: HashMap<String, Long> =
+                TimerSingleton.getInstance().getTimeStampMap()
+            val uptimeStamp: Long = (systemTimeToUptimeMapping[timestamp] ?: 0) * 1000000
+            logger.writeToLogFile(uptimeStamp.toString(), event)
         } catch (e: Exception) {
             e.printStackTrace()
         }
         promise?.resolve(null)
     }
+
     @ReactMethod
     override fun writeInLogFiles(timestamp: String?, tree: ReadableMap?, promise: Promise?) {
         try {
-            val hm: HashMap<String, Long> = TimerSingleton.getInstance().getTimeStampMap()
-            val uptimeStamp: Long = (hm.get(timestamp) ?: 0) * 1000000
-            Log.d("TimerThread upTime", uptimeStamp.toString())
-            logger.log(uptimeStamp, tree)
+            val systemTimeToUptimeMapping: HashMap<String, Long> =
+                TimerSingleton.getInstance().getTimeStampMap()
+            val uptimeStamp: Long = (systemTimeToUptimeMapping[timestamp] ?: 0) * 1000000
+            logger.writeToLogFile(uptimeStamp, tree)
         } catch (e: Exception) {
             e.printStackTrace()
         }
         promise?.resolve(null)
     }
+
     companion object {
-        const val NAME = "Bridge"
+        const val NAME = "DefrostModule"
     }
 
 }

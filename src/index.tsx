@@ -1,5 +1,5 @@
 import { NativeModules, Platform } from 'react-native';
-import type { DefrostType } from './NativeBridge';
+import type { DefrostType } from './NativeDefrostModule';
 
 const isAndroid = Platform.OS === 'android';
 const isTurboModuleEnabled = (global as any).__turboModuleProxy != null;
@@ -7,7 +7,7 @@ const isTurboModuleEnabled = (global as any).__turboModuleProxy != null;
 const FrozenFrameModule = isAndroid
   ? isTurboModuleEnabled
     ? require('./NativeBridge').default
-    : NativeModules.Bridge
+    : NativeModules.DefrostModule
   : null;
 
 const FrozenFrame = FrozenFrameModule

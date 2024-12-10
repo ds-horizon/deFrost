@@ -7,14 +7,14 @@ import com.facebook.react.uimanager.ViewManager
 
 
 class FrozenFramePackage : ReactPackage {
-  override fun createNativeModules(reactContext: ReactApplicationContext): List<NativeModule> {
-    if (BuildConfig.defrost_enable)
-      return listOf(FrozenFrameModule(reactContext))
-    else
-      return emptyList()
-  }
+    override fun createNativeModules(reactContext: ReactApplicationContext): List<NativeModule> {
+        if (BuildConfig.defrost_enable)
+            return listOf(FrozenFrameModule(reactContext))
+        else
+            return emptyList()
+    }
 
-  override fun createViewManagers(reactContext: ReactApplicationContext): List<ViewManager<*, *>> {
-    return emptyList()
-  }
+    override fun createViewManagers(reactContext: ReactApplicationContext): List<ViewManager<*, *>> {
+        return emptyList()
+    }
 }

@@ -12,5 +12,14 @@ export interface DefrostType {
   ) => Promise<void>;
 }
 
-export interface Spec extends TurboModule, DefrostType {}
-export default TurboModuleRegistry.get<Spec>('Bridge');
+export interface Spec extends TurboModule {
+  sendPerformanceEvent: (timestamp: string, event: string) => Promise<void>;
+  writeInLogFiles: (
+    timestamp: string,
+    tree: {
+      change: string;
+      list: Array<{ componentName: string; flags: number; key: string }>;
+    }
+  ) => Promise<void>;
+}
+export default TurboModuleRegistry.get<Spec>('DefrostModule');

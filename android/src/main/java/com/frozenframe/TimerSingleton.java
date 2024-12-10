@@ -1,13 +1,15 @@
 package com.frozenframe;
 
 public class TimerSingleton {
-  private static TimerThread th;
-  public TimerSingleton(){
-  }
-  public static TimerThread getInstance() {
-    if(th ==null){
-      th= new TimerThread();
+    private static TimerThread timerThread;
+
+    public TimerSingleton() {
     }
-    return th;
-  }
+
+    public static TimerThread getInstance() {
+        if (timerThread == null) {
+            timerThread = new TimerThread();
+        }
+        return timerThread;
+    }
 }
