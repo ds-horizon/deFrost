@@ -6,7 +6,7 @@ const isTurboModuleEnabled = (global as any).__turboModuleProxy != null;
 
 const FrozenFrameModule = isAndroid
   ? isTurboModuleEnabled
-    ? require('./NativeBridge').default
+    ? require('./NativeDefrostModule').default
     : NativeModules.DefrostModule
   : null;
 
