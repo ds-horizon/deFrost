@@ -14,7 +14,7 @@ function addBabelPlugin() {
   const appBabelConfigPath = path.resolve(process.cwd(), 'babel.config.js');
   const pluginPath = path.resolve(
     process.cwd(),
-    'node_modules/@sarthak-d11/de-frost/plugins/babel-plugin-transform-memo-component.js'
+    'node_modules/@d11/de-frost/plugins/babel-plugin-transform-memo-component.js'
   );
   if (fs.existsSync(appBabelConfigPath)) {
     const babelConfig = require(appBabelConfigPath);
@@ -93,7 +93,7 @@ const moveReactNativePatch = () => {
   const nodeModulesPath = path.resolve(process.cwd(), 'node_modules');
   const patchLocation = path.resolve(
     nodeModulesPath,
-    '@sarthak-d11/de-frost/src/patches/react-native+0.72.5.patch'
+    '@d11/de-frost/src/patches/react-native+0.72.5.patch'
   );
   const mainPatchLocation = path.resolve(process.cwd(), 'patches');
 

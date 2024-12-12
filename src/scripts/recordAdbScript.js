@@ -11,7 +11,7 @@ for (let i = 0; i < args.length; i++) {
     i++;
   }
 }
-const nodeModulesRepo = './node_modules/@sarthak-d11/de-frost';
+const nodeModulesRepo = './node_modules/@d11/de-frost';
 const removeData = `rm -rf ./data && rm -rf ${nodeModulesRepo}/web/data`;
 const removeCommand = 'adb shell rm /sdcard/DefrostLog/userLogs.txt';
 const removeCommand2 = 'adb shell rm /sdcard/DefrostLog/reactCommits.txt';
