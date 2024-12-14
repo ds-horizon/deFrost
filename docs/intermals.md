@@ -135,3 +135,10 @@ The following intervals are calculated by subtracting timestamps from different 
    - This calculates the time between **IssueDrawCommandsStart** and **FrameCompleted**, representing the GPU processing time to finish rendering the frame.
 
 Each of these times is in **milliseconds** and provides detailed insights into the time spent at each stage of the frame lifecycle. These insights help identify areas where performance improvements can be made, such as reducing GPU time or improving synchronization with the display.
+
+### **References**
+
+1. https://developer.android.com/topic/performance/rendering/profile-gpu
+2. https://britt-barak.medium.com/rendering-phase-by-phase-7ea8c9885eb2
+3. https://jser.dev/react/2022/03/16/how-react-scheduler-works/
+4. [Reconcilation Files](https://github.com/facebook/react-native/tree/main/packages/react-native/Libraries/Renderer/implementations)

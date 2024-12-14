@@ -4,6 +4,11 @@
 
 The visualization tool provides an interactive way to analyze frame rendering performance and correlate it with React commit data. It helps identify frozen frames and performance bottlenecks by visualizing the frame rendering time and React commit events.
 
+<video width="640" height="360" controls>
+  <source src="./media/Defrost.mov" type="video/quicktime">
+  Your browser does not support the video tag.
+</video>
+
 ## Key Features
 
 1. **Bar Graph Representation**:

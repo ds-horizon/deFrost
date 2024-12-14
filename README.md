@@ -195,3 +195,8 @@ Let’s walk through an example of how this package can be used in practice:
 - **Yarn**: For managing dependencies and running the commands.
 - **ADB**: Ensure that your mobile device is connected and recognized via ADB for recording the frame data.
 - **Android Device**: For installing and testing the APK. USB debugging must be enabled.
+
+## Other Documents
+
+- [Internals of Defrost](./docs/intermals.md)
+- [Understanding of Frames Dashboard](./docs/dashboard.md)
