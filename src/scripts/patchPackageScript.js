@@ -150,37 +150,31 @@ const cleanUp = () => {
   execSync(envVariable);
 };
 
-for (let i = 0; i < args.length; i++) {
-  if (args[i] === '-f' || args[i] === '--flavour') {
-    flavour = capitalizeFirstLetter(args[i + 1]);
-    i++;
-  } else if (args[i] === '-v' || args[i] === '--variant') {
-    variant = capitalizeFirstLetter(args[i + 1]);
-    i++;
-  }
+const allSteps = (flavourLocal, variantLocal) => {
+  try {
+    flavour = flavourLocal
+    variant = variantLocal
+    console.log(
+      '-----------------Checking and Installing PatchPackage: Start -------------'
+    );
+    checkAndInstallPatchPackage();
+    console.log(
+      '-----------------Checking and Installing PatchPackage: Done -------------'
+    );
+    console.log('-----------------Applying RN Patch: Start -------------');
+    moveReactNativePatch();
+    console.log('-----------------Applying RN Patch: Done -------------');
+    console.log(
+      '-----------------Applying Babel Plugin for memo: Start -------------'
+    );
+    addBabelPlugin();
+    console.log(
+      '-----------------Applying Babel Plugin for memo: Done -------------'
+    );
+    console.log('-----------------Creating the build: Start -------------');
+    createBuild();
+    console.log('-----------------Creating the build: Done -------------');
+  } catch (ex) {}
+  cleanUp();
 }
-
-try {
-  console.log(
-    '-----------------Checking and Installing PatchPackage: Start -------------'
-  );
-  checkAndInstallPatchPackage();
-  console.log(
-    '-----------------Checking and Installing PatchPackage: Done -------------'
-  );
-  console.log('-----------------Applying RN Patch: Start -------------');
-  moveReactNativePatch();
-  console.log('-----------------Applying RN Patch: Done -------------');
-  console.log(
-    '-----------------Applying Babel Plugin for memo: Start -------------'
-  );
-  addBabelPlugin();
-  console.log(
-    '-----------------Applying Babel Plugin for memo: Done -------------'
-  );
-  console.log('-----------------Creating the build: Start -------------');
-  createBuild();
-  console.log('-----------------Creating the build: Done -------------');
-} catch (ex) {}
-
-cleanUp();
+module.exports = {allSteps}

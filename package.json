@@ -1,14 +1,12 @@
 {
   "name": "@d11/de-frost",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "To detect frozen frame in react native app",
   "source": "./src/index.tsx",
   "main": "./src/index.tsx",
   "module": "./src/index.tsx",
   "bin": {
-    "defrost-create-build": "./src/scripts/patchPackageScript.js",
-    "defrost-record": "./src/scripts/recordAdbScript.js",
-    "defrost-show-web": "./src/scripts/showWeb.js"
+    "defrost": "./src/scripts/commander.js"
   },
   "files": [
     "src",
@@ -61,9 +59,10 @@
   "homepage": "https://github.com/dream11/de-frost/#readme",
   "publishConfig": {
     "access": "restricted",
-    "registry": "https://npm.pkg.github.com/"
+    "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
+    "commander": "^12.1.0",
     "fast-csv": "5.0.1"
   },
   "devDependencies": {

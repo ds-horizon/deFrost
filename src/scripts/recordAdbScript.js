@@ -5,12 +5,6 @@ const fs = require('fs');
 const args = process.argv.slice(2);
 let packageName = 'com.app.dream11staging';
 
-for (let i = 0; i < args.length; i++) {
-  if (args[i] === '-p' || args[i] === '--packageName') {
-    packageName = args[i + 1];
-    i++;
-  }
-}
 const nodeModulesRepo = './node_modules/@d11/de-frost';
 const removeData = `rm -rf ./data && rm -rf ${nodeModulesRepo}/web/data`;
 const removeCommand = 'adb shell rm /sdcard/DefrostLog/userLogs.txt';
@@ -223,16 +217,20 @@ const removeDataFolderLocal = () => {
   execSync(removeData);
 };
 
-process.on('SIGINT', () => {
-  console.log('Received SIGINT (Ctrl + C)');
-  stopTrace();
-  if (flag) writeValuesInFiles();
-  flag = false;
-  pullDocs();
+const allSteps = (packageNameLocal) => {
+  packageName = packageNameLocal
+  process.on('SIGINT', () => {
+    console.log('Received SIGINT (Ctrl + C)');
+    stopTrace();
+    if (flag) writeValuesInFiles();
+    flag = false;
+    pullDocs();
+    cleanUpRecord();
+    exitAfterDelay(1000);
+  });
   cleanUpRecord();
-  exitAfterDelay(1000);
-});
-cleanUpRecord();
-removeDataFolderLocal();
-startTrace();
-runBashCommandInterval(intervalSeconds);
+  removeDataFolderLocal();
+  startTrace();
+  runBashCommandInterval(intervalSeconds);
+}
+module.exports = {allSteps}

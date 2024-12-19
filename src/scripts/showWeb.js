@@ -10,23 +10,20 @@ const folderPath = path.resolve(
   'node_modules/@d11/de-frost/web'
 );
 let dataPath = '';
-const buildWebCommand = `cd ${folderPath} && npx http-server`;
+const buildWebCommand = `cd ${folderPath} && npx http-server -c-1`;
 
 const webPath = path.resolve(folderPath, 'web/');
-for (let i = 0; i < args.length; i++) {
-  if (args[i] === '-d' || args[i] === '--directory') {
-    dataPath = args[i + 1];
-    i++;
+const allSteps = (directoryLocal) => {
+  dataPath = directoryLocal
+  if (dataPath) {
+    const copyDataToWeb = `cp -r ${dataPath} ${webPath}`;
+    runCommandWithOutput(copyDataToWeb, { stdio: 'inherit' });
+  }
+  
+  try {
+    runCommandWithOutput(buildWebCommand, { stdio: 'inherit' });
+  } catch (exc) {
+    console.log('Exception - ', exc);
   }
 }
-
-if (dataPath) {
-  const copyDataToWeb = `cp -r ${dataPath} ${webPath}`;
-  runCommandWithOutput(copyDataToWeb, { stdio: 'inherit' });
-}
-
-try {
-  runCommandWithOutput(buildWebCommand, { stdio: 'inherit' });
-} catch (exc) {
-  console.log('Exception - ', exc);
-}
+module.exports = {allSteps}
