@@ -218,7 +218,7 @@ const removeDataFolderLocal = () => {
 };
 
 const allSteps = (packageNameLocal) => {
-  packageName = packageNameLocal
+  packageName = packageNameLocal;
   process.on('SIGINT', () => {
     console.log('Received SIGINT (Ctrl + C)');
     stopTrace();
@@ -232,5 +232,5 @@ const allSteps = (packageNameLocal) => {
   removeDataFolderLocal();
   startTrace();
   runBashCommandInterval(intervalSeconds);
-}
-module.exports = {allSteps}
+};
+module.exports = { allSteps };

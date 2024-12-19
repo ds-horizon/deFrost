@@ -14,16 +14,16 @@ const buildWebCommand = `cd ${folderPath} && npx http-server -c-1`;
 
 const webPath = path.resolve(folderPath, 'web/');
 const allSteps = (directoryLocal) => {
-  dataPath = directoryLocal
+  dataPath = directoryLocal;
   if (dataPath) {
     const copyDataToWeb = `cp -r ${dataPath} ${webPath}`;
     runCommandWithOutput(copyDataToWeb, { stdio: 'inherit' });
   }
-  
+
   try {
     runCommandWithOutput(buildWebCommand, { stdio: 'inherit' });
   } catch (exc) {
     console.log('Exception - ', exc);
   }
-}
-module.exports = {allSteps}
+};
+module.exports = { allSteps };

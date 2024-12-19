@@ -1891,9 +1891,7 @@ __metadata:
     react: "*"
     react-native: "*"
   bin:
-    defrost-create-build: ./src/scripts/patchPackageScript.js
-    defrost-record: ./src/scripts/recordAdbScript.js
-    defrost-show-web: ./src/scripts/showWeb.js
+    defrost: ./src/scripts/commander.js
   languageName: unknown
   linkType: soft
 

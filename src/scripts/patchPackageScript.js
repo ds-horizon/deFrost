@@ -152,8 +152,8 @@ const cleanUp = () => {
 
 const allSteps = (flavourLocal, variantLocal) => {
   try {
-    flavour = flavourLocal
-    variant = variantLocal
+    flavour = flavourLocal;
+    variant = variantLocal;
     console.log(
       '-----------------Checking and Installing PatchPackage: Start -------------'
     );
@@ -176,5 +176,5 @@ const allSteps = (flavourLocal, variantLocal) => {
     console.log('-----------------Creating the build: Done -------------');
   } catch (ex) {}
   cleanUp();
-}
-module.exports = {allSteps}
+};
+module.exports = { allSteps };

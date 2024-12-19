@@ -105,7 +105,7 @@ export const formatDataForGraph = ({
     while (
       reactEvents.length > 0 &&
       indexReact < reactEvents.length &&
-      element['timestamp'] > (reactEvents?.[indexReact]?.timestamp || 0)
+      element.timestamp > (reactEvents?.[indexReact]?.timestamp || 0)
     ) {
       reactData.push({
         x: `${index}`,
@@ -119,7 +119,7 @@ export const formatDataForGraph = ({
     while (
       logtEvents.length > 0 &&
       indexLog < logtEvents.length &&
-      element['timestamp'] > (logtEvents?.[indexLog]?.timestamp || 0)
+      element.timestamp > (logtEvents?.[indexLog]?.timestamp || 0)
     ) {
       logData.push({
         x: `${index}`,
