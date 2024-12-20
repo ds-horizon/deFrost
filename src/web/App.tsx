@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import MixedChart from './MixedChart/MixedChart';
 import ModalDescription from './Modal/Modal';
 import {
@@ -32,12 +32,12 @@ const App = () => {
       setLogEvents(res);
     });
   }, []);
-  const openModal = (data: ModalDataType[]) => {
+  const openModal = useCallback((data: ModalDataType[]) => {
     if (data.length > 0) {
       setModalData(data);
       setModalIsOpen(true);
     }
-  };
+  }, []);
 
   return (
     <div>
