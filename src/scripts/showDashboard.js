@@ -4,7 +4,6 @@ const path = require('path');
 const runCommandWithOutput = (command) => {
   execSync(command, { stdio: 'inherit' });
 };
-const args = process.argv.slice(2);
 const folderPath = path.resolve(
   process.cwd(),
   'node_modules/@d11/de-frost/web'
@@ -13,17 +12,17 @@ let dataPath = '';
 const buildWebCommand = `cd ${folderPath} && npx http-server -c-1`;
 
 const webPath = path.resolve(folderPath, 'web/');
-const allSteps = (directoryLocal) => {
+const setupAndBuildWeb = (directoryLocal) => {
   dataPath = directoryLocal;
   if (dataPath) {
     const copyDataToWeb = `cp -r ${dataPath} ${webPath}`;
-    runCommandWithOutput(copyDataToWeb, { stdio: 'inherit' });
+    runCommandWithOutput(copyDataToWeb);
   }
 
   try {
-    runCommandWithOutput(buildWebCommand, { stdio: 'inherit' });
+    runCommandWithOutput(buildWebCommand);
   } catch (exc) {
     console.log('Exception - ', exc);
   }
 };
-module.exports = { allSteps };
+module.exports = { setupAndBuildWeb };

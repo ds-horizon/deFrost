@@ -3,8 +3,6 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-const args = process.argv.slice(2);
-
 let flavour = '';
 let variant = 'Debug';
 let oldBabelConfig = null;
@@ -150,10 +148,10 @@ const cleanUp = () => {
   execSync(envVariable);
 };
 
-const allSteps = (flavourLocal, variantLocal) => {
+const configureAndBuildProject = (flavourLocal, variantLocal) => {
   try {
-    flavour = flavourLocal;
-    variant = variantLocal;
+    flavour = capitalizeFirstLetter(flavourLocal);
+    variant = capitalizeFirstLetter(variantLocal);
     console.log(
       '-----------------Checking and Installing PatchPackage: Start -------------'
     );
@@ -177,4 +175,4 @@ const allSteps = (flavourLocal, variantLocal) => {
   } catch (ex) {}
   cleanUp();
 };
-module.exports = { allSteps };
+module.exports = { configureAndBuildProject };

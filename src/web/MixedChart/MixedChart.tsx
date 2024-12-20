@@ -1,5 +1,5 @@
 // MixedChart.js
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo } from 'react';
 import {
   Chart,
   registerables,
@@ -7,52 +7,38 @@ import {
   type ChartOptions,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
-import {
-  colors,
-  options,
-  type CsvDataType,
-  type LogEvent,
-  type LogItem,
-  type ModalDataType,
-  type ReactEventType,
-  type ReactItemType,
-} from '../utils';
+import { colors, options } from './MixedChartUtils';
 import './MixedChart.css';
 import zoomPlugin from 'chartjs-plugin-zoom';
 import annotationPlugin from 'chartjs-plugin-annotation';
-import {
-  CSV_TEXT,
-  fetchFromCsv,
-  formatDataForGraph,
-  getLogsTextFile,
-  getReactChangesTextFile,
-} from './MixedChartUtils';
+import { formatDataForGraph } from './MixedChartUtils';
+import type {
+  CsvDataType,
+  LogEvent,
+  LogItem,
+  ModalDataType,
+  ReactEventType,
+  ReactItemType,
+} from '../AppInterface';
 
 // Register the necessary Chart.js components
 Chart.register(...registerables);
 Chart.register(zoomPlugin);
 Chart.register(annotationPlugin);
+
+type MixedChartType = {
+  openModal: (data: ModalDataType[]) => void;
+  csvData: CsvDataType[];
+  reactEvents: ReactEventType[];
+  logtEvents: LogEvent[];
+};
+
 const MixedChart = ({
   openModal,
-}: {
-  openModal: (data: ModalDataType[]) => void;
-}) => {
-  const [csvData, setcsvData] = useState<CsvDataType[]>([]);
-  const [reactEvents, setReactEvents] = useState<ReactEventType[]>([]);
-  const [logtEvents, setLogEvents] = useState<LogEvent[]>([]);
-  useEffect(() => {
-    fetchFromCsv<CsvDataType>(CSV_TEXT).then((res) => {
-      setcsvData(res);
-    });
-    getReactChangesTextFile<ReactEventType[]>().then((res) => {
-      setReactEvents(res);
-    });
-
-    getLogsTextFile<LogEvent[]>().then((res) => {
-      setLogEvents(res);
-    });
-  }, []);
-
+  csvData,
+  reactEvents,
+  logtEvents,
+}: MixedChartType) => {
   const { allData, labels, reactData, logData } = formatDataForGraph({
     csvData,
     reactEvents,
@@ -92,18 +78,18 @@ const MixedChart = ({
     _: React.MouseEvent,
     elements: { datasetIndex: number; index: number }[]
   ) => {
-    const dataToSend: ModalDataType[] = [];
+    const dataToShowOnModal: ModalDataType[] = [];
     if (elements.length > 0) {
       elements.forEach((element) => {
         if (element.datasetIndex === 7) {
-          dataToSend.push({
+          dataToShowOnModal.push({
             label: reactData[element.index]?.label,
             data: reactData[element.index]?.data,
           });
         }
       });
-      if (dataToSend.length > 0) {
-        openModal(dataToSend);
+      if (dataToShowOnModal.length > 0) {
+        openModal(dataToShowOnModal);
       }
     }
   };

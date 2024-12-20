@@ -2,16 +2,13 @@
 const { execSync } = require('child_process');
 const path = require('path');
 const fs = require('fs');
-const args = process.argv.slice(2);
 let packageName = 'com.app.dream11staging';
 
 const nodeModulesRepo = './node_modules/@d11/de-frost';
 const removeData = `rm -rf ./data && rm -rf ${nodeModulesRepo}/web/data`;
 const removeCommand = 'adb shell rm /sdcard/DefrostLog/userLogs.txt';
 const removeCommand2 = 'adb shell rm /sdcard/DefrostLog/reactCommits.txt';
-const removeCommand3 = 'adb shell rm /sdcard/DefrostLog/log.txt';
 
-const pullLogTxt = 'adb pull /sdcard/DefrostLog/log.txt ./data/';
 const pullEventsTxt = 'adb pull /sdcard/DefrostLog/userLogs.txt ./data/';
 const pullChangesTxt = 'adb pull /sdcard/DefrostLog/reactCommits.txt ./data/';
 const copyToWeb = `cp -r ./data ${nodeModulesRepo}/web/data`;
@@ -21,6 +18,35 @@ const processedData = new Set();
 const rawDataForFile = new Set();
 const timestampsDump = new Set();
 let flag = true;
+const dataCsvHeader = [
+  'misc',
+  'input',
+  'animations',
+  'measure',
+  'draw',
+  'sync',
+  'gpu',
+  'timestamp',
+];
+const framestatsHeader = [
+  'Flags',
+  'IntendedVsync',
+  'Vsync',
+  'OldestInputEvent',
+  'NewestInputEvent',
+  'HandleInputStart',
+  'AnimationStart',
+  'PerformTraversalsStart',
+  'DrawStart',
+  'SyncQueued',
+  'SyncStart',
+  'IssueDrawCommandsStart',
+  'SwapBuffers',
+  'FrameCompleted',
+  'DequeueBufferDuration',
+  'QueueBufferDuration',
+  'GpuCompleted',
+];
 
 const writeValuesInFiles = () => {
   const csv = require('fast-csv');
@@ -41,35 +67,8 @@ const writeValuesInFiles = () => {
   writerFramestats.pipe(fileFramestatsStream).on('end', () => {});
 
   if (!fileExists) {
-    writer.write([
-      'misc',
-      'input',
-      'animations',
-      'measure',
-      'draw',
-      'sync',
-      'gpu',
-      'timestamp',
-    ]);
-    writerFramestats.write([
-      'Flags',
-      'IntendedVsync',
-      'Vsync',
-      'OldestInputEvent',
-      'NewestInputEvent',
-      'HandleInputStart',
-      'AnimationStart',
-      'PerformTraversalsStart',
-      'DrawStart',
-      'SyncQueued',
-      'SyncStart',
-      'IssueDrawCommandsStart',
-      'SwapBuffers',
-      'FrameCompleted',
-      'DequeueBufferDuration',
-      'QueueBufferDuration',
-      'GpuCompleted',
-    ]);
+    writer.write(dataCsvHeader);
+    writerFramestats.write(framestatsHeader);
   }
 
   for (let row of processedData) {
@@ -192,11 +191,9 @@ const runCommandWithExceptionHandling = (command) => {
 const cleanUpRecord = () => {
   runCommandWithExceptionHandling(removeCommand);
   runCommandWithExceptionHandling(removeCommand2);
-  runCommandWithExceptionHandling(removeCommand3);
 };
 
 const pullDocs = () => {
-  runCommandWithExceptionHandling(pullLogTxt);
   runCommandWithExceptionHandling(pullEventsTxt);
   runCommandWithExceptionHandling(pullChangesTxt);
 };
@@ -217,7 +214,7 @@ const removeDataFolderLocal = () => {
   execSync(removeData);
 };
 
-const allSteps = (packageNameLocal) => {
+const collectAndAnalyzePerformanceData = (packageNameLocal) => {
   packageName = packageNameLocal;
   process.on('SIGINT', () => {
     console.log('Received SIGINT (Ctrl + C)');
@@ -233,4 +230,5 @@ const allSteps = (packageNameLocal) => {
   startTrace();
   runBashCommandInterval(intervalSeconds);
 };
-module.exports = { allSteps };
+
+module.exports = { collectAndAnalyzePerformanceData };

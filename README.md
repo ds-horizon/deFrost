@@ -21,7 +21,7 @@ yarn add @d11/defrost
 
 ## Setup
 
-Before using the package, you need to configure your Android device for debugging and profiling.
+Before using the package, you need to configure your Android device(Android version < 14) for debugging and profiling.
 
 ### 1. Enable USB Debugging
 
@@ -93,14 +93,14 @@ Where:
 
 - `-p`: The package name of the app you want to record data from (e.g., `com.example.myapp`). Default value: `""`.
 
-### 3. `yarn defrost show-web`
+### 3. `yarn defrost show-dashboard`
 
 This command opens a web dashboard where you can visualize the frame data and React commit information. You need to specify the location of the data folder where the recorded data is stored.
 
 **Usage**:
 
 ```sh
-yarn defrost show-web -d <data-folder-location>
+yarn defrost show-dashboard -d <data-folder-location>
 ```
 
 Where:
@@ -149,12 +149,12 @@ Both the frame data and React commit information are **dumped into a `data` fold
 
 **Why this is important**: The `yarn defrost record` command gives us all the raw data we need to analyze frame rendering behavior and correlate it with React component rendering. This is key to identifying and diagnosing frozen frames or UI performance issues in the app.
 
-### Step 4: Visualize the Data (`yarn defrost show-web`)
+### Step 4: Visualize the Data (`yarn defrost show-dashboard`)
 
 Finally, after collecting all the frame and React commit data, you need a way to **visualize** it in an interactive and user-friendly manner. This is achieved using the following command:
 
 ```sh
-yarn defrost show-web -d <data-folder-location>
+yarn defrost show-dashboard -d <data-folder-location>
 ```
 
 - `-d`: The directory where the frame data and React commit information have been dumped (the `data` folder).
@@ -184,7 +184,7 @@ Let’s walk through an example of how this package can be used in practice:
 3. **Visualize the Data**: Finally, you can open the web dashboard to analyze the data and identify any potential frozen frames:
 
    ```sh
-   yarn defrost show-web -d ./data
+   yarn defrost show-dashboard -d ./data
    ```
 
 ---
@@ -194,7 +194,7 @@ Let’s walk through an example of how this package can be used in practice:
 - **Node.js**: v12 or higher.
 - **Yarn**: For managing dependencies and running the commands.
 - **ADB**: Ensure that your mobile device is connected and recognized via ADB for recording the frame data.
-- **Android Device**: For installing and testing the APK. USB debugging must be enabled.
+- **Android Device**: For installing and testing the APK. USB debugging must be enabled. Android version should be less that 14
 
 ## Other Documents
 

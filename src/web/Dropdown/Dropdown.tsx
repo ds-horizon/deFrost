@@ -2,15 +2,13 @@
 import React, { useState } from 'react';
 import './Dropdown.css';
 
-const Dropdown = ({
-  options,
-  onSelect,
-  placeholder,
-}: {
+type DropdownType = {
   options: string[];
   onSelect: (value: string) => void;
   placeholder: string;
-}) => {
+};
+
+const Dropdown = ({ options, onSelect, placeholder }: DropdownType) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState('');
 
@@ -20,7 +18,7 @@ const Dropdown = ({
 
   const handleOptionClick = (option: string) => {
     setSelectedOption(option);
-    onSelect(option); // Call the onSelect callback
+    onSelect(option);
     setIsOpen(false);
   };
 

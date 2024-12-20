@@ -57,7 +57,7 @@ public class FileLogger {
                 }
 
                 File logFolder = new File(android.os.Environment.getExternalStorageDirectory(), LOG_FOLDER_NAME);
-                String message = ReadableMapUtils.readableMapToString(tree);
+                String message = ReadableMapUtils.readableMapToJSONString(tree);
                 if (!logFolder.exists()) {
                     if (!logFolder.mkdirs()) {
                         return;
