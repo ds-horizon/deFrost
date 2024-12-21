@@ -1,3 +1,4 @@
+import { Chart, type ChartOptions, type Plugin } from 'chart.js';
 import type {
   CsvDataType,
   LogEvent,
@@ -40,7 +41,7 @@ export const colors = {
 
 export const options = (
   handleOnClick: (event: React.MouseEvent, elements: any[]) => void
-) => ({
+): ChartOptions<any> => ({
   responsive: true,
   onClick: handleOnClick,
   plugins: {
@@ -95,6 +96,7 @@ export const options = (
 
     legend: {
       position: 'top' as const,
+      usePointStyle: true,
     },
     title: {
       display: true,
@@ -113,6 +115,7 @@ export const options = (
         },
       },
     },
+    highlightBars: customHighlightPlugin,
   },
   scales: {
     x: {
@@ -232,3 +235,70 @@ export const createDatasetForGraph = (
   };
   return data;
 };
+
+const customHighlightPlugin: Plugin = {
+  id: 'highlightBars',
+  beforeDraw: (chart) => {
+    const ctx = chart.ctx;
+    const datasets = chart.data.datasets;
+    const indicesToHighlight = [1, 5, 10]; // Indices of bars you want to highlight
+    const glowColor = 'rgba(255, 99, 132, 0.8)'; // The color of the glow
+
+    // Loop through indices to highlight
+    indicesToHighlight.forEach((index) => {
+      let highestY = chart.chartArea.bottom; // Track the top bar in the stack
+      let barWidth = 0; // Track bar width for the top bar
+      let barColor: string | undefined;
+
+      // Loop through datasets to find the top bar at the given index
+      datasets.forEach((dataset, datasetIndex) => {
+        const meta = chart.getDatasetMeta(datasetIndex);
+        const bar = meta.data[index]; // Get the bar at the current index
+
+        if (bar) {
+          const properties = bar.getProps(['x', 'y', 'width', 'height'], true); // Get the bar properties
+
+          // Update highestY, barWidth, and barColor for the topmost bar
+          if (properties.y < highestY) {
+            highestY = properties.y; // Top of the stack
+            barWidth = properties.width + 2; // Use the bar's width property
+            if (Array.isArray(dataset.backgroundColor)) {
+              barColor = dataset.backgroundColor[index] as string;
+            } else {
+              barColor = dataset.backgroundColor as string;
+            }
+          }
+        }
+      });
+
+      if (barColor && barWidth > 0) {
+        // Apply glow to the top bar in the stack
+        ctx.shadowColor = glowColor;
+        ctx.shadowBlur = 6; // Adjust this for a tighter glow
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
+
+        // Draw the glow for the top bar
+        const meta = chart.getDatasetMeta(0); // Use the first dataset for x-coordinates
+        const bar = meta.data[index];
+        const properties = bar?.getProps(['x', 'y'], true) || { x: 0, y: 0 };
+
+        ctx.fillStyle = barColor;
+        ctx.fillRect(
+          properties.x - barWidth / 2,
+          highestY,
+          barWidth,
+          chart.chartArea.bottom - highestY
+        );
+
+        // Reset shadow settings
+        ctx.shadowColor = 'transparent';
+        ctx.shadowBlur = 0;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 0;
+      }
+    });
+  },
+};
+
+Chart.register(customHighlightPlugin);
