@@ -9,7 +9,12 @@ export const fetchFromFile = (fileUrl: string) => {
     fetch(fileUrl)
       .then((res) => res.text())
       .then((text) => {
-        res(text);
+        const errorText = `<pre>Cannot GET /${fileUrl}</pre>`;
+        if (text.includes(errorText)) {
+          console.error('File Not Found');
+        } else {
+          res(text);
+        }
       })
       .catch((error) => {
         rej(error);

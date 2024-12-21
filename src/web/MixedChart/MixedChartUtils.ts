@@ -98,12 +98,15 @@ export const options = (
     },
     title: {
       display: true,
-      text: 'De',
+      text: 'De-Frost',
     },
     zoom: {
       zoom: {
         limits: {
-          y: { min: 0, max: 20, minRange: 'original' },
+          y: {
+            min: 0,
+            max: 100,
+          },
         },
         drag: {
           enabled: true,
@@ -115,10 +118,12 @@ export const options = (
     x: {
       stacked: true,
       min: 0,
+      beginAtZero: true,
     },
     y: {
       stacked: true,
       min: 0,
+      beginAtZero: true,
     },
   },
 });
@@ -187,4 +192,43 @@ export const formatDataForGraph = ({
     labels.push(`${index}`);
   });
   return { allData, labels, reactData, logData };
+};
+
+export const createDatasetForGraph = (
+  allData: Record<string, string[]>,
+  labels: string[],
+  reactData: ReactItemType[],
+  logData: LogItem[]
+) => {
+  const allDataSetName = Object.keys(allData);
+  const dataSets = allDataSetName.map((datasetName) => {
+    return {
+      data: allData[datasetName],
+      label: datasetName,
+      borderWidth: 1,
+      ...colors[datasetName as keyof typeof colors],
+      stack: 'stack1',
+    };
+  });
+  const data = {
+    labels: labels,
+    datasets: [
+      ...dataSets,
+      {
+        label: 'React',
+        type: 'scatter',
+        data: reactData,
+        backgroundColor: 'rgb(10, 99, 132, 0.5)',
+        stack: 'stack2',
+      },
+      {
+        label: 'Log',
+        type: 'scatter',
+        data: logData,
+        backgroundColor: 'rgb(132, 99, 10, 0.5)',
+        stack: 'stack3',
+      },
+    ],
+  };
+  return data;
 };

@@ -1862,7 +1862,7 @@ __metadata:
     babel-loader: ^8.2.5
     chart.js: 4.4.3
     chartjs-plugin-annotation: 3.0.1
-    chartjs-plugin-zoom: 2.0.1
+    chartjs-plugin-zoom: 2.2.0
     commander: ^12.1.0
     commitlint: ^17.0.2
     css-loader: 7.1.2
@@ -3410,6 +3410,13 @@ __metadata:
   dependencies:
     "@types/node": "*"
   checksum: 79d746a8f053954bba36bd3d94a90c78de995d126289d656fb3271dd9f1229d33f678da04d10bce6be440494a5a73438e2e363e92802d16b8315b051036c5256
+  languageName: node
+  linkType: hard
+
+"@types/hammerjs@npm:^2.0.45":
+  version: 2.0.46
+  resolution: "@types/hammerjs@npm:2.0.46"
+  checksum: caba6ec788d19905c71092670b58514b3d1f5eee5382bf9205e8df688d51e7857b7994e2dd7aed57fac8977bdf0e456d67fbaf23440a4385b8ce25fe2af1ec39
   languageName: node
   linkType: hard
 
@@ -5087,14 +5094,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chartjs-plugin-zoom@npm:2.0.1":
-  version: 2.0.1
-  resolution: "chartjs-plugin-zoom@npm:2.0.1"
+"chartjs-plugin-zoom@npm:2.2.0":
+  version: 2.2.0
+  resolution: "chartjs-plugin-zoom@npm:2.2.0"
   dependencies:
+    "@types/hammerjs": ^2.0.45
     hammerjs: ^2.0.8
   peerDependencies:
     chart.js: ">=3.2.0"
-  checksum: c0ca5ae475bc3c7263e471258a7f16bd3d92c3642ded1395aeb841c9710d5af83e80410aa5e34869c4a1a5cc3899a166aec06a59bf9ecfda85f564618528b286
+  checksum: a540e3834082eeb4dedb5ec6ca381f94d7e101075c19a7b65f2a4cd2d12685b3a416e718c9cf7145799802874fb397f69b71a955dfc56b035946cde4d1eb6c8e
   languageName: node
   linkType: hard
 

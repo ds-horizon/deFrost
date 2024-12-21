@@ -7,7 +7,7 @@ import {
   type ChartOptions,
 } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
-import { colors, options } from './MixedChartUtils';
+import { createDatasetForGraph, options } from './MixedChartUtils';
 import './MixedChart.css';
 import zoomPlugin from 'chartjs-plugin-zoom';
 import annotationPlugin from 'chartjs-plugin-annotation';
@@ -44,36 +44,8 @@ const MixedChart = ({
     reactEvents,
     logtEvents,
   });
-  const allDataSetName = Object.keys(allData);
-  const dataSets = allDataSetName.map((datasetName) => {
-    return {
-      data: allData[datasetName],
-      label: datasetName,
-      borderWidth: 1,
-      ...colors[datasetName as keyof typeof colors],
-      stack: 'stack1',
-    };
-  });
-  const data = {
-    labels: labels,
-    datasets: [
-      ...dataSets,
-      {
-        label: 'React',
-        type: 'scatter',
-        data: reactData,
-        backgroundColor: 'rgb(10, 99, 132, 0.5)',
-        stack: 'stack2',
-      },
-      {
-        label: 'Log',
-        type: 'scatter',
-        data: logData,
-        backgroundColor: 'rgb(132, 99, 10, 0.5)',
-        stack: 'stack3',
-      },
-    ],
-  };
+  const data = createDatasetForGraph(allData, labels, reactData, logData);
+
   const handleOnClick = (
     _: React.MouseEvent,
     elements: { datasetIndex: number; index: number }[]

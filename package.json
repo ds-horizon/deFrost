@@ -82,7 +82,7 @@
     "babel-loader": "^8.2.5",
     "chart.js": "4.4.3",
     "chartjs-plugin-annotation": "3.0.1",
-    "chartjs-plugin-zoom": "2.0.1",
+    "chartjs-plugin-zoom": "2.2.0",
     "commitlint": "^17.0.2",
     "css-loader": "7.1.2",
     "del-cli": "^5.1.0",
