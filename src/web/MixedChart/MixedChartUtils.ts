@@ -1,4 +1,4 @@
-import { Chart, type ChartOptions, type Plugin } from 'chart.js';
+import { type ChartOptions } from 'chart.js';
 import type {
   CsvDataType,
   LogEvent,
@@ -89,7 +89,8 @@ export const options = (
           if (label === 'Log') {
             return `Log: ${point.label}`;
           }
-          return `${label}: ${point}`;
+          const total = context.dataset.totalRenderTime[context.dataIndex];
+          return `${label}: ${point}\n Total: ${total}`;
         },
       },
     },
@@ -115,7 +116,6 @@ export const options = (
         },
       },
     },
-    highlightBars: customHighlightPlugin,
   },
   scales: {
     x: {
@@ -147,7 +147,7 @@ export const formatDataForGraph = ({
   const labels: string[] = [];
   let maxSum = 0;
   const csvSortedData = csvData.sort((a, b) => +a.timestamp - +b.timestamp);
-
+  const totalRenderTime: number[] = [];
   csvSortedData.forEach((element, index) => {
     const elementKeys = Object.keys(element);
     let sum = 0;
@@ -162,7 +162,7 @@ export const formatDataForGraph = ({
       }
       sum = sum + +element[eleKey];
     });
-
+    totalRenderTime.push(sum);
     while (
       reactEvents.length > 0 &&
       indexReact < reactEvents.length &&
@@ -194,20 +194,22 @@ export const formatDataForGraph = ({
     if (maxSum < sum) maxSum = sum;
     labels.push(`${index}`);
   });
-  return { allData, labels, reactData, logData };
+  return { allData, labels, reactData, logData, totalRenderTime };
 };
 
 export const createDatasetForGraph = (
   allData: Record<string, string[]>,
   labels: string[],
   reactData: ReactItemType[],
-  logData: LogItem[]
+  logData: LogItem[],
+  totalRenderTime: number[]
 ) => {
   const allDataSetName = Object.keys(allData);
   const dataSets = allDataSetName.map((datasetName) => {
     return {
       data: allData[datasetName],
       label: datasetName,
+      totalRenderTime: totalRenderTime,
       borderWidth: 1,
       ...colors[datasetName as keyof typeof colors],
       stack: 'stack1',
@@ -235,70 +237,3 @@ export const createDatasetForGraph = (
   };
   return data;
 };
-
-const customHighlightPlugin: Plugin = {
-  id: 'highlightBars',
-  beforeDraw: (chart) => {
-    const ctx = chart.ctx;
-    const datasets = chart.data.datasets;
-    const indicesToHighlight = [1, 5, 10]; // Indices of bars you want to highlight
-    const glowColor = 'rgba(255, 99, 132, 0.8)'; // The color of the glow
-
-    // Loop through indices to highlight
-    indicesToHighlight.forEach((index) => {
-      let highestY = chart.chartArea.bottom; // Track the top bar in the stack
-      let barWidth = 0; // Track bar width for the top bar
-      let barColor: string | undefined;
-
-      // Loop through datasets to find the top bar at the given index
-      datasets.forEach((dataset, datasetIndex) => {
-        const meta = chart.getDatasetMeta(datasetIndex);
-        const bar = meta.data[index]; // Get the bar at the current index
-
-        if (bar) {
-          const properties = bar.getProps(['x', 'y', 'width', 'height'], true); // Get the bar properties
-
-          // Update highestY, barWidth, and barColor for the topmost bar
-          if (properties.y < highestY) {
-            highestY = properties.y; // Top of the stack
-            barWidth = properties.width + 2; // Use the bar's width property
-            if (Array.isArray(dataset.backgroundColor)) {
-              barColor = dataset.backgroundColor[index] as string;
-            } else {
-              barColor = dataset.backgroundColor as string;
-            }
-          }
-        }
-      });
-
-      if (barColor && barWidth > 0) {
-        // Apply glow to the top bar in the stack
-        ctx.shadowColor = glowColor;
-        ctx.shadowBlur = 6; // Adjust this for a tighter glow
-        ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = 0;
-
-        // Draw the glow for the top bar
-        const meta = chart.getDatasetMeta(0); // Use the first dataset for x-coordinates
-        const bar = meta.data[index];
-        const properties = bar?.getProps(['x', 'y'], true) || { x: 0, y: 0 };
-
-        ctx.fillStyle = barColor;
-        ctx.fillRect(
-          properties.x - barWidth / 2,
-          highestY,
-          barWidth,
-          chart.chartArea.bottom - highestY
-        );
-
-        // Reset shadow settings
-        ctx.shadowColor = 'transparent';
-        ctx.shadowBlur = 0;
-        ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = 0;
-      }
-    });
-  },
-};
-
-Chart.register(customHighlightPlugin);

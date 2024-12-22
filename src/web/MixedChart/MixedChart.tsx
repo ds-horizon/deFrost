@@ -39,12 +39,19 @@ const MixedChart = ({
   reactEvents,
   logtEvents,
 }: MixedChartType) => {
-  const { allData, labels, reactData, logData } = formatDataForGraph({
-    csvData,
-    reactEvents,
-    logtEvents,
-  });
-  const data = createDatasetForGraph(allData, labels, reactData, logData);
+  const { allData, labels, reactData, logData, totalRenderTime } =
+    formatDataForGraph({
+      csvData,
+      reactEvents,
+      logtEvents,
+    });
+  const data = createDatasetForGraph(
+    allData,
+    labels,
+    reactData,
+    logData,
+    totalRenderTime
+  );
 
   const handleOnClick = (
     _: React.MouseEvent,
