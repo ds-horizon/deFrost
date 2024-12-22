@@ -5,7 +5,7 @@ import com.facebook.react.bridge.ReadableMapKeySetIterator;
 
 public class ReadableMapUtils {
 
-    public static String readableMapToString(ReadableMap readableMap) {
+    public static String readableMapToJSONString(ReadableMap readableMap) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("{\n");
         String indent = "  ";

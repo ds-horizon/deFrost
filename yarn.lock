@@ -1862,7 +1862,8 @@ __metadata:
     babel-loader: ^8.2.5
     chart.js: 4.4.3
     chartjs-plugin-annotation: 3.0.1
-    chartjs-plugin-zoom: 2.0.1
+    chartjs-plugin-zoom: 2.2.0
+    commander: ^12.1.0
     commitlint: ^17.0.2
     css-loader: 7.1.2
     del-cli: ^5.1.0
@@ -1890,9 +1891,7 @@ __metadata:
     react: "*"
     react-native: "*"
   bin:
-    defrost-create-build: ./src/scripts/patchPackageScript.js
-    defrost-record: ./src/scripts/recordAdbScript.js
-    defrost-show-web: ./src/scripts/showWeb.js
+    defrost: ./src/scripts/commander.js
   languageName: unknown
   linkType: soft
 
@@ -3411,6 +3410,13 @@ __metadata:
   dependencies:
     "@types/node": "*"
   checksum: 79d746a8f053954bba36bd3d94a90c78de995d126289d656fb3271dd9f1229d33f678da04d10bce6be440494a5a73438e2e363e92802d16b8315b051036c5256
+  languageName: node
+  linkType: hard
+
+"@types/hammerjs@npm:^2.0.45":
+  version: 2.0.46
+  resolution: "@types/hammerjs@npm:2.0.46"
+  checksum: caba6ec788d19905c71092670b58514b3d1f5eee5382bf9205e8df688d51e7857b7994e2dd7aed57fac8977bdf0e456d67fbaf23440a4385b8ce25fe2af1ec39
   languageName: node
   linkType: hard
 
@@ -5088,14 +5094,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chartjs-plugin-zoom@npm:2.0.1":
-  version: 2.0.1
-  resolution: "chartjs-plugin-zoom@npm:2.0.1"
+"chartjs-plugin-zoom@npm:2.2.0":
+  version: 2.2.0
+  resolution: "chartjs-plugin-zoom@npm:2.2.0"
   dependencies:
+    "@types/hammerjs": ^2.0.45
     hammerjs: ^2.0.8
   peerDependencies:
     chart.js: ">=3.2.0"
-  checksum: c0ca5ae475bc3c7263e471258a7f16bd3d92c3642ded1395aeb841c9710d5af83e80410aa5e34869c4a1a5cc3899a166aec06a59bf9ecfda85f564618528b286
+  checksum: a540e3834082eeb4dedb5ec6ca381f94d7e101075c19a7b65f2a4cd2d12685b3a416e718c9cf7145799802874fb397f69b71a955dfc56b035946cde4d1eb6c8e
   languageName: node
   linkType: hard
 
@@ -5344,6 +5351,13 @@ __metadata:
   version: 10.0.1
   resolution: "commander@npm:10.0.1"
   checksum: 436901d64a818295803c1996cd856621a74f30b9f9e28a588e726b2b1670665bccd7c1a77007ebf328729f0139838a88a19265858a0fa7a8728c4656796db948
+  languageName: node
+  linkType: hard
+
+"commander@npm:^12.1.0":
+  version: 12.1.0
+  resolution: "commander@npm:12.1.0"
+  checksum: 68e9818b00fc1ed9cdab9eb16905551c2b768a317ae69a5e3c43924c2b20ac9bb65b27e1cab36aeda7b6496376d4da908996ba2c0b5d79463e0fb1e77935d514
   languageName: node
   linkType: hard
 

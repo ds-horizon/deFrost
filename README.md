@@ -21,7 +21,7 @@ yarn add @d11/defrost
 
 ## Setup
 
-Before using the package, you need to configure your Android device for debugging and profiling.
+Before using the package, you need to configure your Android device(Android version < 14) for debugging and profiling.
 
 ### 1. Enable USB Debugging
 
@@ -59,7 +59,7 @@ If your device is listed, you're good to go.
 
 ## Commands
 
-### 1. `yarn defrost-create-build`
+### 1. `yarn defrost create-build`
 
 This command prepares the APK with the necessary code to report React commit data. It takes two parameters:
 
@@ -69,7 +69,7 @@ This command prepares the APK with the necessary code to report React commit dat
 **Usage**:
 
 ```sh
-yarn defrost-create-build -f <flavor> -v <variant>
+yarn defrost create-build -f <flavor> -v <variant>
 ```
 
 This will:
@@ -77,7 +77,7 @@ This will:
 - Add the code for reporting React commits.
 - Generate the APK and store it in a folder named `ff-build` in your project directory.
 
-### 2. `yarn defrost-record`
+### 2. `yarn defrost record`
 
 This command records the frame data from the APK running on your connected device and extracts React commit information. It will dump the data as a CSV file in the `data` folder on your laptop.
 
@@ -86,21 +86,21 @@ You need to connect your mobile device to your laptop using ADB (Android Debug B
 **Usage**:
 
 ```sh
-yarn defrost-record -p <package-name>
+yarn defrost record -p <package-name>
 ```
 
 Where:
 
 - `-p`: The package name of the app you want to record data from (e.g., `com.example.myapp`). Default value: `""`.
 
-### 3. `yarn show-web`
+### 3. `yarn defrost show-dashboard`
 
 This command opens a web dashboard where you can visualize the frame data and React commit information. You need to specify the location of the data folder where the recorded data is stored.
 
 **Usage**:
 
 ```sh
-yarn show-web -d <data-folder-location>
+yarn defrost show-dashboard -d <data-folder-location>
 ```
 
 Where:
@@ -111,12 +111,12 @@ Where:
 
 The purpose of this npm package, `@d11/defrost`, is to help you **detect and analyze frozen frames** in your mobile application. This package is divided into two main parts: **extraction of frozen frame data** and **visualization** of that data.
 
-### Step 1: Prepare the APK with the Necessary Code (`yarn defrost-create-build`)
+### Step 1: Prepare the APK with the Necessary Code (`yarn defrost create-build`)
 
 The first step is to **add code to your APK that can report React commit data**, which is essential for detecting frozen frames. This is achieved by running the following command:
 
 ```sh
-yarn defrost-create-build -f <flavor> -v <variant>
+yarn defrost create-build -f <flavor> -v <variant>
 ```
 
 - `-f`: Specifies the flavor of the APK (e.g., `staging`, `prod`, etc.).
@@ -127,15 +127,14 @@ When this command is executed, it **modifies the APK code** to include tracking 
 **Why this is important**: React commit data helps correlate frame rendering with the changes made in the React component tree. This allows us to identify any discrepancies or delays in rendering that might lead to frozen frames.
 
 ### Step 2: Install APK on a Mobile Device and Connect via ADB
+Once the APK is generated, **install it on your mobile device**. After installation, allow Files and Media permissions to ensure the app can save logs and data for analysis. After this, you need to **connect the mobile device to your laptop via ADB (Android Debug Bridge)**. This is done to allow the laptop to interact with the mobile device and record relevant data during the app's execution.
 
-Once the APK is generated, **install it on your mobile device**. After installation, you need to **connect the mobile device to your laptop via ADB (Android Debug Bridge)**. This is done to allow the laptop to interact with the mobile device and record relevant data during the app's execution.
-
-### Step 3: Record Frame and React Commit Data (`yarn defrost-record`)
+### Step 3: Record Frame and React Commit Data (`yarn defrost record`)
 
 Now that the APK is installed and the device is connected, it's time to capture the frame rendering data and React commit information. This is done using the following command:
 
 ```sh
-yarn defrost-record -p <package-name>
+yarn defrost record -p <package-name>
 ```
 
 - `-p`: The package name of the app you want to record data from (e.g., `com.example.myapp`).
@@ -147,14 +146,14 @@ This command does the following:
 
 Both the frame data and React commit information are **dumped into a `data` folder** on your laptop in CSV format. This data will be the foundation for visualizing frame performance and analyzing any issues related to frozen frames.
 
-**Why this is important**: The `yarn defrost-record` command gives us all the raw data we need to analyze frame rendering behavior and correlate it with React component rendering. This is key to identifying and diagnosing frozen frames or UI performance issues in the app.
+**Why this is important**: The `yarn defrost record` command gives us all the raw data we need to analyze frame rendering behavior and correlate it with React component rendering. This is key to identifying and diagnosing frozen frames or UI performance issues in the app.
 
-### Step 4: Visualize the Data (`yarn show-web`)
+### Step 4: Visualize the Data (`yarn defrost show-dashboard`)
 
 Finally, after collecting all the frame and React commit data, you need a way to **visualize** it in an interactive and user-friendly manner. This is achieved using the following command:
 
 ```sh
-yarn show-web -d <data-folder-location>
+yarn defrost show-dashboard -d <data-folder-location>
 ```
 
 - `-d`: The directory where the frame data and React commit information have been dumped (the `data` folder).
@@ -170,13 +169,13 @@ Let’s walk through an example of how this package can be used in practice:
 1. **Create the APK**: You start by generating an APK that has React commit tracking code added:
 
    ```sh
-   yarn defrost-create-build -f Staging -v Release
+   yarn defrost create-build -f Staging -v Release
    ```
 
-2. **Record Frame and React Data**: Once the APK is ready and installed on your device, you can begin recording frame and React commit data:
+2. **Record Frame and React Data**: Once the APK is ready, installed on your device and all permissions given, you can begin recording frame and React commit data:
 
    ```sh
-   yarn defrost-record -p com.example.myapp
+   yarn defrost record -p com.example.myapp
    ```
 
    This will start recording and will dump the data into the `data` folder.
@@ -184,7 +183,7 @@ Let’s walk through an example of how this package can be used in practice:
 3. **Visualize the Data**: Finally, you can open the web dashboard to analyze the data and identify any potential frozen frames:
 
    ```sh
-   yarn show-web -d ./data
+   yarn defrost show-dashboard -d ./data
    ```
 
 ---
@@ -194,7 +193,7 @@ Let’s walk through an example of how this package can be used in practice:
 - **Node.js**: v12 or higher.
 - **Yarn**: For managing dependencies and running the commands.
 - **ADB**: Ensure that your mobile device is connected and recognized via ADB for recording the frame data.
-- **Android Device**: For installing and testing the APK. USB debugging must be enabled.
+- **Android Device**: For installing and testing the APK. USB debugging must be enabled. Android version should be less that 14
 
 ## Other Documents
 

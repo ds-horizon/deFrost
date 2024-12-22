@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Modal from 'react-modal';
 import './Modal.css';
 import Dropdown from '../Dropdown/Dropdown';
-import type { ModalDataType } from '../utils';
+import type { ModalDataType } from '../AppInterface';
 
 const ModalDescription = ({
   modalIsOpen,
@@ -13,25 +13,22 @@ const ModalDescription = ({
   modalData: ModalDataType[];
   setModalIsOpen: (value: boolean) => void;
 }) => {
-  const [state, setState] = useState(0);
-  const componentString: string[] = [];
-  let options: string[] = [];
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const componentList: string[] = [];
   let onSelect = (element: string) => {
     const index = options.indexOf(element);
     if (index >= 0) {
-      setState(index);
+      setSelectedIndex(index);
     }
   };
-  if (modalData.length > 0) {
-    options = modalData.map((ele) => {
-      return ele.label || '';
-    });
-    modalData[state]?.data?.forEach((component) => {
-      componentString.push(component.componentName || '');
-    });
-  }
+  const options = modalData.map((ele) => {
+    return ele.label || '';
+  });
+  modalData[selectedIndex]?.data?.forEach((component) => {
+    componentList.push(component.componentName || '');
+  });
   const onClose = () => {
-    setState(0);
+    setSelectedIndex(0);
     setModalIsOpen(false);
   };
   return (
@@ -52,11 +49,11 @@ const ModalDescription = ({
       <div className="modal-body">
         {modalData.length > 0 ? (
           <div>
-            <div className="title">{`Component Name - ${modalData[state]?.label}`}</div>
+            <div className="title">{`Component Name - ${modalData[selectedIndex]?.label}`}</div>
             <div className="list-of-components">
               <p>{`List of Components - [`}</p>
               <div className="margin10">
-                {componentString.reverse().map((compStr: string) => {
+                {componentList.reverse().map((compStr: string) => {
                   return (
                     <>
                       {compStr ? compStr : 'Unable to find name'} <br />

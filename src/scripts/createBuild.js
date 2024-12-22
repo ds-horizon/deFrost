@@ -3,8 +3,6 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-const args = process.argv.slice(2);
-
 let flavour = '';
 let variant = 'Debug';
 let oldBabelConfig = null;
@@ -150,37 +148,31 @@ const cleanUp = () => {
   execSync(envVariable);
 };
 
-for (let i = 0; i < args.length; i++) {
-  if (args[i] === '-f' || args[i] === '--flavour') {
-    flavour = capitalizeFirstLetter(args[i + 1]);
-    i++;
-  } else if (args[i] === '-v' || args[i] === '--variant') {
-    variant = capitalizeFirstLetter(args[i + 1]);
-    i++;
-  }
-}
-
-try {
-  console.log(
-    '-----------------Checking and Installing PatchPackage: Start -------------'
-  );
-  checkAndInstallPatchPackage();
-  console.log(
-    '-----------------Checking and Installing PatchPackage: Done -------------'
-  );
-  console.log('-----------------Applying RN Patch: Start -------------');
-  moveReactNativePatch();
-  console.log('-----------------Applying RN Patch: Done -------------');
-  console.log(
-    '-----------------Applying Babel Plugin for memo: Start -------------'
-  );
-  addBabelPlugin();
-  console.log(
-    '-----------------Applying Babel Plugin for memo: Done -------------'
-  );
-  console.log('-----------------Creating the build: Start -------------');
-  createBuild();
-  console.log('-----------------Creating the build: Done -------------');
-} catch (ex) {}
-
-cleanUp();
+const configureAndBuildProject = (flavourLocal, variantLocal) => {
+  try {
+    flavour = capitalizeFirstLetter(flavourLocal);
+    variant = capitalizeFirstLetter(variantLocal);
+    console.log(
+      '-----------------Checking and Installing PatchPackage: Start -------------'
+    );
+    checkAndInstallPatchPackage();
+    console.log(
+      '-----------------Checking and Installing PatchPackage: Done -------------'
+    );
+    console.log('-----------------Applying RN Patch: Start -------------');
+    moveReactNativePatch();
+    console.log('-----------------Applying RN Patch: Done -------------');
+    console.log(
+      '-----------------Applying Babel Plugin for memo: Start -------------'
+    );
+    addBabelPlugin();
+    console.log(
+      '-----------------Applying Babel Plugin for memo: Done -------------'
+    );
+    console.log('-----------------Creating the build: Start -------------');
+    createBuild();
+    console.log('-----------------Creating the build: Done -------------');
+  } catch (ex) {}
+  cleanUp();
+};
+module.exports = { configureAndBuildProject };
