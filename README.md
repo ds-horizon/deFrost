@@ -14,9 +14,9 @@ A powerful npm package to help you detect and analyze frozen frames in your mobi
 To install the package, use npm or yarn:
 
 ```sh
-npm install @d11/defrost
+npm install @d11/de-frost
 # or
-yarn add @d11/defrost
+yarn add @d11/de-frost
 ```
 
 ## Setup
