@@ -87,12 +87,44 @@ const checkAndInstallPatchPackage = () => {
   }
 };
 
-const moveReactNativePatch = () => {
-  const nodeModulesPath = path.resolve(process.cwd(), 'node_modules');
-  const patchLocation = path.resolve(
-    nodeModulesPath,
-    '@d11/de-frost/src/patches/react-native+0.72.5.patch'
+const getReactNativeVersion = () => {
+  const packageJSONPath = path.resolve(process.cwd(), 'package.json');
+  const packageJson = require(packageJSONPath);
+  const reactNativeVersion = packageJson.dependencies['react-native'];
+  return reactNativeVersion;
+};
+
+const getReactNativePatchPath = (reactNativeVersion) => {
+  const reactNativeMajorVersion = +reactNativeVersion.split('.')[1];
+  const patchesDirPath = path.resolve(
+    process.cwd(),
+    'node_modules/@d11/de-frost/src/patches'
   );
+  const patchesList = fs.readdirSync(patchesDirPath);
+  let currentPatchName = '';
+  let currentPatchVersion = Number.MAX_SAFE_INTEGER;
+  patchesList.forEach((patch, index) => {
+    const patchVersion = +patch.split('.')[1];
+    if (
+      patchVersion >= reactNativeMajorVersion &&
+      currentPatchVersion > patchVersion
+    ) {
+      currentPatchName = patch;
+      currentPatchVersion = patchVersion;
+    }
+  });
+
+  if (currentPatchName === '') {
+    console.log(
+      'Sorry currently Defrost does not support this React Native version'
+    );
+  }
+  return path.resolve(patchesDirPath, currentPatchName);
+};
+
+const moveReactNativePatch = () => {
+  const rnversion = getReactNativeVersion();
+  const patchLocation = getReactNativePatchPath(rnversion);
   const mainPatchLocation = path.resolve(process.cwd(), 'patches');
 
   if (!fs.existsSync(mainPatchLocation)) {
