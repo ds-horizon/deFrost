@@ -21,7 +21,7 @@ yarn add @d11/de-frost
 
 ## Setup
 
-Before using the package, you need to configure your Android device(Android version < 14) for debugging and profiling.
+Before using the package, you need to configure your Android device(Android version < 12) for debugging and profiling.
 
 ### 1. Enable USB Debugging
 
