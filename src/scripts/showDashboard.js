@@ -10,12 +10,13 @@ const folderPath = path.resolve(
 );
 let dataPath = '';
 const buildWebCommand = `cd ${folderPath} && npx http-server -c-1`;
-
-const webPath = path.resolve(folderPath, 'web/');
+const webPath = path.resolve(folderPath, 'data/');
+const removeOldData = `rm -rf ${webPath}`;
 const setupAndBuildWeb = (directoryLocal) => {
   dataPath = directoryLocal;
   if (dataPath) {
     const copyDataToWeb = `cp -r ${dataPath} ${webPath}`;
+    runCommandWithOutput(removeOldData);
     runCommandWithOutput(copyDataToWeb);
   }
 
