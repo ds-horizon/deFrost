@@ -5,8 +5,12 @@ const path = require('path');
 
 const reactFilePath = path.join(__dirname, './data/reactCommits.txt');
 const userLogsFilePath = path.join(__dirname, './data/userLogs.txt');
+const options = {
+  key: fs.readFileSync(path.join(__dirname, './credentials/server.key')),
+  cert: fs.readFileSync(path.join(__dirname, './credentials/server.cert')),
+};
 
-const server = http.createServer((req, res) => {
+const server = http.createServer(options, (req, res) => {
   if (req.method === 'POST' && req.url === '/react-commits') {
     let body = '';
     req.on('data', (chunk) => {
@@ -16,6 +20,10 @@ const server = http.createServer((req, res) => {
       const logData = body;
       const filePath =
         req.url === '/react-commits' ? reactFilePath : userLogsFilePath;
+      const dir = path.dirname(filePath);
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
       fs.appendFile(filePath, logData, (err) => {
         if (err) {
           console.error('Failed to write to file:', err);
@@ -23,7 +31,7 @@ const server = http.createServer((req, res) => {
           res.end('Internal Server Error');
           return;
         }
-        console.log('Request logged:', logData.trim());
+        parentPort.postMessage('Request logged:', logData.trim());
         res.writeHead(200, { 'Content-Type': 'text/plain' });
         res.end('Request logged successfully');
       });
@@ -35,6 +43,5 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(3001, () => {
-  console.log('Server running on http://localhost:3001');
-  parentPort.postMessage('Server started on http://localhost:3001');
+  parentPort.postMessage('Server running on http://localhost:3001');
 });
