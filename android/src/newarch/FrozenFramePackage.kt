@@ -8,7 +8,7 @@ import com.facebook.react.module.model.ReactModuleInfoProvider
 
 
 class FrozenFramePackage : TurboReactPackage() {
-    override fun getModule(name: String?, reactContext: ReactApplicationContext): NativeModule? {
+    override fun getModule(name: String, reactContext: ReactApplicationContext): NativeModule? {
         return if (name.equals(FrozenFrameModule.NAME)) {
             if (BuildConfig.defrost_enable) {
                 FrozenFrameModule(reactContext);
