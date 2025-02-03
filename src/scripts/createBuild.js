@@ -142,14 +142,10 @@ const createBuild = () => {
 
   execSync('yarn patch-package', { stdio: 'inherit' });
 
-  try {
-    execSync(
-      `cd android && ${envVariable} && ./gradlew app:assemble${flavour}${variant} && cd ..`,
-      { stdio: 'inherit' }
-    );
-  } catch (e) {
-    console.log('-----------------e', e);
-  }
+  execSync(
+    `cd android && ${envVariable} && ./gradlew app:assemble${flavour}${variant} && cd ..`,
+    { stdio: 'inherit' }
+  );
 
   try {
     execSync('mkdir ff_apks');
