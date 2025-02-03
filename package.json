@@ -37,8 +37,8 @@
     "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build lib",
     "prepare": "bob build",
     "release": "release-it",
-    "create-build": "node src/scripts/patchPackageScript.js",
-    "record": "node src/scripts/recordAdbScript.js",
+    "create-build": "node src/scripts/createBuild.js",
+    "record": "node src/scripts/record.js",
     "web": "webpack serve --mode production --config webpack.config.js",
     "build-web": "webpack --mode production --config webpack.config.js"
   },
@@ -213,5 +213,6 @@
     "type": "module-mixed",
     "languages": "kotlin-swift",
     "version": "0.40.0"
-  }
+  },
+  "packageManager": "yarn@3.6.1"
 }
