@@ -101,25 +101,19 @@ const getReactNativePatchPath = (reactNativeVersion) => {
     'node_modules/@d11/de-frost/src/patches'
   );
   const patchesList = fs.readdirSync(patchesDirPath);
-  let currentPatchName = '';
-  let currentPatchVersion = Number.MAX_SAFE_INTEGER;
+  const patchDistance = [];
   patchesList.forEach((patch, index) => {
     const patchVersion = +patch.split('.')[1];
-    if (
-      patchVersion >= reactNativeMajorVersion &&
-      currentPatchVersion > patchVersion
-    ) {
-      currentPatchName = patch;
-      currentPatchVersion = patchVersion;
-    }
+    patchDistance.push({
+      patchName: patch,
+      distance: Math.abs(patchVersion - reactNativeMajorVersion),
+    });
   });
-
-  if (currentPatchName === '') {
-    console.log(
-      'Sorry currently Defrost does not support this React Native version'
-    );
-  }
-  return path.resolve(patchesDirPath, currentPatchName);
+  const minimumPatchDistance = patchDistance.reduce(
+    (min, item) => (item.distance <= min.distance ? item : min),
+    patchDistance[0]
+  );
+  return path.resolve(patchesDirPath, minimumPatchDistance.patchName);
 };
 
 const moveReactNativePatch = () => {
@@ -147,10 +141,15 @@ const createBuild = () => {
   const envVariable = `export DEFROST_ENABLE=true`;
 
   execSync('yarn patch-package', { stdio: 'inherit' });
-  execSync(
-    `cd android && ${envVariable} && ./gradlew app:assemble${flavour}${variant} && cd ..`,
-    { stdio: 'inherit' }
-  );
+
+  try {
+    execSync(
+      `cd android && ${envVariable} && ./gradlew app:assemble${flavour}${variant} && cd ..`,
+      { stdio: 'inherit' }
+    );
+  } catch (e) {
+    console.log('-----------------e', e);
+  }
 
   try {
     execSync('mkdir ff_apks');
