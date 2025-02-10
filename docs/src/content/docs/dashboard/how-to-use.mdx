@@ -1,0 +1,33 @@
+---
+title: 'How to Identify Problems'
+sidebar:
+  order: 4
+---
+
+import { Steps } from "@astrojs/starlight/components";
+
+## Identifying Performance Problems with De-frost
+
+Follow these steps to detect bottlenecks using the De-frost dashboard:
+
+<Steps>
+1. **Analyze the Bar Graph**:
+   - Locate frames where total rendering time crosses the **red threshold (700ms)**.
+   - Identify which segments (e.g., layout or animation) consume the most time.
+
+2. **Examine React Commit Scatter Points**:
+   - Look for scatter points overlapping with frozen frames.
+   - Identify React components responsible for the delays.
+
+3. **Inspect the Pop-Up Details**:
+   - Click scatter points to reveal the affected components.
+   - Use this data to trace React updates causing performance degradation.
+
+4. **Take Action**:
+   - Optimize React components or rendering pipeline stages contributing to frozen frames.
+   - Repeat the process after changes to measure improvements.
+</Steps>
+
+---
+
+This structure creates a clear separation between the **overview**, **bar graph**, **React Native commits**, and the actionable **problem identification**. Each document uses Astro's components to enhance readability and interactivity.

@@ -1,0 +1,35 @@
+---
+title: 'React Native Commits'
+sidebar:
+  order: 3
+---
+
+import { Steps, Aside } from "@astrojs/starlight/components";
+import reactCommitLabels from "../../../assets/react-commits-label.png";
+import popup from "../../../assets/popup.png";
+
+The scatter plot overlays React commit events on the bar graph, providing insights into how React updates affect frame rendering performance.
+
+### Features
+
+- **Scatter Points**:  
+   When you hover over scatter points on the graph, you will see labels like this:  
+   <img src={reactCommitLabels.src} alt="React commit labels" />  
+
+   These labels display the names of components where state changes occurred in React Native. The state changes signify the starting point of a re-render. All these state changes happen between the previous and next frames in Android. Clicking on a scatter point will open a detailed pop-up.
+
+- **Pop-Up**:  
+   <div style="display: flex; align-items: start; gap: 16px;">
+      <img src={popup.src} alt="Pop-up example" style="height: 300px;" />  
+      <div>
+        <p>A pop-up appears as shown on the left. This pop-up provides detailed information, including:</p>
+        <ul>
+          <li><b>Component Name</b>: The name of the component where the state change originated, initiating the re-render.</li>
+          <li><b>List of Affected Components</b>: A list of child components impacted by the state change in the originating component.</li>
+        </ul>
+      </div>
+   </div>
+
+<Aside>
+  Scatter points help identify React updates that contribute to high frame rendering times.
+</Aside>
