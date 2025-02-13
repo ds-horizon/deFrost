@@ -79,3 +79,5 @@ lib/
 data*/ 
 dist
 web/data
+
+docs/node_modules

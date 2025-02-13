@@ -168,7 +168,8 @@
   },
   "eslintIgnore": [
     "node_modules/",
-    "lib/"
+    "lib/",
+    "docs/"
   ],
   "prettier": {
     "quoteProps": "consistent",
@@ -215,5 +216,5 @@
     "languages": "kotlin-swift",
     "version": "0.40.0"
   },
-  "packageManager": "yarn@3.6.1"
+  "packageManager": "yarn@4.6.0"
 }
