@@ -1,7 +1,10 @@
 package com.frozenframe;
 
+import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableMapKeySetIterator;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class ReadableMapUtils {
 
@@ -18,7 +21,7 @@ public class ReadableMapUtils {
     private static void addMapToStringBuilder(ReadableMap readableMap, StringBuilder stringBuilder, String indent, String currentIndent) {
         ReadableMapKeySetIterator iterator = readableMap.keySetIterator();
         while (iterator.hasNextKey()) {
-            Boolean useValueString = true;
+            boolean useValueString = true;
             String key = iterator.nextKey();
             String valueString;
             switch (readableMap.getType(key)) {
@@ -32,14 +35,19 @@ public class ReadableMapUtils {
                     valueString = String.valueOf(readableMap.getDouble(key));
                     break;
                 case String:
-                    valueString = "\"" + readableMap.getString(key) + "\"";
+                    String stringValue = readableMap.getString(key);
+                    if (isValidJSON(stringValue)) {
+                        valueString = stringValue;
+                    } else {
+                        valueString = "\"" + stringValue + "\"";
+                    }
                     break;
                 case Map:
                     stringBuilder.append(currentIndent).append(indent).append("\"").append(key).append("\": {\n");
                     addMapToStringBuilder(readableMap.getMap(key), stringBuilder, indent, currentIndent + indent);
                     valueString = "";
                     useValueString = false;
-                    stringBuilder.append(currentIndent).append(indent).append("}\n");
+                    stringBuilder.append(currentIndent).append(indent).append("}");
                     break;
                 case Array:
                     stringBuilder.append(currentIndent).append(indent).append("\"").append(key).append("\": [\n");
@@ -53,12 +61,11 @@ public class ReadableMapUtils {
                         }
                     }
                     useValueString = false;
-                    stringBuilder.append(currentIndent).append(indent).append("]\n");
+                    stringBuilder.append(currentIndent).append(indent).append("]");
                     valueString = "";
                     break;
                 default:
-                    // Handle other types if needed
-                    valueString = "";
+                    valueString = ""; 
             }
             if (useValueString) {
                 stringBuilder.append(currentIndent).append(indent).append("\"").append(key).append("\": ").append(valueString);
@@ -67,6 +74,23 @@ public class ReadableMapUtils {
                 stringBuilder.append(",");
             }
             stringBuilder.append("\n");
+        }
+    }
+
+    private static boolean isValidJSON(String value) {
+        if (value == null) {
+            return false;
+        }
+        try {
+            new JSONObject(value);
+            return true;
+        } catch (JSONException ex) {
+            try {
+                new org.json.JSONArray(value);
+                return true;
+            } catch (JSONException ex2) {
+                return false;
+            }
         }
     }
 }
