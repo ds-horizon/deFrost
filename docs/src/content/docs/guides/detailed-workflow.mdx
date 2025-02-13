@@ -1,0 +1,98 @@
+---
+title: 'Defrost Workflow'
+sidebar:
+  order: 2
+---
+
+import { Steps, Code, Tabs, TabItem } from "@astrojs/starlight/components";
+
+The npm package `@d11/defrost` helps you **detect and analyze frozen frames** in mobile applications by combining data extraction and visualization.
+
+### Step 1: Prepare the APK
+
+Generate an APK with embedded tracking for React commit data using:
+
+```sh frame=none
+yarn defrost create-build -f `<flavor>` -v `<variant>`
+```
+
+**Flags:**
+- `-f`: Specifies the APK flavor (e.g., `staging`, `prod`).
+- `-v`: Specifies the APK variant (e.g., `debug`, `release`).
+
+The modified APK is saved in the `ff-build` folder of your project.
+
+> **Why?** React commit data correlates UI updates with frame rendering, offering insights into frozen frames.
+
+---
+
+### Step 2: Install the APK and Connect via ADB
+
+1. Install the modified APK on your Android device.
+2. Grant **Files and Media permissions** for logging.
+3. Connect the device to your computer using **ADB (Android Debug Bridge)**.
+
+> **Why?** These steps enable your app to capture and transfer performance data for analysis.
+
+---
+
+### Step 3: Record Frame and React Commit Data
+
+Capture data with:
+
+```sh frame=none
+yarn defrost record -p `<package-name>`
+```
+
+**Flags:**
+- `-p`: The package name of your app (e.g., `com.example.myapp`).
+
+This command:
+- Records **frame rendering data**, showing timings for each rendering stage.
+- Captures **React commit data**, linking component updates to frames.
+
+The data is saved in a `data` folder in CSV format.
+
+> **Why?** This step generates raw data to analyze bottlenecks, frozen frames, and React updates.
+
+---
+
+### Step 4: Visualize the Data
+
+Launch the dashboard with:
+
+```sh frame=none
+yarn defrost show-dashboard -d `<data-folder-location>`
+```
+
+**Flags:**
+- `-d`: Specifies the directory containing the data (default: `data` folder).
+
+The dashboard features:
+- **Bar graphs** of frame rendering times, segmented by pipeline stages.
+- **Scatter plots** of React commits, correlating them with frames.
+- **Interactive details** for frames and React commit events.
+
+> **Why?** The visualization makes it easier to identify trends, frozen frames, and performance issues.
+
+---
+
+### Summary Workflow
+
+
+1. Create an APK with tracking enabled:
+   ```sh frame=none
+   yarn defrost create-build -f `<flavor>` -v `<variant>`
+   ```
+2. Install the APK, connect via ADB, and start the app.
+3. Record frame and React commit data:
+   ```sh frame=none
+   yarn defrost record -p `<package-name>`
+   ```
+4. Visualize the data:
+   ```sh frame=none
+   yarn defrost show-dashboard -d `<data-folder-location>`
+   ```
+
+
+By following these steps, you can effectively **detect frozen frames**, pinpoint their root causes, and optimize your app’s performance.

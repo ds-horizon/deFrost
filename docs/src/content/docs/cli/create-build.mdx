@@ -1,0 +1,36 @@
+---
+title: "Create Build"
+sidebar:
+  order: 0
+---
+
+This command generates an APK with integrated React commit tracking and necessary instrumentation for capturing performance data, enabling the analysis of frozen frames and rendering behavior in your mobile app.
+This will:
+  - Add the code for reporting React commits.
+  - Generate the APK and store it in a folder named `ff-build` in your project directory.
+
+```bash frame="none"
+yarn defrost create-build --help
+```
+
+```bash frame="none"
+Usage: @d11/defrost create-build [options]
+
+Create a build with React commit data tracking for the specified APK flavour and variant
+
+Options:
+  -f, --flavour <flavour>  Specify the flavour of the APK (e.g., staging, prod) (default: "")
+  -v, --variant <variant>  Specify the variant of the APK (e.g., debug, release) (default: "debug")
+  -h, --help               display help for command
+```
+
+### Options
+
+- `--flavour <flavour>`: Specify the flavour of the APK which will be generated (e.g., staging, prod) (default: "") (optional)
+- `--variant <package>`:  Specify the variant of the APK (e.g., debug, release)(required).
+
+Example:
+
+```bash frame="none"
+yarn defrost create-build -f proStaging -v Release
+```

@@ -1,0 +1,78 @@
+---
+title: 'Setup Guide'
+sidebar:
+  order: 2
+---
+
+import { Aside } from '@astrojs/starlight/components'
+
+Follow these steps to configure your environment and prepare your Android device for using the `@d11/de-frost` package effectively.
+
+### Step 1: Enable USB Debugging
+
+To allow your laptop to interact with your Android device, you need to enable USB Debugging.
+
+<Aside type="note">
+Make sure your Android device is running a version below **Android 12**, as the package currently supports devices with Android versions less than 12.
+</Aside>
+
+1. Open the **Settings** app on your Android device.
+2. Scroll down and select **About phone**.
+3. Tap **Build number** 7 times to enable **Developer options**. You will see a message indicating that Developer options have been enabled.
+4. Go back to **Settings**, then tap **Developer options**.
+5. Locate and enable the **USB Debugging** option.
+
+---
+
+### Step 2: Enable "Profile HWUI Rendering"
+
+To collect accurate frame rendering data, you need to enable **Profile HWUI Rendering**.
+
+1. Go to **Settings** on your Android device.
+2. Scroll down and tap on **Developer options**.
+3. Find and select **Profile HWUI Rendering**.
+4. A pop-up window will appear with three options:
+   - **Off**
+   - **Screenbars**
+   - **adb shell dumpsys gfxinfo**
+5. Select **adb shell dumpsys gfxinfo**.
+
+<Aside type="tip">
+Selecting **adb shell dumpsys gfxinfo** ensures your device captures detailed frame statistics, which will be used for performance analysis.
+</Aside>
+
+---
+
+### Step 3: Verify ADB Connection
+
+Ensure that your Android device is recognized by ADB (Android Debug Bridge).
+
+1. Connect your Android device to your laptop using a USB cable.
+2. Open a terminal on your laptop and run the following command:
+
+```
+adb devices
+```
+
+3. If your device is recognized, you will see it listed in the terminal output. For example:
+
+```
+List of devices attached
+device-id  device
+```
+
+<Aside type="caution">
+If your device is not listed, check your USB connection, ensure USB Debugging is enabled, and verify that the necessary USB drivers are installed.
+</Aside>
+
+---
+
+### Step 4: Additional Notes
+
+- Grant **Files and Media permissions** to the app after installing the APK for proper logging and data storage.
+- Ensure that your device is prepared for testing with all required configurations completed.
+
+
+---
+
+You're now ready to use the `@d11/de-frost` package! Head over to the **Quick Start** section to begin creating builds and analyzing frozen frames.
