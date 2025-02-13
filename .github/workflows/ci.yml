@@ -153,7 +153,9 @@ jobs:
           pod install
         env:
           NO_FLIPPER: 1
-
+      - name: Install example app dependencies
+        run: |
+          yarn example install
       - name: Build example for iOS
         run: |
           yarn turbo run build:ios --cache-dir="${{ env.TURBO_CACHE_DIR }}"
