@@ -19,7 +19,6 @@
     "*.podspec",
     "!src/web",
     "!ios/build",
-    "!docs",
     "!android/build",
     "!android/gradle",
     "!android/gradlew",
