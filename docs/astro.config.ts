@@ -17,7 +17,8 @@ export default defineConfig({
       title: 'De-frost',
       pagination: true,
       titleDelimiter: '/',
-      description: 'Track and optimize your android app’s frozen frames with ease.',
+      description:
+        'Track and optimize your android app’s frozen frames with ease.',
       logo: {
         dark: './src/assets/logo-dark.svg',
         light: './src/assets/logo-light.svg',
@@ -44,11 +45,7 @@ export default defineConfig({
         },
         {
           label: 'CLI',
-          items: [
-            'cli/create-build',
-            'cli/record',
-            'cli/visualization',
-          ],
+          items: ['cli/create-build', 'cli/record', 'cli/visualization'],
         },
         {
           label: 'Guides',

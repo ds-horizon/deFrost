@@ -168,7 +168,8 @@
   },
   "eslintIgnore": [
     "node_modules/",
-    "lib/"
+    "lib/",
+    "docs/"
   ],
   "prettier": {
     "quoteProps": "consistent",
