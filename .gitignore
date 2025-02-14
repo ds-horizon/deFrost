@@ -81,3 +81,4 @@ dist
 web/data
 
 docs/node_modules
+example/.yarn
