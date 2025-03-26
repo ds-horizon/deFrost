@@ -6,7 +6,7 @@ import tailwind from '@astrojs/tailwind';
 
 import { defineConfig } from 'astro/config';
 
-const SITE = 'https://marco.dreamsportslabs.com';
+const SITE = 'https://deFrost.dreamsportslabs.com';
 
 // https://astro.build/config
 export default defineConfig({
@@ -26,7 +26,7 @@ export default defineConfig({
         replacesTitle: true,
       },
       social: {
-        github: 'https://github.com/dream-sports-labs/marco',
+        github: 'https://github.com/dream-sports-labs/deFrost',
         discord: 'https://discord.gg/RBDPaN2V',
       },
       sidebar: [
