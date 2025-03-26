@@ -95,13 +95,16 @@ const ensureDirectoryExists = (directory) => {
 
 const insertFrameStatsHeaderIndexes = (line) => {
   if (Object.keys(framestatsHeaderIndexes).length > 0) return;
-  const deviceFrameStatsHeader = line.replaceAll(' ', '').split(',');
+  const deviceFrameStatsHeader = line
+    .replaceAll(' ', '')
+    .split(',')
+    .filter((str) => str !== '');
   framestatsHeader.map((value, index) => {
     const newIndex = deviceFrameStatsHeader.indexOf(value);
     if (newIndex != -1) {
       framestatsHeaderIndexes[value] = newIndex;
     } else {
-      throw new Error('values are not found in frame stats');
+      console.log('-------------value', value);
     }
   });
 };
@@ -116,7 +119,6 @@ const frameRecording = (inputString = '') => {
     let draw = 0;
     let sync = 0;
     let gpu = 0;
-
     if (framestats.length >= 16) {
       start =
         (framestats[framestatsHeaderIndexes.HandleInputStart] -
@@ -269,3 +271,4 @@ const collectAndAnalyzePerformanceData = (packageNameLocal) => {
 };
 
 module.exports = { collectAndAnalyzePerformanceData };
+collectAndAnalyzePerformanceData('com.app.dream11staging');
