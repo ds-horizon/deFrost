@@ -4,13 +4,13 @@ import com.facebook.react.bridge.Promise
 import com.facebook.react.bridge.ReadableMap
 
 class FrozenFrameModuleImpl {
-    private var logger: FileLogger = FileLogger()
+    private var logger: NetworkLogger = NetworkLogger()
     fun sendPerformanceEvent(timestamp: String?, event: String?, promise: Promise?){
         try {
             val systemTimeToUptimeMapping: HashMap<String, Long> =
                 TimerSingleton.getInstance().getTimeStampMap()
             val uptimeStamp: Long = (systemTimeToUptimeMapping[timestamp] ?: 0) * 1000000
-            logger.writeToLogFile(uptimeStamp.toString(), event)
+            logger.sendLogs(uptimeStamp.toString(), event)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -22,7 +22,7 @@ class FrozenFrameModuleImpl {
             val systemTimeToUptimeMapping: HashMap<String, Long> =
                 TimerSingleton.getInstance().getTimeStampMap()
             val uptimeStamp: Long = (systemTimeToUptimeMapping[timestamp] ?: 0) * 1000000
-            logger.writeToLogFile(uptimeStamp, tree)
+            logger.sendLogs(uptimeStamp, tree)
         } catch (e: Exception) {
             e.printStackTrace()
         }
