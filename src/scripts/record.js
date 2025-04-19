@@ -4,7 +4,12 @@ const path = require('path');
 const fs = require('fs');
 let packageName = 'com.app.dream11staging';
 
+const port = 3001;
+
+const adbReverseCommand = `adb reverse tcp:${port} tcp:${port}`;
+
 const nodeModulesRepo = './node_modules/@d11/de-frost';
+const serverPath = `${nodeModulesRepo}/src/scripts/record/reactCommitsAndUserLogs.js`;
 const removeData = `rm -rf ./data && rm -rf ${nodeModulesRepo}/web/data`;
 const removeCommand = 'adb shell rm /sdcard/DefrostLog/userLogs.txt';
 const removeCommand2 = 'adb shell rm /sdcard/DefrostLog/reactCommits.txt';
@@ -253,11 +258,23 @@ const removeDataFolderLocal = () => {
   execSync(removeData);
 };
 
+const startNetworkWorker = () => {
+  runCommandWithExceptionHandling(adbReverseCommand);
+  const { Worker } = require('worker_threads');
+  const worker = new Worker(serverPath);
+  worker.on('message', (message) => {
+    console.log('Worker:', message);
+  });
+  return worker;
+};
+
 const collectAndAnalyzePerformanceData = (packageNameLocal) => {
   packageName = packageNameLocal;
+  const worker = startNetworkWorker();
   process.on('SIGINT', () => {
     console.log('Received SIGINT (Ctrl + C)');
     stopTrace();
+    worker.terminate();
     if (flag) writeValuesInFiles();
     flag = false;
     pullDocs();
