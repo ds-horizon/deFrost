@@ -2,7 +2,9 @@
 const { execSync } = require('child_process');
 const path = require('path');
 const fs = require('fs');
+const adbDevice = require('./record/adbDeviceSelection');
 let packageName = 'com.app.dream11staging';
+let selectedId = '';
 
 const port = 3001;
 
@@ -194,7 +196,7 @@ const frameRecording = (inputString = '') => {
 };
 
 const recordFrameRate = (packageName) => {
-  const output = execSync(
+  const output = runCommandWithExceptionHandling(
     `adb shell dumpsys gfxinfo ${packageName} framestats`,
     {
       encoding: 'utf-8',
@@ -215,7 +217,9 @@ const runBashCommandInterval = (intervalSeconds) => {
 };
 
 const startTrace = () => {
-  execSync('adb shell atrace --async_start -c -b 4096 sched gfx view');
+  runCommandWithExceptionHandling(
+    'adb shell atrace --async_start -c -b 4096 sched gfx view'
+  );
 };
 
 const stopTrace = () => {
@@ -226,7 +230,14 @@ const stopTrace = () => {
 
 const runCommandWithExceptionHandling = (command) => {
   try {
-    execSync(command);
+    let finalCommand = '';
+    if (command.includes('adb')) {
+      const restCommand = command.split('adb ')[0];
+      finalCommand = `adb -s ${selectedId} ${restCommand}`;
+    } else {
+      finalCommand = command;
+    }
+    execSync(finalCommand);
   } catch (exception) {
     console.log('Exception occurred while cleanup');
   }
@@ -243,7 +254,7 @@ const pullDocs = () => {
 };
 
 const moveToWebDir = () => {
-  execSync(copyToWeb);
+  runCommandWithExceptionHandling(copyToWeb);
 };
 
 const exitAfterDelay = (delay) => {
@@ -255,7 +266,7 @@ const exitAfterDelay = (delay) => {
 };
 
 const removeDataFolderLocal = () => {
-  execSync(removeData);
+  runCommandWithExceptionHandling(removeData);
 };
 
 const startNetworkWorker = () => {
@@ -268,7 +279,8 @@ const startNetworkWorker = () => {
   return worker;
 };
 
-const collectAndAnalyzePerformanceData = (packageNameLocal) => {
+const collectAndAnalyzePerformanceData = async (packageNameLocal) => {
+  selectedId = await adbDevice.getSelectedID();
   packageName = packageNameLocal;
   const worker = startNetworkWorker();
   process.on('SIGINT', () => {

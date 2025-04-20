@@ -59,14 +59,15 @@ program
     'The package name of the app to record data from (e.g., com.example.myapp)',
     ''
   )
-  .action((cmdObj) => {
+  .action(async (cmdObj) => {
+    console.log('------------reached');
     const { packageName } = cmdObj;
     if (!packageName) {
       console.error('Error: --packageName is required.');
       process.exit(1);
     }
     console.log(`Recording data for package: ${packageName}`);
-    record.collectAndAnalyzePerformanceData(packageName);
+    await record.collectAndAnalyzePerformanceData(packageName);
   });
 
 program
