@@ -288,4 +288,3 @@ const collectAndAnalyzePerformanceData = (packageNameLocal) => {
 };
 
 module.exports = { collectAndAnalyzePerformanceData };
-collectAndAnalyzePerformanceData('com.app.dream11staging');

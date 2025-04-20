@@ -8,6 +8,7 @@ const scriptsPath = path.resolve(
 const createBuild = require(path.resolve(scriptsPath, 'createBuild.js'));
 const record = require(path.resolve(scriptsPath, 'record.js'));
 const showWeb = require(path.resolve(scriptsPath, 'showDashboard.js'));
+const cleanUp = require(path.resolve(scriptsPath, 'clean.js'));
 
 const program = new Command();
 
@@ -44,7 +45,12 @@ program
     );
     createBuild.configureAndBuildProject(flavour, variant);
   });
-
+program
+  .command('clean')
+  .description('Clean up for creating the build')
+  .action(() => {
+    cleanUp.cleanUpPackage();
+  });
 program
   .command('record')
   .description('Record frame and React commit data from the connected device')

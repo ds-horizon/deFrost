@@ -16,12 +16,12 @@ function addBabelPlugin() {
   );
   if (fs.existsSync(appBabelConfigPath)) {
     const babelConfig = require(appBabelConfigPath);
-    oldBabelConfig = JSON.parse(JSON.stringify(babelConfig));
+    oldBabelConfig = fs.readFileSync(appBabelConfigPath);
     if (!babelConfig.plugins) {
       babelConfig.plugins = [];
     }
 
-    if (!babelConfig.plugins.some((plugin) => plugin.includes('defrost'))) {
+    if (!babelConfig.plugins.some((plugin) => plugin.includes('de-frost'))) {
       babelConfig.plugins.push([pluginPath]);
 
       fs.writeFileSync(
@@ -40,10 +40,7 @@ function removeBablePlugin() {
   const appBabelConfigPath = path.resolve(process.cwd(), 'babel.config.js');
 
   if (fs.existsSync(appBabelConfigPath)) {
-    fs.writeFileSync(
-      appBabelConfigPath,
-      `module.exports = ${JSON.stringify(oldBabelConfig, null, 2)};\n`
-    );
+    fs.writeFileSync(appBabelConfigPath, oldBabelConfig);
   } else {
     console.error('babel.config.js not found in the current directory.');
   }

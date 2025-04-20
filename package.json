@@ -6,7 +6,7 @@
   "main": "./src/index.tsx",
   "module": "./src/index.tsx",
   "bin": {
-    "defrost": "./src/scripts/commander.js"
+    "de-frost": "./src/scripts/commander.js"
   },
   "files": [
     "src",
