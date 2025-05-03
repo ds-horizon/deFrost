@@ -1,5 +1,5 @@
 // MixedChart.js
-import React, { memo, useContext } from 'react';
+import React, { memo, useContext, useState, useCallback, useMemo } from 'react';
 import { Chart, registerables, type ChartData } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import { createDatasetForGraph, options } from './MixedChartUtils';
@@ -16,6 +16,8 @@ import type {
   ReactItemType,
 } from '../AppInterface';
 import { ThemeContext } from '../App';
+import Slider from '../Slider/Slider';
+import debounce from 'lodash/debounce';
 
 // Register the necessary Chart.js components
 Chart.register(...registerables);
@@ -36,65 +38,106 @@ const MixedChart = ({
   logtEvents,
 }: MixedChartType) => {
   const { theme } = useContext(ThemeContext);
-  const { allData, labels, reactData, logData, totalRenderTime, maxSum } =
-    formatDataForGraph({
-      csvData,
-      reactEvents,
-      logtEvents,
-    });
-  const data = createDatasetForGraph(
-    allData,
-    labels,
-    reactData,
-    logData,
-    totalRenderTime,
-    maxSum
+  const [barThickness, setBarThickness] = useState(14);
+
+  // Memoize the formatted data
+  const { allData, labels, reactData, logData, totalRenderTime } = useMemo(
+    () =>
+      formatDataForGraph({
+        csvData,
+        reactEvents,
+        logtEvents,
+      }),
+    [csvData, reactEvents, logtEvents]
   );
 
-  const handleOnClick = (
-    _: React.MouseEvent,
-    elements: { datasetIndex: number; index: number }[]
-  ) => {
-    const dataToShowOnModal: ModalDataType[] = [];
-    if (elements.length > 0) {
-      elements.forEach((element) => {
-        if (element.datasetIndex === 7) {
-          dataToShowOnModal.push({
-            label: reactData[element.index]?.label,
-            data: reactData[element.index]?.data,
-          });
-        }
-      });
-      if (dataToShowOnModal.length > 0) {
-        openModal(dataToShowOnModal);
-      }
-    }
-  };
+  // Create debounced setter for bar thickness
+  const debouncedSetBarThickness = useMemo(
+    () =>
+      debounce((value: number) => {
+        setBarThickness(value);
+      }, 100),
+    []
+  );
 
-  const chartOptions = options(
-    handleOnClick,
-    data.aspectRatioCalculated,
-    theme
+  // Memoize the chart data
+  const data = useMemo(
+    () =>
+      createDatasetForGraph(
+        allData,
+        labels,
+        reactData,
+        logData,
+        totalRenderTime,
+        barThickness
+      ),
+    [allData, labels, reactData, logData, totalRenderTime, barThickness]
+  );
+
+  const handleOnClick = useCallback(
+    (
+      _: React.MouseEvent,
+      elements: { datasetIndex: number; index: number }[]
+    ) => {
+      const dataToShowOnModal: ModalDataType[] = [];
+      if (elements.length > 0) {
+        elements.forEach((element) => {
+          if (element.datasetIndex === 7) {
+            dataToShowOnModal.push({
+              label: reactData[element.index]?.label,
+              data: reactData[element.index]?.data,
+            });
+          }
+        });
+        if (dataToShowOnModal.length > 0) {
+          openModal(dataToShowOnModal);
+        }
+      }
+    },
+    [openModal, reactData]
+  );
+
+  // Memoize chart options
+  const chartOptions = useMemo(
+    () => options(handleOnClick, theme),
+    [handleOnClick, theme]
   );
 
   return (
     <div
       style={{
-        overflowX: 'auto',
-        width: `${data.widthOfScreen}px`,
-        maxHeight: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '20px',
+        padding: '20px',
+        height: '100vh',
       }}
     >
-      <Bar
-        data={
-          data as ChartData<
-            'bar',
-            string[] | ReactItemType[] | LogItem[],
-            string
-          >
-        }
-        options={chartOptions}
-      />
+      <Slider value={barThickness} onChange={debouncedSetBarThickness} />
+      <div
+        style={{
+          overflowX: 'auto',
+          width: `${data.widthOfScreen}px`,
+          height: '600px',
+          backgroundColor: theme === 'dark' ? '#2d2d2d' : '#ffffff',
+          borderRadius: '8px',
+          padding: '20px',
+          position: 'relative',
+        }}
+      >
+        <div style={{ width: '100%', height: '100%' }}>
+          <Bar
+            data={
+              data as ChartData<
+                'bar',
+                string[] | ReactItemType[] | LogItem[],
+                string
+              >
+            }
+            options={chartOptions}
+          />
+        </div>
+      </div>
     </div>
   );
 };

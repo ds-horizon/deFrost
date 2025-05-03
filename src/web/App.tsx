@@ -65,12 +65,17 @@ const ThemeToggle: React.FC = () => {
         position: 'fixed',
         top: '20px',
         right: '20px',
-        padding: '8px 16px',
-        borderRadius: '4px',
+        padding: '10px 20px',
+        borderRadius: '8px',
         border: 'none',
         cursor: 'pointer',
-        backgroundColor: 'var(--button-bg)',
-        color: 'var(--text-color)',
+        backgroundColor: theme === 'dark' ? '#404040' : '#e0e0e0',
+        color: theme === 'dark' ? '#ffffff' : '#333333',
+        fontSize: '16px',
+        fontWeight: 'bold',
+        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
+        zIndex: 1000,
+        transition: 'all 0.3s ease',
       }}
     >
       {theme === 'light' ? '🌙' : '☀️'}

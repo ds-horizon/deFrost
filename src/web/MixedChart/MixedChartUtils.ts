@@ -41,7 +41,6 @@ export const colors = {
 
 export const options = (
   handleOnClick: (event: React.MouseEvent, elements: any[]) => void,
-  aspectRatio: number,
   theme: 'light' | 'dark'
 ): ChartOptions<any> => {
   const textColor = theme === 'dark' ? '#ffffff' : '#333333';
@@ -50,7 +49,15 @@ export const options = (
 
   return {
     responsive: true,
-    aspectRatio: aspectRatio ? aspectRatio : 1,
+    maintainAspectRatio: false,
+    animation: false,
+    transitions: {
+      active: {
+        animation: {
+          duration: 10,
+        },
+      },
+    },
     onClick: handleOnClick,
     plugins: {
       annotation: {
@@ -222,7 +229,7 @@ export const formatDataForGraph = ({
     if (maxSum < sum) maxSum = sum;
     labels.push(`${index}`);
   });
-  return { allData, labels, reactData, logData, totalRenderTime, maxSum };
+  return { allData, labels, reactData, logData, totalRenderTime };
 };
 
 export const createDatasetForGraph = (
@@ -231,12 +238,15 @@ export const createDatasetForGraph = (
   reactData: ReactItemType[],
   logData: LogItem[],
   totalRenderTime: number[],
-  maxRenderTime: number
+  barThickness: number = 14
 ) => {
   let widthOfScreen: number = 0;
   const allDataSetName = Object.keys(allData);
   const dataSets = allDataSetName.map((datasetName) => {
-    widthOfScreen = (allData[datasetName]?.length || 0) * 14;
+    // Calculate width based on number of bars and bar thickness
+    const numberOfBars = allData[datasetName]?.length || 0;
+    // Add some padding between bars (1.4 is the padding factor)
+    widthOfScreen = numberOfBars * (barThickness * 1.4);
     return {
       data: allData[datasetName],
       label: datasetName.charAt(0).toUpperCase() + datasetName.slice(1),
@@ -244,13 +254,12 @@ export const createDatasetForGraph = (
       borderWidth: 1,
       ...colors[datasetName as keyof typeof colors],
       stack: 'stack1',
-      barThickness: 10,
+      barThickness: barThickness,
     };
   });
   const data = {
     labels: labels,
     widthOfScreen,
-    aspectRatioCalculated: widthOfScreen / maxRenderTime,
     datasets: [
       ...dataSets,
       {
