@@ -1,11 +1,6 @@
 // MixedChart.js
-import React, { memo } from 'react';
-import {
-  Chart,
-  registerables,
-  type ChartData,
-  type ChartOptions,
-} from 'chart.js';
+import React, { memo, useContext } from 'react';
+import { Chart, registerables, type ChartData } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import { createDatasetForGraph, options } from './MixedChartUtils';
 import './MixedChart.css';
@@ -20,6 +15,7 @@ import type {
   ReactEventType,
   ReactItemType,
 } from '../AppInterface';
+import { ThemeContext } from '../App';
 
 // Register the necessary Chart.js components
 Chart.register(...registerables);
@@ -39,6 +35,7 @@ const MixedChart = ({
   reactEvents,
   logtEvents,
 }: MixedChartType) => {
+  const { theme } = useContext(ThemeContext);
   const { allData, labels, reactData, logData, totalRenderTime, maxSum } =
     formatDataForGraph({
       csvData,
@@ -73,6 +70,13 @@ const MixedChart = ({
       }
     }
   };
+
+  const chartOptions = options(
+    handleOnClick,
+    data.aspectRatioCalculated,
+    theme
+  );
+
   return (
     <div
       style={{
@@ -89,12 +93,7 @@ const MixedChart = ({
             string
           >
         }
-        options={
-          options(
-            handleOnClick,
-            data.aspectRatioCalculated
-          ) as ChartOptions<any>
-        }
+        options={chartOptions}
       />
     </div>
   );

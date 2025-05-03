@@ -41,97 +41,123 @@ export const colors = {
 
 export const options = (
   handleOnClick: (event: React.MouseEvent, elements: any[]) => void,
-  aspectRatio: number
-): ChartOptions<any> => ({
-  responsive: true,
-  aspectRatio: aspectRatio ? aspectRatio : 1,
-  onClick: handleOnClick,
-  plugins: {
-    annotation: {
-      annotations: {
-        line1: {
-          type: 'line',
-          yMin: 16,
-          yMax: 16,
-          borderColor: 'green',
-          borderWidth: 1,
-          label: {
-            content: 'Line at 16',
-            enabled: true,
-            position: 'left',
-            backgroundColor: 'green',
-            color: 'white',
-          },
-        },
-        line2: {
-          type: 'line',
-          yMin: 700,
-          yMax: 700,
-          borderColor: 'red',
-          borderWidth: 1,
-          borderDash: [5, 5],
-          label: {
-            content: 'Line at 700',
-            enabled: true,
-            position: 'left',
-            backgroundColor: 'red',
-            color: 'white',
-          },
-        },
-      },
-    },
-    tooltip: {
-      callbacks: {
-        label: function (context: any) {
-          const label = context.dataset.label || '';
-          const point = context.raw;
-          if (label === 'React') {
-            return `componentName : ${point.label}`;
-          }
-          if (label === 'Log') {
-            return `Log: ${point.label}`;
-          }
-          const total = context.dataset.totalRenderTime[context.dataIndex];
-          return `${label}: ${point}\n Total: ${total}`;
-        },
-      },
-    },
+  aspectRatio: number,
+  theme: 'light' | 'dark'
+): ChartOptions<any> => {
+  const textColor = theme === 'dark' ? '#ffffff' : '#333333';
+  const gridColor = theme === 'dark' ? '#404040' : '#e0e0e0';
+  const backgroundColor = theme === 'dark' ? '#2d2d2d' : '#ffffff';
 
-    legend: {
-      position: 'top' as const,
-      usePointStyle: true,
-    },
-    title: {
-      display: true,
-      text: 'De-Frost',
-    },
-    zoom: {
-      zoom: {
-        limits: {
-          y: {
-            min: 0,
-            max: 100,
+  return {
+    responsive: true,
+    aspectRatio: aspectRatio ? aspectRatio : 1,
+    onClick: handleOnClick,
+    plugins: {
+      annotation: {
+        annotations: {
+          line1: {
+            type: 'line',
+            yMin: 16,
+            yMax: 16,
+            borderColor: 'green',
+            borderWidth: 1,
+            label: {
+              content: 'Line at 16',
+              enabled: true,
+              position: 'left',
+              backgroundColor: 'green',
+              color: 'white',
+            },
+          },
+          line2: {
+            type: 'line',
+            yMin: 700,
+            yMax: 700,
+            borderColor: 'red',
+            borderWidth: 1,
+            borderDash: [5, 5],
+            label: {
+              content: 'Line at 700',
+              enabled: true,
+              position: 'left',
+              backgroundColor: 'red',
+              color: 'white',
+            },
           },
         },
-        drag: {
-          enabled: true,
+      },
+      tooltip: {
+        callbacks: {
+          label: function (context: any) {
+            const label = context.dataset.label || '';
+            const point = context.raw;
+            if (label === 'React') {
+              return `componentName : ${point.label}`;
+            }
+            if (label === 'Log') {
+              return `Log: ${point.label}`;
+            }
+            const total = context.dataset.totalRenderTime[context.dataIndex];
+            return `${label}: ${point}\n Total: ${total}`;
+          },
+        },
+        backgroundColor: backgroundColor,
+        titleColor: textColor,
+        bodyColor: textColor,
+      },
+      legend: {
+        position: 'top' as const,
+        usePointStyle: true,
+        labels: {
+          color: textColor,
+        },
+      },
+      title: {
+        display: true,
+        text: 'De-Frost',
+        color: textColor,
+      },
+      zoom: {
+        zoom: {
+          limits: {
+            y: {
+              min: 0,
+              max: 100,
+            },
+          },
+          drag: {
+            enabled: true,
+          },
         },
       },
     },
-  },
-  scales: {
-    x: {
-      stacked: true,
-      min: 0,
-      beginAtZero: true,
+    scales: {
+      x: {
+        stacked: true,
+        min: 0,
+        beginAtZero: true,
+        grid: {
+          color: gridColor,
+        },
+        ticks: {
+          color: textColor,
+        },
+      },
+      y: {
+        stacked: true,
+        min: 0,
+        beginAtZero: true,
+        grid: {
+          color: gridColor,
+        },
+        ticks: {
+          color: textColor,
+        },
+      },
     },
-    y: {
-      stacked: true,
-      min: 0,
-      beginAtZero: true,
-    },
-  },
-});
+  };
+};
+
 export const formatDataForGraph = ({
   csvData,
   reactEvents,
@@ -213,7 +239,7 @@ export const createDatasetForGraph = (
     widthOfScreen = (allData[datasetName]?.length || 0) * 14;
     return {
       data: allData[datasetName],
-      label: datasetName,
+      label: datasetName.charAt(0).toUpperCase() + datasetName.slice(1),
       totalRenderTime: totalRenderTime,
       borderWidth: 1,
       ...colors[datasetName as keyof typeof colors],
