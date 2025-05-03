@@ -39,7 +39,7 @@ const MixedChart = ({
   reactEvents,
   logtEvents,
 }: MixedChartType) => {
-  const { allData, labels, reactData, logData, totalRenderTime } =
+  const { allData, labels, reactData, logData, totalRenderTime, maxSum } =
     formatDataForGraph({
       csvData,
       reactEvents,
@@ -50,7 +50,8 @@ const MixedChart = ({
     labels,
     reactData,
     logData,
-    totalRenderTime
+    totalRenderTime,
+    maxSum
   );
 
   const handleOnClick = (
@@ -73,7 +74,13 @@ const MixedChart = ({
     }
   };
   return (
-    <div>
+    <div
+      style={{
+        overflowX: 'auto',
+        width: `${data.widthOfScreen}px`,
+        maxHeight: '100%',
+      }}
+    >
       <Bar
         data={
           data as ChartData<
@@ -82,7 +89,12 @@ const MixedChart = ({
             string
           >
         }
-        options={options(handleOnClick) as ChartOptions<any>}
+        options={
+          options(
+            handleOnClick,
+            data.aspectRatioCalculated
+          ) as ChartOptions<any>
+        }
       />
     </div>
   );

@@ -40,9 +40,11 @@ export const colors = {
 };
 
 export const options = (
-  handleOnClick: (event: React.MouseEvent, elements: any[]) => void
+  handleOnClick: (event: React.MouseEvent, elements: any[]) => void,
+  aspectRatio: number
 ): ChartOptions<any> => ({
   responsive: true,
+  aspectRatio: aspectRatio ? aspectRatio : 1,
   onClick: handleOnClick,
   plugins: {
     annotation: {
@@ -194,7 +196,7 @@ export const formatDataForGraph = ({
     if (maxSum < sum) maxSum = sum;
     labels.push(`${index}`);
   });
-  return { allData, labels, reactData, logData, totalRenderTime };
+  return { allData, labels, reactData, logData, totalRenderTime, maxSum };
 };
 
 export const createDatasetForGraph = (
@@ -202,10 +204,13 @@ export const createDatasetForGraph = (
   labels: string[],
   reactData: ReactItemType[],
   logData: LogItem[],
-  totalRenderTime: number[]
+  totalRenderTime: number[],
+  maxRenderTime: number
 ) => {
+  let widthOfScreen: number = 0;
   const allDataSetName = Object.keys(allData);
   const dataSets = allDataSetName.map((datasetName) => {
+    widthOfScreen = (allData[datasetName]?.length || 0) * 14;
     return {
       data: allData[datasetName],
       label: datasetName,
@@ -213,10 +218,13 @@ export const createDatasetForGraph = (
       borderWidth: 1,
       ...colors[datasetName as keyof typeof colors],
       stack: 'stack1',
+      barThickness: 10,
     };
   });
   const data = {
     labels: labels,
+    widthOfScreen,
+    aspectRatioCalculated: widthOfScreen / maxRenderTime,
     datasets: [
       ...dataSets,
       {
