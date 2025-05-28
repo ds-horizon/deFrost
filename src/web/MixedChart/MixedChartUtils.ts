@@ -120,7 +120,7 @@ export const options = (
         },
       },
       title: {
-        display: true,
+        display: false,
         text: 'De-Frost',
         color: textColor,
       },

@@ -110,8 +110,6 @@ const App = () => {
           onBarThicknessChange={debouncedSetBarThickness}
         />
         <div style={{ paddingTop: '70px' }}>
-          {' '}
-          {/* Add padding to account for fixed navbar */}
           <MixedChart
             openModal={openModal}
             csvData={csvData}
