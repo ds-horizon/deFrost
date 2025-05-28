@@ -1,5 +1,5 @@
 // MixedChart.js
-import React, { memo, useContext, useState, useCallback, useMemo } from 'react';
+import React, { memo, useContext, useCallback, useMemo } from 'react';
 import { Chart, registerables, type ChartData } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import { createDatasetForGraph, options } from './MixedChartUtils';
@@ -16,8 +16,6 @@ import type {
   ReactItemType,
 } from '../AppInterface';
 import { ThemeContext } from '../App';
-import Slider from '../Slider/Slider';
-import debounce from 'lodash/debounce';
 
 // Register the necessary Chart.js components
 Chart.register(...registerables);
@@ -29,6 +27,7 @@ type MixedChartType = {
   csvData: CsvDataType[];
   reactEvents: ReactEventType[];
   logtEvents: LogEvent[];
+  barThickness: number;
 };
 
 const MixedChart = ({
@@ -36,9 +35,9 @@ const MixedChart = ({
   csvData,
   reactEvents,
   logtEvents,
+  barThickness,
 }: MixedChartType) => {
   const { theme } = useContext(ThemeContext);
-  const [barThickness, setBarThickness] = useState(14);
 
   // Memoize the formatted data
   const { allData, labels, reactData, logData, totalRenderTime } = useMemo(
@@ -49,15 +48,6 @@ const MixedChart = ({
         logtEvents,
       }),
     [csvData, reactEvents, logtEvents]
-  );
-
-  // Create debounced setter for bar thickness
-  const debouncedSetBarThickness = useMemo(
-    () =>
-      debounce((value: number) => {
-        setBarThickness(value);
-      }, 100),
-    []
   );
 
   // Memoize the chart data
@@ -104,28 +94,15 @@ const MixedChart = ({
   );
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '20px',
-        padding: '20px',
-        height: '100vh',
-      }}
-    >
-      <Slider value={barThickness} onChange={debouncedSetBarThickness} />
+    <div className="chart-container">
       <div
+        className="chart-wrapper"
         style={{
-          overflowX: 'auto',
           width: `${data.widthOfScreen}px`,
-          height: '600px',
           backgroundColor: theme === 'dark' ? '#2d2d2d' : '#ffffff',
-          borderRadius: '8px',
-          padding: '20px',
-          position: 'relative',
         }}
       >
-        <div style={{ width: '100%', height: '100%' }}>
+        <div className="chart">
           <Bar
             data={
               data as ChartData<

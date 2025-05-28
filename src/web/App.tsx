@@ -3,10 +3,11 @@ import React, {
   useEffect,
   useState,
   createContext,
-  useContext,
+  useMemo,
 } from 'react';
 import MixedChart from './MixedChart/MixedChart';
 import ModalDescription from './Modal/Modal';
+import Navbar from './Navbar/Navbar';
 import {
   CSV_TEXT,
   fetchFromCsv,
@@ -20,6 +21,7 @@ import type {
   ReactEventType,
 } from './AppInterface';
 import './styles.css';
+import debounce from 'lodash/debounce';
 
 // Theme context
 type Theme = 'light' | 'dark';
@@ -54,41 +56,31 @@ const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 };
 
-// Theme toggle button component
-const ThemeToggle: React.FC = () => {
-  const { theme, toggleTheme } = useContext(ThemeContext);
-
-  return (
-    <button
-      onClick={toggleTheme}
-      style={{
-        position: 'fixed',
-        top: '20px',
-        right: '20px',
-        padding: '10px 20px',
-        borderRadius: '8px',
-        border: 'none',
-        cursor: 'pointer',
-        backgroundColor: theme === 'dark' ? '#404040' : '#e0e0e0',
-        color: theme === 'dark' ? '#ffffff' : '#333333',
-        fontSize: '16px',
-        fontWeight: 'bold',
-        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
-        zIndex: 1000,
-        transition: 'all 0.3s ease',
-      }}
-    >
-      {theme === 'light' ? '🌙' : '☀️'}
-    </button>
-  );
-};
-
 const App = () => {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalData, setModalData] = useState<ModalDataType[]>([]);
   const [csvData, setcsvData] = useState<CsvDataType[]>([]);
   const [reactEvents, setReactEvents] = useState<ReactEventType[]>([]);
   const [logtEvents, setLogEvents] = useState<LogEvent[]>([]);
+  const [barThickness, setBarThickness] = useState(14);
+
+  // First, create a stable function that updates the bar thickness
+  const updateBarThickness = useCallback((value: number) => {
+    setBarThickness(value);
+  }, []);
+
+  // Then create a memoized debounced version of that function
+  const debouncedSetBarThickness = useMemo(
+    () => debounce(updateBarThickness, 100),
+    [updateBarThickness]
+  );
+
+  // Clean up the debounced function on component unmount
+  useEffect(() => {
+    return () => {
+      debouncedSetBarThickness.cancel();
+    };
+  }, [debouncedSetBarThickness]);
 
   useEffect(() => {
     fetchFromCsv<CsvDataType>(CSV_TEXT).then((res) => {
@@ -113,13 +105,21 @@ const App = () => {
   return (
     <ThemeProvider>
       <div style={{ minHeight: '100vh', backgroundColor: 'var(--bg-color)' }}>
-        <ThemeToggle />
-        <MixedChart
-          openModal={openModal}
-          csvData={csvData}
-          reactEvents={reactEvents}
-          logtEvents={logtEvents}
+        <Navbar
+          barThickness={barThickness}
+          onBarThicknessChange={debouncedSetBarThickness}
         />
+        <div style={{ paddingTop: '70px' }}>
+          {' '}
+          {/* Add padding to account for fixed navbar */}
+          <MixedChart
+            openModal={openModal}
+            csvData={csvData}
+            reactEvents={reactEvents}
+            logtEvents={logtEvents}
+            barThickness={barThickness}
+          />
+        </div>
         {modalIsOpen && (
           <ModalDescription
             modalIsOpen={modalIsOpen}

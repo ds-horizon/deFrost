@@ -1,5 +1,4 @@
-import React, { useContext } from 'react';
-import { ThemeContext } from '../App';
+import React from 'react';
 import './Slider.css';
 
 interface SliderProps {
@@ -7,36 +6,31 @@ interface SliderProps {
   onChange: (value: number) => void;
   min?: number;
   max?: number;
-  label?: string;
+  step?: number;
 }
 
 const Slider: React.FC<SliderProps> = ({
   value,
   onChange,
-  min = 5,
+  min = 8,
   max = 30,
-  label = 'Bar Thickness',
+  step = 1,
 }) => {
-  const { theme } = useContext(ThemeContext);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onChange(parseInt(e.target.value));
+  };
 
   return (
     <div className="slider-container">
-      <label htmlFor="barThickness" className="slider-label">
-        {label}:
-      </label>
       <input
         type="range"
-        id="barThickness"
         min={min}
         max={max}
+        step={step}
         value={value}
-        onChange={(e) => onChange(Number(e.target.value))}
-        className="slider-input"
-        style={{
-          accentColor: theme === 'dark' ? '#404040' : '#007bff',
-        }}
+        onChange={handleChange}
+        className="slider"
       />
-      <span className="slider-value">{value}px</span>
     </div>
   );
 };
