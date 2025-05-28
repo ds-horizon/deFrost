@@ -196,7 +196,7 @@ const MixedChart = ({
           className="chart"
           style={{
             width: `${data.widthOfScreen}px`,
-            backgroundColor: theme === 'dark' ? '#2d2d2d' : '#ffffff',
+            backgroundColor: theme === 'dark' ? '#1e1e1e' : '#ffffff',
           }}
         >
           <Bar
