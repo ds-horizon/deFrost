@@ -232,12 +232,13 @@ const runCommandWithExceptionHandling = (command) => {
   try {
     let finalCommand = '';
     if (command.includes('adb')) {
-      const restCommand = command.split('adb ')[0];
+      const restCommand = command.split('adb ').filter((str) => str)[0];
       finalCommand = `adb -s ${selectedId} ${restCommand}`;
     } else {
       finalCommand = command;
     }
-    execSync(finalCommand);
+    const result = execSync(finalCommand);
+    return result.toString();
   } catch (exception) {
     console.log('Exception occurred while cleanup');
   }

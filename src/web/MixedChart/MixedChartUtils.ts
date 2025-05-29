@@ -37,6 +37,12 @@ export const colors = {
     backgroundColor: 'rgb(122, 99, 71, 0.5)',
     borderColor: 'rgb(122, 99, 71, 1)',
   },
+  react: {
+    backgroundColor: 'rgb(10, 99, 132, 0.5)',
+  },
+  log: {
+    backgroundColor: 'rgb(132, 99, 10, 0.5)',
+  },
 };
 
 export const options = (
@@ -266,14 +272,14 @@ export const createDatasetForGraph = (
         label: 'React',
         type: 'scatter',
         data: reactData,
-        backgroundColor: 'rgb(10, 99, 132, 0.5)',
+        backgroundColor: colors.react.backgroundColor,
         stack: 'stack2',
       },
       {
         label: 'Log',
         type: 'scatter',
         data: logData,
-        backgroundColor: 'rgb(132, 99, 10, 0.5)',
+        backgroundColor: colors.log.backgroundColor,
         stack: 'stack3',
       },
     ],
