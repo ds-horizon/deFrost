@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { ThemeContext } from '../App';
 import Slider from '../Slider/Slider';
+import NavbarItem from './NavbarItem';
 import './Navbar.css';
 
 interface NavbarProps {
@@ -33,6 +34,37 @@ const Navbar: React.FC<NavbarProps> = ({
     setMenuOpen(!menuOpen);
   };
 
+  const navItems = [
+    {
+      label: 'Dashboard',
+      href: '#',
+      hasDropdown: false,
+    },
+    {
+      label: 'Data Management',
+      hasDropdown: true,
+      dropdownItems: [
+        { label: 'Record New Data', href: '#' },
+        { label: 'Import Data', href: '#' },
+        { label: 'Export Results', href: '#' },
+      ],
+    },
+    {
+      label: 'Settings',
+      hasDropdown: true,
+      dropdownItems: [
+        { label: 'Visualization', href: '#' },
+        { label: 'Performance', href: '#' },
+        { label: 'Preferences', href: '#' },
+      ],
+    },
+    {
+      label: 'Documentation',
+      href: '#',
+      hasDropdown: false,
+    },
+  ];
+
   return (
     <nav className="navbar">
       <div className="navbar-brand">
@@ -42,58 +74,18 @@ const Navbar: React.FC<NavbarProps> = ({
         </button>
       </div>
       <div className={`navbar-menu ${menuOpen ? 'open' : ''}`}>
-        <div className="navbar-item">
-          <a href="#" className="navbar-link">
-            Dashboard
-          </a>
-        </div>
-        <div
-          className={`navbar-item dropdown ${activeDropdown === 'data' ? 'active' : ''}`}
-        >
-          <a
-            href="#"
-            className="navbar-link"
-            onClick={(e) => {
-              e.preventDefault();
-              if (isMobile()) {
-                toggleDropdown('data');
-              }
-            }}
-          >
-            Data Management
-          </a>
-          <div className="dropdown-content">
-            <a href="#">Record New Data</a>
-            <a href="#">Import Data</a>
-            <a href="#">Export Results</a>
-          </div>
-        </div>
-        <div
-          className={`navbar-item dropdown ${activeDropdown === 'settings' ? 'active' : ''}`}
-        >
-          <a
-            href="#"
-            className="navbar-link"
-            onClick={(e) => {
-              e.preventDefault();
-              if (isMobile()) {
-                toggleDropdown('settings');
-              }
-            }}
-          >
-            Settings
-          </a>
-          <div className="dropdown-content">
-            <a href="#">Visualization</a>
-            <a href="#">Performance</a>
-            <a href="#">Preferences</a>
-          </div>
-        </div>
-        <div className="navbar-item">
-          <a href="#" className="navbar-link">
-            Documentation
-          </a>
-        </div>
+        {navItems.map((item, index) => (
+          <NavbarItem
+            key={index}
+            label={item.label}
+            href={item.href}
+            hasDropdown={item.hasDropdown}
+            dropdownItems={item.dropdownItems}
+            isMobile={isMobile()}
+            activeDropdown={activeDropdown}
+            onToggleDropdown={toggleDropdown}
+          />
+        ))}
       </div>
       <div className={`navbar-end ${menuOpen ? 'open' : ''}`}>
         {onBarThicknessChange && (
