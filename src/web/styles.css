@@ -12,6 +12,7 @@
   --border-color: #e0e0e0;
   --card-bg: #f8f8f8;
   --shadow-color: rgba(0, 0, 0, 0.1);
+  --hover-color: #f5f5f5;
 }
 
 [data-theme="dark"] {
@@ -27,6 +28,7 @@
   --border-color: #444444;
   --card-bg: #2d2d2d;
   --shadow-color: rgba(0, 0, 0, 0.2);
+  --hover-color: #333333;
 }
 
 * {

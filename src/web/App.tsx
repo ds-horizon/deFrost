@@ -6,7 +6,7 @@ import React, {
   useMemo,
 } from 'react';
 import MixedChart from './MixedChart/MixedChart';
-import ModalDescription from './Modal/Modal';
+import CommitPanel from './CommitPanel/CommitPanel';
 import Navbar from './Navbar/Navbar';
 import {
   CSV_TEXT,
@@ -57,8 +57,11 @@ const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
 };
 
 const App = () => {
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [modalData, setModalData] = useState<ModalDataType[]>([]);
+  const [commitPanelOpen, setCommitPanelOpen] = useState(false);
+  const [commitData, setCommitData] = useState<ModalDataType[]>([]);
+  const [selectedPointIndex, setSelectedPointIndex] = useState<number | null>(
+    null
+  );
   const [csvData, setcsvData] = useState<CsvDataType[]>([]);
   const [reactEvents, setReactEvents] = useState<ReactEventType[]>([]);
   const [logtEvents, setLogEvents] = useState<LogEvent[]>([]);
@@ -95,11 +98,20 @@ const App = () => {
     });
   }, []);
 
-  const openModal = useCallback((data: ModalDataType[]) => {
-    if (data.length > 0) {
-      setModalData(data);
-      setModalIsOpen(true);
-    }
+  const openCommitPanel = useCallback(
+    (data: ModalDataType[], pointIndex: number) => {
+      if (data.length > 0) {
+        setCommitData(data);
+        setSelectedPointIndex(pointIndex);
+        setCommitPanelOpen(true);
+      }
+    },
+    []
+  );
+
+  const closeCommitPanel = useCallback(() => {
+    setCommitPanelOpen(false);
+    setSelectedPointIndex(null);
   }, []);
 
   return (
@@ -111,20 +123,20 @@ const App = () => {
         />
         <div style={{ paddingTop: '70px' }}>
           <MixedChart
-            openModal={openModal}
+            openCommitPanel={openCommitPanel}
             csvData={csvData}
             reactEvents={reactEvents}
             logtEvents={logtEvents}
             barThickness={barThickness}
+            selectedPointIndex={selectedPointIndex}
           />
         </div>
-        {modalIsOpen && (
-          <ModalDescription
-            modalIsOpen={modalIsOpen}
-            setModalIsOpen={setModalIsOpen}
-            modalData={modalData}
-          />
-        )}
+
+        <CommitPanel
+          isOpen={commitPanelOpen}
+          commitData={commitData}
+          onClose={closeCommitPanel}
+        />
       </div>
     </ThemeProvider>
   );

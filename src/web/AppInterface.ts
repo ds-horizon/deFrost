@@ -31,6 +31,10 @@ export type ReactItemType = {
   y: number;
   label: string;
   data: ComponentEvent[];
+  r?: number;
+  hoverRadius?: number;
+  backgroundColor?: string;
+  borderColor?: string;
 };
 
 export type LogItem = {

@@ -24,11 +24,12 @@ Chart.register(zoomPlugin);
 Chart.register(annotationPlugin);
 
 type MixedChartType = {
-  openModal: (data: ModalDataType[]) => void;
+  openCommitPanel: (data: ModalDataType[], pointIndex: number) => void;
   csvData: CsvDataType[];
   reactEvents: ReactEventType[];
   logtEvents: LogEvent[];
   barThickness: number;
+  selectedPointIndex: number | null;
 };
 
 // Define legend items manually to match chart datasets
@@ -81,11 +82,12 @@ const legendItems = [
 ];
 
 const MixedChart = ({
-  openModal,
+  openCommitPanel,
   csvData,
   reactEvents,
   logtEvents,
   barThickness,
+  selectedPointIndex,
 }: MixedChartType) => {
   const { theme } = useContext(ThemeContext);
   const [hiddenDatasets, setHiddenDatasets] = useState<number[]>([]);
@@ -102,40 +104,72 @@ const MixedChart = ({
   );
 
   // Memoize the chart data
-  const data = useMemo(
-    () =>
-      createDatasetForGraph(
-        allData,
-        labels,
-        reactData,
-        logData,
-        totalRenderTime,
-        barThickness
-      ),
-    [allData, labels, reactData, logData, totalRenderTime, barThickness]
-  );
+  const data = useMemo(() => {
+    // Modify React data to highlight selected point
+    const enhancedReactData = reactData.map((item, index) => {
+      if (selectedPointIndex === index) {
+        // Return enhanced item with highlight properties
+        return {
+          ...item,
+          r: 8, // Larger radius for the selected point
+          hoverRadius: 10,
+          backgroundColor: 'rgba(255, 215, 0, 0.7)', // Gold highlight color
+          borderColor: 'rgba(255, 215, 0, 1)',
+        };
+      }
+      // Return regular item
+      return {
+        ...item,
+        r: 3, // Regular radius
+        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+        borderColor: 'rgba(255, 99, 132, 1)',
+      };
+    });
+
+    return createDatasetForGraph(
+      allData,
+      labels,
+      enhancedReactData,
+      logData,
+      totalRenderTime,
+      barThickness
+    );
+  }, [
+    allData,
+    labels,
+    reactData,
+    logData,
+    totalRenderTime,
+    barThickness,
+    selectedPointIndex,
+  ]);
 
   const handleOnClick = useCallback(
     (
       _: React.MouseEvent,
       elements: { datasetIndex: number; index: number }[]
     ) => {
-      const dataToShowOnModal: ModalDataType[] = [];
+      const dataToShowOnPanel: ModalDataType[] = [];
+      let pointIndex = null;
+
       if (elements.length > 0) {
         elements.forEach((element) => {
           if (element.datasetIndex === 7) {
-            dataToShowOnModal.push({
+            // React dataset
+            dataToShowOnPanel.push({
               label: reactData[element.index]?.label,
               data: reactData[element.index]?.data,
             });
+            pointIndex = element.index;
           }
         });
-        if (dataToShowOnModal.length > 0) {
-          openModal(dataToShowOnModal);
+
+        if (dataToShowOnPanel.length > 0 && pointIndex !== null) {
+          openCommitPanel(dataToShowOnPanel, pointIndex);
         }
       }
     },
-    [openModal, reactData]
+    [openCommitPanel, reactData]
   );
 
   // Handle legend item click (toggle visibility)
@@ -191,7 +225,7 @@ const MixedChart = ({
         onItemClick={handleLegendItemClick}
       />
       <div className="chart-wrapper">
-        <div></div>
+        <div />
         <div
           className="chart"
           style={{
