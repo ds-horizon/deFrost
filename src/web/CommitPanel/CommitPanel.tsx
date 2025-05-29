@@ -8,6 +8,7 @@ import React, {
 import './CommitPanel.css';
 import Dropdown from '../Dropdown/Dropdown';
 import type { ModalDataType } from '../AppInterface';
+import { blackListedComponents } from './CommitPanelUtils';
 
 interface CommitPanelProps {
   isOpen: boolean;
@@ -233,11 +234,17 @@ const CommitPanel: React.FC<CommitPanelProps> = ({
           <div className="commit-components">
             <p>{`Component Tree:`}</p>
             <div className="commit-components-list">
-              {processedComponentList.map((compStr: string, idx: number) => (
-                <div key={idx} className="component-item">
-                  {compStr ? compStr : 'Unknown component'}
+              {processedComponentList.length > 0 ? (
+                processedComponentList.map((compStr: string, idx: number) => (
+                  <div key={idx} className="component-item">
+                    {compStr ? compStr : 'Unknown component'}
+                  </div>
+                ))
+              ) : (
+                <div className="component-item">
+                  No children components found
                 </div>
-              ))}
+              )}
             </div>
           </div>
         </div>
@@ -259,7 +266,9 @@ function useProcessData(commitData: ModalDataType[], selectedIndex: number) {
     // Populate component list if data exists
     if (commitData.length > 0 && commitData[selectedIndex]?.data) {
       commitData[selectedIndex].data?.forEach((component) => {
-        componentList.push(component.componentName || '');
+        if (!blackListedComponents.includes(component.componentName || '')) {
+          componentList.push(component.componentName || '');
+        }
       });
     }
 
