@@ -56,6 +56,8 @@ const FrameStatsHeader = Object.freeze({
   GpuCompleted: 'GpuCompleted',
 });
 
+let rawHeaderString = [];
+
 const framestatsHeader = [...Object.keys(FrameStatsHeader)];
 const writeValuesInFiles = () => {
   const csv = require('fast-csv');
@@ -77,7 +79,7 @@ const writeValuesInFiles = () => {
 
   if (!fileExists) {
     writer.write(dataCsvHeader);
-    writerFramestats.write(framestatsHeader);
+    writerFramestats.write(rawHeaderString);
   }
 
   for (let row of processedData) {
@@ -106,6 +108,7 @@ const insertFrameStatsHeaderIndexes = (line) => {
     .replaceAll(' ', '')
     .split(',')
     .filter((str) => str !== '');
+  rawHeaderString = deviceFrameStatsHeader;
   framestatsHeader.map((value, index) => {
     const newIndex = deviceFrameStatsHeader.indexOf(value);
     if (newIndex != -1) {
@@ -167,7 +170,7 @@ const frameRecording = (inputString = '') => {
       draw,
       sync,
       gpu,
-      framestats[1],
+      framestats[framestatsHeaderIndexes.IntendedVsync],
     ];
   };
 
