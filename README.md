@@ -1,6 +1,6 @@
 # @d11/defrost
 
-A powerful npm package to help you detect and analyze frozen frames in your mobile application. This package provides tools for extracting frozen frame data, recording React commit information, and visualizing the data in an interactive dashboard.
+A powerful npm package to help you detect and analyze frozen frames in your mobile application. This package provides tools for extracting frozen frame data, recording React commit information, and visualizing the data in an interactive dashboard. Visit https://defrost.dreamsportslabs.com/ for more details
 
 ## Features
 
