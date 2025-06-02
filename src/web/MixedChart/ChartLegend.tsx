@@ -4,7 +4,7 @@ import './ChartLegend.css';
 interface LegendItem {
   label: string;
   color: string;
-  borderColor: string;
+  borderColor?: string;
   hidden?: boolean;
 }
 
