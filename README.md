@@ -21,7 +21,6 @@ yarn add @d11/de-frost
 
 ## Setup
 
-Before using the package, you need to configure your Android device(Android version < 12) for debugging and profiling.
 
 ### 1. Enable USB Debugging
 
@@ -193,7 +192,6 @@ Let’s walk through an example of how this package can be used in practice:
 - **Node.js**: v12 or higher.
 - **Yarn**: For managing dependencies and running the commands.
 - **ADB**: Ensure that your mobile device is connected and recognized via ADB for recording the frame data.
-- **Android Device**: For installing and testing the APK. USB debugging must be enabled. Android version should be less that 12
 
 ## Other Documents
 

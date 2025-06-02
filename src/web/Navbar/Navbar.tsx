@@ -10,6 +10,13 @@ interface NavbarProps {
   onBarThicknessChange?: (value: number) => void;
 }
 
+interface NavbarItemType {
+  label: string;
+  href: string;
+  hasDropdown: boolean;
+  dropdownItems?: { label: string; href: string }[];
+}
+
 const Navbar: React.FC<NavbarProps> = ({
   title = 'De-Frost',
   barThickness = 14,
@@ -34,33 +41,35 @@ const Navbar: React.FC<NavbarProps> = ({
     setMenuOpen(!menuOpen);
   };
 
-  const navItems = [
+  const navItems: NavbarItemType[] = [
     {
       label: 'Dashboard',
       href: '#',
       hasDropdown: false,
     },
-    {
-      label: 'Data Management',
-      hasDropdown: true,
-      dropdownItems: [
-        { label: 'Record New Data', href: '#' },
-        { label: 'Import Data', href: '#' },
-        { label: 'Export Results', href: '#' },
-      ],
-    },
-    {
-      label: 'Settings',
-      hasDropdown: true,
-      dropdownItems: [
-        { label: 'Visualization', href: '#' },
-        { label: 'Performance', href: '#' },
-        { label: 'Preferences', href: '#' },
-      ],
-    },
+    //TO DO: Add data management dropdown
+    // {
+    //   label: 'Data Management',
+    //   hasDropdown: true,
+    //   dropdownItems: [
+    //     { label: 'Record New Data', href: '#' },
+    //     { label: 'Import Data', href: '#' },
+    //     { label: 'Export Results', href: '#' },
+    //   ],
+    // },
+    //TO DO: Add settings dropdown
+    // {
+    //   label: 'Settings',
+    //   hasDropdown: true,
+    //   dropdownItems: [
+    //     { label: 'Visualization', href: '#' },
+    //     { label: 'Performance', href: '#' },
+    //     { label: 'Preferences', href: '#' },
+    //   ],
+    // },
     {
       label: 'Documentation',
-      href: '#',
+      href: 'https://defrost.dreamsportslabs.com/',
       hasDropdown: false,
     },
   ];

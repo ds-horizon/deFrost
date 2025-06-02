@@ -71,13 +71,13 @@ const legendItems = [
   },
   {
     label: 'React',
-    color: 'rgba(255, 99, 132, 0.5)',
-    borderColor: 'rgba(255, 99, 132, 1)',
+    color: colors.react.backgroundColor,
+    // borderColor: 'rgba(255, 99, 132, 1)',
   },
   {
     label: 'Log',
-    color: 'rgba(100, 100, 100, 0.5)',
-    borderColor: 'rgba(100, 100, 100, 1)',
+    color: colors.log.backgroundColor,
+    // borderColor: 'rgba(100, 100, 100, 1)',
   },
 ];
 
