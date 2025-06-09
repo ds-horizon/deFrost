@@ -1,6 +1,6 @@
 {
   "name": "@d11/de-frost",
-  "version": "1.0.1-nightly",
+  "version": "2.1.0",
   "description": "To detect frozen frame in react native app",
   "source": "./src/index.tsx",
   "main": "./src/index.tsx",
@@ -37,6 +37,7 @@
     "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build lib",
     "prepare": "bob build",
     "release": "release-it",
+    "yarn-publish": "npm publish",
     "create-build": "node src/scripts/createBuild.js",
     "record": "node src/scripts/record.js",
     "web": "webpack serve --mode development --config webpack.config.js",
@@ -58,7 +59,7 @@
   },
   "homepage": "https://github.com/dream11/de-frost/#readme",
   "publishConfig": {
-    "access": "restricted",
+    "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
