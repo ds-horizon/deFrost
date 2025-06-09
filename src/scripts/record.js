@@ -109,7 +109,7 @@ const insertFrameStatsHeaderIndexes = (line) => {
     .split(',')
     .filter((str) => str !== '');
   rawHeaderString = deviceFrameStatsHeader;
-  framestatsHeader.map((value, index) => {
+  framestatsHeader.forEach((value, index) => {
     const newIndex = deviceFrameStatsHeader.indexOf(value);
     if (newIndex != -1) {
       framestatsHeaderIndexes[value] = newIndex;
@@ -233,12 +233,10 @@ const stopTrace = () => {
 
 const runCommandWithExceptionHandling = (command) => {
   try {
-    let finalCommand = '';
+    let finalCommand = command;
     if (command.includes('adb')) {
       const restCommand = command.split('adb ').filter((str) => str)[0];
       finalCommand = `adb -s ${selectedId} ${restCommand}`;
-    } else {
-      finalCommand = command;
     }
     const result = execSync(finalCommand);
     return result.toString();

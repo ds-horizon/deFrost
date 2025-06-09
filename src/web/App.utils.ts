@@ -1,5 +1,5 @@
 import Papa from 'papaparse';
-import type { ComponentEvent } from './AppInterface';
+import type { ComponentEvent } from './App.interface';
 
 export const CSV_TEXT = 'data/data.csv';
 const CHANGES_TXT = 'data/reactCommits.txt';

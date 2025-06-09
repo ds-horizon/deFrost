@@ -41,12 +41,12 @@ import { Aside } from '@astrojs/starlight/components';
       <Tabs syncKey="package-manager">
       <TabItem label="yarn" icon="seti:yarn">
         ```sh frame=none
-        yarn defrost create-build -f Staging -v Release
+        yarn de-frost create-build -f Staging -v Release
         ```
       </TabItem>
       <TabItem label="npm" icon="seti:npm">
         ```sh frame=none
-        npm defrost create-build -f Staging -v Release
+        npx de-frost create-build -f Staging -v Release
         ```
       </TabItem>
     </Tabs> 
@@ -57,12 +57,12 @@ import { Aside } from '@astrojs/starlight/components';
     <Tabs syncKey="package-manager">
       <TabItem label="yarn" icon="seti:yarn">
         ```sh frame=none
-        yarn defrost record -p com.example.myapp
+        yarn de-frost record -p com.example.myapp
         ```
       </TabItem>
       <TabItem label="npm" icon="seti:npm">
         ```sh frame=none
-        npm defrost record -p com.example.myapp
+        npx de-frost record -p com.example.myapp
         ```
       </TabItem>
     </Tabs>
@@ -73,12 +73,12 @@ import { Aside } from '@astrojs/starlight/components';
       <Tabs syncKey="package-manager">
       <TabItem label="yarn" icon="seti:yarn">
         ```sh frame=none
-        yarn defrost show-dashboard -d ./data
+        yarn de-frost show-dashboard -d ./data
         ```
       </TabItem>
       <TabItem label="npm" icon="seti:npm">
         ```sh frame=none
-        npm defrost show-dashboard -d ./data
+        npx de-frost show-dashboard -d ./data
         ```
       </TabItem>
     </Tabs>

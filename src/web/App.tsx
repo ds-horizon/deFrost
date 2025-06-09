@@ -13,25 +13,21 @@ import {
   fetchFromCsv,
   getLogsTextFile,
   getReactChangesTextFile,
-} from './AppUtils';
-import type {
-  CsvDataType,
-  LogEvent,
-  ModalDataType,
-  ReactEventType,
-} from './AppInterface';
+} from './App.utils';
+import {
+  Theme,
+  type CsvDataType,
+  type LogEvent,
+  type ModalDataType,
+  type ReactEventType,
+  type ThemeContextType,
+} from './App.interface';
 import './styles.css';
+import './App.css';
 import debounce from 'lodash/debounce';
 
-// Theme context
-type Theme = 'light' | 'dark';
-interface ThemeContextType {
-  theme: Theme;
-  toggleTheme: () => void;
-}
-
 export const ThemeContext = createContext<ThemeContextType>({
-  theme: 'light',
+  theme: Theme.LIGHT,
   toggleTheme: () => {},
 });
 
@@ -39,10 +35,12 @@ export const ThemeContext = createContext<ThemeContextType>({
 const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [theme, setTheme] = useState<Theme>('light');
+  const [theme, setTheme] = useState<Theme>(Theme.LIGHT);
 
   const toggleTheme = () => {
-    setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
+    setTheme((prevTheme) =>
+      prevTheme === Theme.LIGHT ? Theme.DARK : Theme.LIGHT
+    );
   };
 
   useEffect(() => {
@@ -116,12 +114,12 @@ const App = () => {
 
   return (
     <ThemeProvider>
-      <div style={{ minHeight: '100vh', backgroundColor: 'var(--bg-color)' }}>
+      <div className="main-container">
         <Navbar
           barThickness={barThickness}
           onBarThicknessChange={debouncedSetBarThickness}
         />
-        <div style={{ paddingTop: '70px' }}>
+        <div className="chart-container">
           <MixedChart
             openCommitPanel={openCommitPanel}
             csvData={csvData}

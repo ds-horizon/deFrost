@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import Modal from 'react-modal';
 import './Modal.css';
 import Dropdown from '../Dropdown/Dropdown';
-import type { ModalDataType } from '../AppInterface';
+import type { ModalDataType } from '../App.interface';
 import { ThemeContext } from '../App';
 
 const ModalDescription = ({

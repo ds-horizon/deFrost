@@ -5,8 +5,9 @@ import type {
   LogItem,
   ReactEventType,
   ReactItemType,
-} from '../AppInterface';
-import { removeDefrost, removeDefrostFromList } from '../AppUtils';
+  Theme,
+} from '../App.interface';
+import { removeDefrost, removeDefrostFromList } from '../App.utils';
 
 export const colors = {
   misc: {
@@ -47,7 +48,7 @@ export const colors = {
 
 export const options = (
   handleOnClick: (event: React.MouseEvent, elements: any[]) => void,
-  theme: 'light' | 'dark'
+  theme: Theme
 ): ChartOptions<any> => {
   const textColor = theme === 'dark' ? '#ffffff' : '#333333';
   const gridColor = theme === 'dark' ? '#404040' : '#e0e0e0';

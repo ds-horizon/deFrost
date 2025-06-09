@@ -7,27 +7,23 @@ import React, {
 } from 'react';
 import './CommitPanel.css';
 import Dropdown from '../Dropdown/Dropdown';
-import type { ModalDataType } from '../AppInterface';
-import { blackListedComponents } from './CommitPanelUtils';
+import type { ModalDataType } from '../App.interface';
+import { blackListedComponents } from './CommitPanel.utils';
 
-interface CommitPanelProps {
+type CommitPanelProps = {
   isOpen: boolean;
   commitData: ModalDataType[];
   onClose: () => void;
-}
+};
 
-const CommitPanel: React.FC<CommitPanelProps> = ({
-  isOpen,
-  commitData,
-  onClose,
-}) => {
+const CommitPanel = ({ isOpen, commitData, onClose }: CommitPanelProps) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [panelHeight, setPanelHeight] = useState<number>(40); // Default height in vh
+  const [panelHeight, setPanelHeight] = useState(40); // Default height in vh
   const [isDragging, setIsDragging] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
   const handleRef = useRef<HTMLDivElement>(null);
-  const startDragPosRef = useRef<number>(0);
-  const startHeightRef = useRef<number>(40);
+  const startDragPosRef = useRef(0);
+  const startHeightRef = useRef(40);
 
   // Handle mouse movement during drag - memoized to avoid stale closures
   const handleMouseMove = useCallback(
@@ -187,7 +183,7 @@ const CommitPanel: React.FC<CommitPanelProps> = ({
 
   // If the panel is not open or there's no data, render an empty div instead of null
   if (!isOpen || commitData.length === 0) {
-    return <div className="commit-panel" style={{ display: 'none' }} />;
+    return <div className="commit-panel close-panel-button" />;
   }
 
   return (

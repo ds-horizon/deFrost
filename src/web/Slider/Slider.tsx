@@ -1,21 +1,21 @@
 import React from 'react';
 import './Slider.css';
 
-interface SliderProps {
+type SliderProps = {
   value: number;
   onChange: (value: number) => void;
   min?: number;
   max?: number;
   step?: number;
-}
+};
 
-const Slider: React.FC<SliderProps> = ({
+const Slider = ({
   value,
   onChange,
   min = 8,
   max = 30,
   step = 1,
-}) => {
+}: SliderProps) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(parseInt(e.target.value));
   };

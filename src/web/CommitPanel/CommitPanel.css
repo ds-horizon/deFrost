@@ -17,6 +17,10 @@
   will-change: max-height;
 }
 
+.close-panel-button { 
+  display: none 
+}
+
 .commit-panel.open {
   transform: translateY(0);
 }

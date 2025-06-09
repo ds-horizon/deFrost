@@ -1,6 +1,6 @@
 import React from 'react';
 
-interface NavbarItemProps {
+type NavbarItemProps = {
   label: string;
   hasDropdown?: boolean;
   dropdownItems?: Array<{ label: string; href: string }>;
@@ -8,9 +8,9 @@ interface NavbarItemProps {
   isMobile: boolean;
   activeDropdown: string | null;
   onToggleDropdown: (dropdown: string) => void;
-}
+};
 
-const NavbarItem: React.FC<NavbarItemProps> = ({
+const NavbarItem = ({
   label,
   hasDropdown = false,
   dropdownItems = [],
@@ -18,7 +18,7 @@ const NavbarItem: React.FC<NavbarItemProps> = ({
   isMobile,
   activeDropdown,
   onToggleDropdown,
-}) => {
+}: NavbarItemProps) => {
   const isActive = activeDropdown === label;
 
   const handleClick = (e: React.MouseEvent) => {

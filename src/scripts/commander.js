@@ -60,7 +60,6 @@ program
     ''
   )
   .action(async (cmdObj) => {
-    console.log('------------reached');
     const { packageName } = cmdObj;
     if (!packageName) {
       console.error('Error: --packageName is required.');

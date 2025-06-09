@@ -1,19 +1,19 @@
 import React from 'react';
 import './ChartLegend.css';
 
-interface LegendItem {
+type LegendItem = {
   label: string;
   color: string;
   borderColor?: string;
   hidden?: boolean;
-}
+};
 
-interface ChartLegendProps {
+type ChartLegendProps = {
   items: LegendItem[];
   onItemClick?: (index: number) => void;
-}
+};
 
-const ChartLegend: React.FC<ChartLegendProps> = ({ items, onItemClick }) => {
+const ChartLegend = ({ items, onItemClick }: ChartLegendProps) => {
   const handleItemClick = (index: number) => {
     if (onItemClick) {
       onItemClick(index);

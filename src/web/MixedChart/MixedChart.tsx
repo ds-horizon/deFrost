@@ -2,12 +2,12 @@
 import React, { memo, useContext, useCallback, useMemo, useState } from 'react';
 import { Chart, registerables, type ChartData } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
-import { createDatasetForGraph, options, colors } from './MixedChartUtils';
+import { createDatasetForGraph, options, colors } from './MixedChart.utils';
 import './MixedChart.css';
 import zoomPlugin from 'chartjs-plugin-zoom';
 import annotationPlugin from 'chartjs-plugin-annotation';
-import { formatDataForGraph } from './MixedChartUtils';
-import ChartLegend from './ChartLegend';
+import { formatDataForGraph } from './MixedChart.utils';
+import ChartLegend from './ChartLegend/ChartLegend';
 import type {
   CsvDataType,
   LogEvent,
@@ -15,7 +15,7 @@ import type {
   ModalDataType,
   ReactEventType,
   ReactItemType,
-} from '../AppInterface';
+} from '../App.interface';
 import { ThemeContext } from '../App';
 
 // Register the necessary Chart.js components
