@@ -1,0 +1,161 @@
+.commit-panel {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--bg-color);
+  box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
+  border-top: 1px solid var(--border-color);
+  z-index: 100;
+  transform: translateY(100%);
+  transition: transform 0.3s ease, max-height 0.2s ease;
+  max-height: 40vh;
+  min-height: 20vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  will-change: max-height;
+}
+
+.close-panel-button { 
+  display: none 
+}
+
+.commit-panel.open {
+  transform: translateY(0);
+}
+
+/* Remove transition during dragging for smooth resize */
+.commit-panel.dragging {
+  transition: transform 0.3s ease;
+  cursor: ns-resize;
+}
+
+/* Resize handle at the top of the panel */
+.resize-handle {
+  width: 100%;
+  height: 24px; /* Increased height for better touch target */
+  cursor: ns-resize;
+  position: absolute;
+  top: -12px; /* Half above the panel for easier targeting */
+  left: 0;
+  z-index: 101;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  touch-action: none; /* Prevent default touch actions */
+}
+
+/* Visual indicator for the drag handle */
+.drag-indicator {
+  width: 80px;
+  height: 6px;
+  background-color: var(--border-color);
+  border-radius: 10px;
+  opacity: 0.8;
+  transition: background-color 0.2s, opacity 0.2s, width 0.2s, height 0.2s;
+}
+
+.resize-handle:hover .drag-indicator {
+  background-color: var(--accent-color);
+  opacity: 1;
+  width: 100px;
+  height: 7px;
+}
+
+/* Active indicator when being dragged */
+.dragging .drag-indicator {
+  background-color: var(--accent-color);
+  opacity: 1;
+  width: 120px;
+  height: 8px;
+}
+
+.commit-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px 10px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.commit-panel-header h3 {
+  margin: 0;
+  color: var(--text-color);
+  font-size: 1.2rem;
+}
+
+.close-panel-button {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--text-color);
+  cursor: pointer;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.close-panel-button:hover {
+  background-color: var(--hover-color);
+}
+
+.commit-panel-content {
+  padding: 15px 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.commit-dropdown {
+  margin-bottom: 15px;
+}
+
+.commit-title {
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: var(--text-color);
+}
+
+.commit-components p {
+  margin-bottom: 5px;
+  color: var(--text-color);
+}
+
+.commit-components-list {
+  padding-left: 15px;
+  max-height: 60vh; /* Allow scrolling for long component lists */
+  overflow-y: auto;
+}
+
+.component-item {
+  padding: 4px 0;
+  color: var(--text-color);
+  font-family: monospace;
+}
+
+/* Add subtle indication that the panel is resizable */
+body.cursor-ns-resize {
+  cursor: ns-resize;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .commit-panel {
+    max-height: 60vh;
+  }
+  
+  /* Make the resize handle taller on mobile for easier touch targets */
+  .resize-handle {
+    height: 32px;
+    top: -16px;
+  }
+  
+  .drag-indicator {
+    width: 100px;
+    height: 8px;
+  }
+} 

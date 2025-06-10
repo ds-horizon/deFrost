@@ -18,49 +18,45 @@
   
   /* Style for the modal content */
   .modal-content {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+    background-color: var(--bg-color);
+    color: var(--text-color);
     padding: 20px;
-    overflow: auto;
-    background: white;
+    border-radius: 8px;
   }
   
   /* Style for the modal header */
   .modal-header {
     font-size: 1.5em;
     margin-bottom: 10px;
+    color: var(--text-color);
   }
   
   /* Style for the modal body */
   .modal-body {
     margin-bottom: 20px;
+    color: var(--text-color);
   }
   .title {
     height: 20px;
     margin-top: 10px;
     margin-left: 10px;
+    color: var(--text-color);
   }
   .list-of-components {
     padding-left: 20px;
     margin-left: 5px;
+    color: var(--text-color);
   }
   .margin10 {
     margin-left: 10px;
+    color: var(--text-color);
   }
   /* Style for the close button */
   .close-button {
-    background-color: #007bff;
-    color: white;
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
     font-size: 1em;
+    transition: background-color 0.3s ease;
   }

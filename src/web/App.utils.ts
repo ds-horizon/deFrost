@@ -1,5 +1,5 @@
 import Papa from 'papaparse';
-import type { ComponentEvent } from './AppInterface';
+import type { ComponentEvent } from './App.interface';
 
 export const CSV_TEXT = 'data/data.csv';
 const CHANGES_TXT = 'data/reactCommits.txt';
@@ -7,7 +7,7 @@ const LOGS_TXT = 'data/userLogs.txt';
 export const fetchFromFile = (fileUrl: string) => {
   return new Promise<string>((res, rej) => {
     fetch(fileUrl)
-      .then((res) => res.text())
+      .then((resLocal) => resLocal.text())
       .then((text) => {
         const errorText = `<pre>Cannot GET /${fileUrl}</pre>`;
         if (text.includes(errorText)) {

@@ -4,6 +4,16 @@ export type ComponentEvent = {
   componentName?: string;
 };
 
+export enum Theme {
+  LIGHT = 'light',
+  DARK = 'dark',
+}
+
+export type ThemeContextType = {
+  theme: Theme;
+  toggleTheme: () => void;
+};
+
 export type CsvDataType = {
   animations: string;
   draw: string;
@@ -31,6 +41,10 @@ export type ReactItemType = {
   y: number;
   label: string;
   data: ComponentEvent[];
+  radius?: number;
+  hoverRadius?: number;
+  backgroundColor?: string;
+  borderColor?: string;
 };
 
 export type LogItem = {

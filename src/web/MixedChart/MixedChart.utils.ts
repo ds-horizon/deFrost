@@ -5,8 +5,9 @@ import type {
   LogItem,
   ReactEventType,
   ReactItemType,
-} from '../AppInterface';
-import { removeDefrost, removeDefrostFromList } from '../AppUtils';
+  Theme,
+} from '../App.interface';
+import { removeDefrost, removeDefrostFromList } from '../App.utils';
 
 export const colors = {
   misc: {
@@ -37,99 +38,140 @@ export const colors = {
     backgroundColor: 'rgb(122, 99, 71, 0.5)',
     borderColor: 'rgb(122, 99, 71, 1)',
   },
+  react: {
+    backgroundColor: 'rgb(10, 99, 132, 0.5)',
+  },
+  log: {
+    backgroundColor: 'rgb(132, 99, 10, 0.5)',
+  },
 };
 
 export const options = (
-  handleOnClick: (event: React.MouseEvent, elements: any[]) => void
-): ChartOptions<any> => ({
-  responsive: true,
-  onClick: handleOnClick,
-  plugins: {
-    annotation: {
-      annotations: {
-        line1: {
-          type: 'line',
-          yMin: 16,
-          yMax: 16,
-          borderColor: 'green',
-          borderWidth: 1,
-          label: {
-            content: 'Line at 16',
-            enabled: true,
-            position: 'left',
-            backgroundColor: 'green',
-            color: 'white',
-          },
-        },
-        line2: {
-          type: 'line',
-          yMin: 700,
-          yMax: 700,
-          borderColor: 'red',
-          borderWidth: 1,
-          borderDash: [5, 5],
-          label: {
-            content: 'Line at 700',
-            enabled: true,
-            position: 'left',
-            backgroundColor: 'red',
-            color: 'white',
-          },
-        },
-      },
-    },
-    tooltip: {
-      callbacks: {
-        label: function (context: any) {
-          const label = context.dataset.label || '';
-          const point = context.raw;
-          if (label === 'React') {
-            return `componentName : ${point.label}`;
-          }
-          if (label === 'Log') {
-            return `Log: ${point.label}`;
-          }
-          const total = context.dataset.totalRenderTime[context.dataIndex];
-          return `${label}: ${point}\n Total: ${total}`;
-        },
-      },
-    },
+  handleOnClick: (event: React.MouseEvent, elements: any[]) => void,
+  theme: Theme
+): ChartOptions<any> => {
+  const textColor = theme === 'dark' ? '#ffffff' : '#333333';
+  const gridColor = theme === 'dark' ? '#404040' : '#e0e0e0';
+  const backgroundColor = theme === 'dark' ? '#2d2d2d' : '#ffffff';
 
-    legend: {
-      position: 'top' as const,
-      usePointStyle: true,
-    },
-    title: {
-      display: true,
-      text: 'De-Frost',
-    },
-    zoom: {
-      zoom: {
-        limits: {
-          y: {
-            min: 0,
-            max: 100,
-          },
-        },
-        drag: {
-          enabled: true,
+  return {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: false,
+    transitions: {
+      active: {
+        animation: {
+          duration: 10,
         },
       },
     },
-  },
-  scales: {
-    x: {
-      stacked: true,
-      min: 0,
-      beginAtZero: true,
+    onClick: handleOnClick,
+    plugins: {
+      annotation: {
+        annotations: {
+          line1: {
+            type: 'line',
+            yMin: 16,
+            yMax: 16,
+            borderColor: 'green',
+            borderWidth: 1,
+            label: {
+              content: 'Line at 16',
+              enabled: true,
+              position: 'left',
+              backgroundColor: 'green',
+              color: 'white',
+            },
+          },
+          line2: {
+            type: 'line',
+            yMin: 700,
+            yMax: 700,
+            borderColor: 'red',
+            borderWidth: 1,
+            borderDash: [5, 5],
+            label: {
+              content: 'Line at 700',
+              enabled: true,
+              position: 'left',
+              backgroundColor: 'red',
+              color: 'white',
+            },
+          },
+        },
+      },
+      tooltip: {
+        callbacks: {
+          label: function (context: any) {
+            const label = context.dataset.label || '';
+            const point = context.raw;
+            if (label === 'React') {
+              return `componentName : ${point.label}`;
+            }
+            if (label === 'Log') {
+              return `Log: ${point.label}`;
+            }
+            const total = context.dataset.totalRenderTime[context.dataIndex];
+            return `${label}: ${point}\n Total: ${total}`;
+          },
+        },
+        backgroundColor: backgroundColor,
+        titleColor: textColor,
+        bodyColor: textColor,
+      },
+      legend: {
+        position: 'top' as const,
+        usePointStyle: true,
+        labels: {
+          color: textColor,
+        },
+      },
+      title: {
+        display: false,
+        text: 'De-Frost',
+        color: textColor,
+      },
+      zoom: {
+        zoom: {
+          limits: {
+            y: {
+              min: 0,
+              max: 100,
+            },
+          },
+          drag: {
+            enabled: true,
+          },
+        },
+      },
     },
-    y: {
-      stacked: true,
-      min: 0,
-      beginAtZero: true,
+    scales: {
+      x: {
+        stacked: true,
+        min: 0,
+        beginAtZero: true,
+        grid: {
+          color: gridColor,
+        },
+        ticks: {
+          color: textColor,
+        },
+      },
+      y: {
+        stacked: true,
+        min: 0,
+        beginAtZero: true,
+        grid: {
+          color: gridColor,
+        },
+        ticks: {
+          color: textColor,
+        },
+      },
     },
-  },
-});
+  };
+};
+
 export const formatDataForGraph = ({
   csvData,
   reactEvents,
@@ -202,35 +244,43 @@ export const createDatasetForGraph = (
   labels: string[],
   reactData: ReactItemType[],
   logData: LogItem[],
-  totalRenderTime: number[]
+  totalRenderTime: number[],
+  barThickness: number = 14
 ) => {
+  let widthOfScreen: number = 0;
   const allDataSetName = Object.keys(allData);
   const dataSets = allDataSetName.map((datasetName) => {
+    // Calculate width based on number of bars and bar thickness
+    const numberOfBars = allData[datasetName]?.length || 0;
+    // Add some padding between bars (1.4 is the padding factor)
+    widthOfScreen = numberOfBars * (barThickness * 1.4);
     return {
       data: allData[datasetName],
-      label: datasetName,
+      label: datasetName.charAt(0).toUpperCase() + datasetName.slice(1),
       totalRenderTime: totalRenderTime,
       borderWidth: 1,
       ...colors[datasetName as keyof typeof colors],
       stack: 'stack1',
+      barThickness: barThickness,
     };
   });
   const data = {
     labels: labels,
+    widthOfScreen,
     datasets: [
       ...dataSets,
       {
         label: 'React',
         type: 'scatter',
         data: reactData,
-        backgroundColor: 'rgb(10, 99, 132, 0.5)',
+        backgroundColor: colors.react.backgroundColor,
         stack: 'stack2',
       },
       {
         label: 'Log',
         type: 'scatter',
         data: logData,
-        backgroundColor: 'rgb(132, 99, 10, 0.5)',
+        backgroundColor: colors.log.backgroundColor,
         stack: 'stack3',
       },
     ],

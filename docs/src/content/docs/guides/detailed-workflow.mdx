@@ -13,7 +13,7 @@ The npm package `@d11/defrost` helps you **detect and analyze frozen frames** in
 Generate an APK with embedded tracking for React commit data using:
 
 ```sh frame=none
-yarn defrost create-build -f `<flavor>` -v `<variant>`
+yarn de-frost create-build -f `<flavor>` -v `<variant>`
 ```
 
 **Flags:**
@@ -41,7 +41,7 @@ The modified APK is saved in the `ff-build` folder of your project.
 Capture data with:
 
 ```sh frame=none
-yarn defrost record -p `<package-name>`
+yarn de-frost record -p `<package-name>`
 ```
 
 **Flags:**
@@ -62,7 +62,7 @@ The data is saved in a `data` folder in CSV format.
 Launch the dashboard with:
 
 ```sh frame=none
-yarn defrost show-dashboard -d `<data-folder-location>`
+yarn de-frost show-dashboard -d `<data-folder-location>`
 ```
 
 **Flags:**
@@ -82,16 +82,16 @@ The dashboard features:
 
 1. Create an APK with tracking enabled:
    ```sh frame=none
-   yarn defrost create-build -f `<flavor>` -v `<variant>`
+   yarn de-frost create-build -f `<flavor>` -v `<variant>`
    ```
 2. Install the APK, connect via ADB, and start the app.
 3. Record frame and React commit data:
    ```sh frame=none
-   yarn defrost record -p `<package-name>`
+   yarn de-frost record -p `<package-name>`
    ```
 4. Visualize the data:
    ```sh frame=none
-   yarn defrost show-dashboard -d `<data-folder-location>`
+   yarn de-frost show-dashboard -d `<data-folder-location>`
    ```
 
 

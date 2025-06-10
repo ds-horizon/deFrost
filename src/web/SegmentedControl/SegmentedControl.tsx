@@ -1,24 +1,24 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './SegmentedControl.css';
 
-interface Segment {
+type Segment = {
   label: string;
   value: string;
-}
+};
 
-interface SegmentedControlProps {
+type SegmentedControlProps = {
   name: string;
   segments: Segment[];
   callback: (val: string, index: number) => void;
   defaultIndex?: number;
-}
+};
 
-const SegmentedControl: React.FC<SegmentedControlProps> = ({
+const SegmentedControl = ({
   name,
   segments,
   callback,
   defaultIndex = 0,
-}) => {
+}: SegmentedControlProps) => {
   const [activeIndex, setActiveIndex] = useState(defaultIndex);
   const containerRef = useRef<HTMLDivElement>(null);
 

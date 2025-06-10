@@ -1,12 +1,12 @@
 {
   "name": "@d11/de-frost",
-  "version": "1.0.0-nightly",
+  "version": "2.1.0",
   "description": "To detect frozen frame in react native app",
   "source": "./src/index.tsx",
   "main": "./src/index.tsx",
   "module": "./src/index.tsx",
   "bin": {
-    "defrost": "./src/scripts/commander.js"
+    "de-frost": "./src/scripts/commander.js"
   },
   "files": [
     "src",
@@ -37,6 +37,7 @@
     "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build lib",
     "prepare": "bob build",
     "release": "release-it",
+    "yarn-publish": "npm publish",
     "create-build": "node src/scripts/createBuild.js",
     "record": "node src/scripts/record.js",
     "web": "webpack serve --mode development --config webpack.config.js",
@@ -58,12 +59,14 @@
   },
   "homepage": "https://github.com/dream11/de-frost/#readme",
   "publishConfig": {
-    "access": "restricted",
+    "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
   "dependencies": {
+    "adbkit": "2.11.1",
     "commander": "^12.1.0",
-    "fast-csv": "5.0.1"
+    "fast-csv": "5.0.1",
+    "inquirer": "12.5.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.12",
@@ -75,6 +78,7 @@
     "@react-native/eslint-config": "^0.73.1",
     "@release-it/conventional-changelog": "^5.0.0",
     "@types/jest": "^29.5.5",
+    "@types/lodash": "^4.17.16",
     "@types/papaparse": "5.3.14",
     "@types/react": "18.2.0",
     "@types/react-dom": "18.2.0",

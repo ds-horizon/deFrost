@@ -2,9 +2,16 @@
 const { execSync } = require('child_process');
 const path = require('path');
 const fs = require('fs');
+const adbDevice = require('./record/adbDeviceSelection');
 let packageName = 'com.app.dream11staging';
+let selectedId = '';
+//TODO: Create a new constants file for all the constants
+const port = 3001;
+
+const adbReverseCommand = `adb reverse tcp:${port} tcp:${port}`;
 
 const nodeModulesRepo = './node_modules/@d11/de-frost';
+const serverPath = `${nodeModulesRepo}/src/scripts/record/reactCommitsAndUserLogs.js`;
 const removeData = `rm -rf ./data && rm -rf ${nodeModulesRepo}/web/data`;
 const removeCommand = 'adb shell rm /sdcard/DefrostLog/userLogs.txt';
 const removeCommand2 = 'adb shell rm /sdcard/DefrostLog/reactCommits.txt';
@@ -18,6 +25,7 @@ const processedData = new Set();
 const rawDataForFile = new Set();
 const timestampsDump = new Set();
 let flag = true;
+let framestatsHeaderIndexes = {};
 const dataCsvHeader = [
   'misc',
   'input',
@@ -28,26 +36,29 @@ const dataCsvHeader = [
   'gpu',
   'timestamp',
 ];
-const framestatsHeader = [
-  'Flags',
-  'IntendedVsync',
-  'Vsync',
-  'OldestInputEvent',
-  'NewestInputEvent',
-  'HandleInputStart',
-  'AnimationStart',
-  'PerformTraversalsStart',
-  'DrawStart',
-  'SyncQueued',
-  'SyncStart',
-  'IssueDrawCommandsStart',
-  'SwapBuffers',
-  'FrameCompleted',
-  'DequeueBufferDuration',
-  'QueueBufferDuration',
-  'GpuCompleted',
-];
+const FrameStatsHeader = Object.freeze({
+  Flags: 'Flags',
+  IntendedVsync: 'IntendedVsync',
+  Vsync: 'Vsync',
+  OldestInputEvent: 'OldestInputEvent',
+  NewestInputEvent: 'NewestInputEvent',
+  HandleInputStart: 'HandleInputStart',
+  AnimationStart: 'AnimationStart',
+  PerformTraversalsStart: 'PerformTraversalsStart',
+  DrawStart: 'DrawStart',
+  SyncQueued: 'SyncQueued',
+  SyncStart: 'SyncStart',
+  IssueDrawCommandsStart: 'IssueDrawCommandsStart',
+  SwapBuffers: 'SwapBuffers',
+  FrameCompleted: 'FrameCompleted',
+  DequeueBufferDuration: 'DequeueBufferDuration',
+  QueueBufferDuration: 'QueueBufferDuration',
+  GpuCompleted: 'GpuCompleted',
+});
 
+let rawHeaderString = [];
+
+const framestatsHeader = [...Object.keys(FrameStatsHeader)];
 const writeValuesInFiles = () => {
   const csv = require('fast-csv');
   const csvPath = 'data.csv';
@@ -68,7 +79,7 @@ const writeValuesInFiles = () => {
 
   if (!fileExists) {
     writer.write(dataCsvHeader);
-    writerFramestats.write(framestatsHeader);
+    writerFramestats.write(rawHeaderString);
   }
 
   for (let row of processedData) {
@@ -91,6 +102,23 @@ const ensureDirectoryExists = (directory) => {
   }
 };
 
+const insertFrameStatsHeaderIndexes = (line) => {
+  if (Object.keys(framestatsHeaderIndexes).length > 0) return;
+  const deviceFrameStatsHeader = line
+    .replaceAll(' ', '')
+    .split(',')
+    .filter((str) => str !== '');
+  rawHeaderString = deviceFrameStatsHeader;
+  framestatsHeader.forEach((value, index) => {
+    const newIndex = deviceFrameStatsHeader.indexOf(value);
+    if (newIndex !== -1) {
+      framestatsHeaderIndexes[value] = newIndex;
+    } else {
+      //TODO: Add better Error Logging
+    }
+  });
+};
+
 const frameRecording = (inputString = '') => {
   const parseFramestats = (line, validOnly = false) => {
     const framestats = line.slice(0, -1).split(',').map(Number);
@@ -101,15 +129,35 @@ const frameRecording = (inputString = '') => {
     let draw = 0;
     let sync = 0;
     let gpu = 0;
-
     if (framestats.length >= 16) {
-      start = (framestats[5] - framestats[1]) / 1000000;
-      handleInput = (framestats[6] - framestats[5]) / 1000000;
-      animations = (framestats[7] - framestats[6]) / 1000000;
-      traversals = (framestats[8] - framestats[7]) / 1000000;
-      draw = (framestats[10] - framestats[8]) / 1000000;
-      sync = (framestats[11] - framestats[10]) / 1000000;
-      gpu = (framestats[13] - framestats[11]) / 1000000;
+      start =
+        (framestats[framestatsHeaderIndexes.HandleInputStart] -
+          framestats[framestatsHeaderIndexes.IntendedVsync]) /
+        1000000;
+      handleInput =
+        (framestats[framestatsHeaderIndexes.AnimationStart] -
+          framestats[framestatsHeaderIndexes.HandleInputStart]) /
+        1000000;
+      animations =
+        (framestats[framestatsHeaderIndexes.PerformTraversalsStart] -
+          framestats[framestatsHeaderIndexes.AnimationStart]) /
+        1000000;
+      traversals =
+        (framestats[framestatsHeaderIndexes.DrawStart] -
+          framestats[framestatsHeaderIndexes.PerformTraversalsStart]) /
+        1000000;
+      draw =
+        (framestats[framestatsHeaderIndexes.SyncStart] -
+          framestats[framestatsHeaderIndexes.DrawStart]) /
+        1000000;
+      sync =
+        (framestats[framestatsHeaderIndexes.IssueDrawCommandsStart] -
+          framestats[framestatsHeaderIndexes.SyncStart]) /
+        1000000;
+      gpu =
+        (framestats[framestatsHeaderIndexes.FrameCompleted] -
+          framestats[framestatsHeaderIndexes.IssueDrawCommandsStart]) /
+        1000000;
     } else if (validOnly) {
       throw new Error('Invalid frame.');
     }
@@ -122,7 +170,7 @@ const frameRecording = (inputString = '') => {
       draw,
       sync,
       gpu,
-      framestats[1],
+      framestats[framestatsHeaderIndexes.IntendedVsync],
     ];
   };
 
@@ -135,6 +183,7 @@ const frameRecording = (inputString = '') => {
     .filter((str) => str.trim() !== '');
   allLines.forEach((line) => {
     if (line.includes('Flags')) {
+      insertFrameStatsHeaderIndexes(line);
       return;
     }
     const values = parseFramestats(line);
@@ -149,9 +198,9 @@ const frameRecording = (inputString = '') => {
   });
 };
 
-const recordFrameRate = (packageName) => {
-  const output = execSync(
-    `adb shell dumpsys gfxinfo ${packageName} framestats`,
+const recordFrameRate = (packageNameLocal) => {
+  const output = runCommandWithExceptionHandling(
+    `adb shell dumpsys gfxinfo ${packageNameLocal} framestats`,
     {
       encoding: 'utf-8',
     }
@@ -159,7 +208,7 @@ const recordFrameRate = (packageName) => {
   frameRecording(output);
 };
 
-const runBashCommandInterval = (intervalSeconds) => {
+const runBashCommandInterval = (intervalSecondsLocal) => {
   console.log('---  Record FrameRate Starting ---');
   setInterval(() => {
     try {
@@ -167,11 +216,13 @@ const runBashCommandInterval = (intervalSeconds) => {
     } catch (exception) {
       console.log('----ex', exception);
     }
-  }, intervalSeconds * 1000);
+  }, intervalSecondsLocal * 1000);
 };
 
 const startTrace = () => {
-  execSync('adb shell atrace --async_start -c -b 4096 sched gfx view');
+  runCommandWithExceptionHandling(
+    'adb shell atrace --async_start -c -b 4096 sched gfx view'
+  );
 };
 
 const stopTrace = () => {
@@ -182,7 +233,13 @@ const stopTrace = () => {
 
 const runCommandWithExceptionHandling = (command) => {
   try {
-    execSync(command);
+    let finalCommand = command;
+    if (command.includes('adb')) {
+      const restCommand = command.split('adb ').filter((str) => str)[0];
+      finalCommand = `adb -s ${selectedId} ${restCommand}`;
+    }
+    const result = execSync(finalCommand);
+    return result.toString();
   } catch (exception) {
     console.log('Exception occurred while cleanup');
   }
@@ -199,7 +256,7 @@ const pullDocs = () => {
 };
 
 const moveToWebDir = () => {
-  execSync(copyToWeb);
+  runCommandWithExceptionHandling(copyToWeb);
 };
 
 const exitAfterDelay = (delay) => {
@@ -211,14 +268,27 @@ const exitAfterDelay = (delay) => {
 };
 
 const removeDataFolderLocal = () => {
-  execSync(removeData);
+  runCommandWithExceptionHandling(removeData);
 };
 
-const collectAndAnalyzePerformanceData = (packageNameLocal) => {
+const startNetworkWorker = () => {
+  runCommandWithExceptionHandling(adbReverseCommand);
+  const { Worker } = require('worker_threads');
+  const worker = new Worker(serverPath);
+  worker.on('message', (message) => {
+    console.log('Worker:', message);
+  });
+  return worker;
+};
+
+const collectAndAnalyzePerformanceData = async (packageNameLocal) => {
+  selectedId = await adbDevice.getSelectedID();
   packageName = packageNameLocal;
+  const worker = startNetworkWorker();
   process.on('SIGINT', () => {
     console.log('Received SIGINT (Ctrl + C)');
     stopTrace();
+    worker.terminate();
     if (flag) writeValuesInFiles();
     flag = false;
     pullDocs();
