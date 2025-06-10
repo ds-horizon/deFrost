@@ -40,7 +40,7 @@ public class NetworkLogger {
         jsonObj.put("messageId", UUID.randomUUID().toString());
       }
       String messageId = jsonObj.getString("messageId");
-      
+      //TODO: Currently creating new socket for every message. Think of a better way to handle this.
       // Connect and send
       socket = new Socket("localhost", 3001);
       writer = new OutputStreamWriter(socket.getOutputStream(), "UTF-8");
