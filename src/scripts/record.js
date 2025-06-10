@@ -111,10 +111,10 @@ const insertFrameStatsHeaderIndexes = (line) => {
   rawHeaderString = deviceFrameStatsHeader;
   framestatsHeader.forEach((value, index) => {
     const newIndex = deviceFrameStatsHeader.indexOf(value);
-    if (newIndex != -1) {
+    if (newIndex !== -1) {
       framestatsHeaderIndexes[value] = newIndex;
     } else {
-      console.log('-------------value', value);
+      //TODO: Add better Error Logging
     }
   });
 };
@@ -198,9 +198,9 @@ const frameRecording = (inputString = '') => {
   });
 };
 
-const recordFrameRate = (packageName) => {
+const recordFrameRate = (packageNameLocal) => {
   const output = runCommandWithExceptionHandling(
-    `adb shell dumpsys gfxinfo ${packageName} framestats`,
+    `adb shell dumpsys gfxinfo ${packageNameLocal} framestats`,
     {
       encoding: 'utf-8',
     }
@@ -208,7 +208,7 @@ const recordFrameRate = (packageName) => {
   frameRecording(output);
 };
 
-const runBashCommandInterval = (intervalSeconds) => {
+const runBashCommandInterval = (intervalSecondsLocal) => {
   console.log('---  Record FrameRate Starting ---');
   setInterval(() => {
     try {
@@ -216,7 +216,7 @@ const runBashCommandInterval = (intervalSeconds) => {
     } catch (exception) {
       console.log('----ex', exception);
     }
-  }, intervalSeconds * 1000);
+  }, intervalSecondsLocal * 1000);
 };
 
 const startTrace = () => {

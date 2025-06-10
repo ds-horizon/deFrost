@@ -7,7 +7,7 @@ const LOGS_TXT = 'data/userLogs.txt';
 export const fetchFromFile = (fileUrl: string) => {
   return new Promise<string>((res, rej) => {
     fetch(fileUrl)
-      .then((res) => res.text())
+      .then((resLocal) => resLocal.text())
       .then((text) => {
         const errorText = `<pre>Cannot GET /${fileUrl}</pre>`;
         if (text.includes(errorText)) {
