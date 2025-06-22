@@ -1882,7 +1882,7 @@ index 4d49bcd..d24dbbf 100644
 -
 +      if (workInProgress.flags & 1 && (workInProgress.type?.displayName || workInProgress.type?.name) !== "View")
 +        insertUpdateComponents(
-+          getComponentNameFromFiber(workInProgress),
++          defrost.getComponentNameFromFiber(workInProgress,getComponentNameFromType,REACT_STRICT_MODE_TYPE),
 +          workInProgress.flags,
 +          workInProgress.key,
 +        );
