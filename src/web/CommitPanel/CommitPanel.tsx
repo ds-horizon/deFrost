@@ -225,7 +225,7 @@ const CommitPanel = ({ isOpen, commitData, onClose }: CommitPanelProps) => {
 
         <div className="commit-details">
           <div className="commit-title">
-            {`Component: ${commitData[selectedIndex]?.label}`}
+            {`Component: ${commitData[selectedIndex]?.label || 'Unknown component'}`}
           </div>
           <div className="commit-components">
             <p>{`Component Tree:`}</p>
