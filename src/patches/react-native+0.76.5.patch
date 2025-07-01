@@ -1882,7 +1882,7 @@ index 4d49bcd..d24dbbf 100644
 -
 +      if (workInProgress.flags & 1 && (workInProgress.type?.displayName || workInProgress.type?.name) !== "View")
 +        insertUpdateComponents(
-+          getComponentNameFromFiber(workInProgress),
++          defrost.getComponentNameFromFiber(workInProgress),
 +          workInProgress.flags,
 +          workInProgress.key,
 +        );
@@ -5166,7 +5166,7 @@ index 3e5cf86..f34c22e 100644
    var newProps = workInProgress.pendingProps;
 +  if (workInProgress.flags & 1 && (workInProgress.type?.displayName || workInProgress.type?.name) !== "View")
 +    insertUpdateComponents(
-+      getComponentNameFromFiber(workInProgress),
++      defrost.getComponentNameFromFiber(workInProgress),
 +      workInProgress.flags,
 +      workInProgress.key,
 +    );
@@ -8135,7 +8135,7 @@ index 2544f75..05d1871 100644
 -
 +      if (workInProgress.flags & 1 && (workInProgress.type?.displayName || workInProgress.type?.name) !== "View")
 +        insertUpdateComponents(
-+          getComponentNameFromFiber(workInProgress),
++          defrost.getComponentNameFromFiber(workInProgress),
 +          workInProgress.flags,
 +          workInProgress.key,
 +        );
@@ -11515,7 +11515,7 @@ index 98d026d..1008433 100644
  function completeWork(current, workInProgress, renderLanes) {
 +  if (workInProgress.flags & 1 && (workInProgress.type?.displayName || workInProgress.type?.name) !== "View")
 +    insertUpdateComponents(
-+      getComponentNameFromFiber(workInProgress),
++      defrost.getComponentNameFromFiber(workInProgress),
 +      workInProgress.flags,
 +      workInProgress.key,
 +    );
