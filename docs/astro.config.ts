@@ -26,7 +26,7 @@ export default defineConfig({
         replacesTitle: true,
       },
       social: {
-        github: 'https://github.com/dream-sports-labs/deFrost',
+        github: 'https://github.com/ds-horizon/deFrost',
         discord: 'https://discord.gg/xYP8EZ9U',
       },
       sidebar: [
