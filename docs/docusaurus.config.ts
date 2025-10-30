@@ -47,11 +47,6 @@ const config: Config = {
     },
     navbar: {
       title: 'De-frost',
-      logo: {
-        alt: 'De-frost Logo',
-        src: 'img/logo-light.svg',
-        srcDark: 'img/logo-dark.svg',
-      },
       items: [
         {
           type: 'docSidebar',
