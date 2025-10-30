@@ -29,11 +29,26 @@ jobs:
       # Set up Yarn 4.6.0
       - name: Set up Yarn 4.6.0
         run: corepack prepare yarn@4.6.0 --activate
-
-      - name: Install, build, and upload your site
-        uses: withastro/action@v3
+      
+      - name: Use Node.js from docs/.nvmrc
+        uses: actions/setup-node@v4
         with:
-          path: docs # The root location of your Astro project inside the repository
+          node-version-file: docs/.nvmrc
+          cache: yarn
+          cache-dependency-path: docs/yarn.lock
+
+      - name: Install dependencies
+        working-directory: docs
+        run: yarn install --immutable
+
+      - name: Build Docusaurus site
+        working-directory: docs
+        run: yarn build
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/build
 
   deploy:
     needs: build

@@ -18,3 +18,7 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Local dev helper files
+.docusaurus-dev.pid
+.docusaurus-dev.log
