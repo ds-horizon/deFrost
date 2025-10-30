@@ -195,5 +195,5 @@ Let’s walk through an example of how this package can be used in practice:
 
 ## Other Documents
 
-- [Internals of Defrost](./documentation/intermals.md)
+- [Internals of Defrost](./documentation/internals.md)
 - [Understanding of Frames Dashboard](./documentation/dashboard.md)
