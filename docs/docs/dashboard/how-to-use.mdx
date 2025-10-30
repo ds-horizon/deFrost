@@ -1,0 +1,29 @@
+---
+title: How to Identify Problems
+sidebar_position: 4
+---
+
+## Identifying Performance Problems with De-frost
+
+Follow these steps to detect bottlenecks using the De-frost dashboard:
+
+1. **Analyze the Bar Graph:**
+   - Locate frames where total rendering time crosses the **red threshold (700ms)**.
+   - Identify which segments (e.g., layout or animation) consume the most time.
+
+2. **Examine React Commit Scatter Points:**
+   - Look for scatter points overlapping with frozen frames.
+   - Identify React components responsible for the delays.
+
+3. **Inspect the Pop-Up Details:**
+   - Click scatter points to reveal the affected components.
+   - Use this data to trace React updates causing performance degradation.
+
+4. **Take Action:**
+   - Optimize React components or rendering pipeline stages contributing to frozen frames.
+   - Repeat the process after changes to measure improvements.
+
+---
+
+This structure creates a clear separation between the **overview**, **bar graph**, **React Native commits**, and the actionable **problem identification**. Each document uses Docusaurus components to enhance readability and interactivity.
+
