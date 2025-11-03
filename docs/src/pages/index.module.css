@@ -232,6 +232,289 @@
   font-weight: 500;
 }
 
+.uspSection {
+  padding: 4rem 2rem;
+  background: linear-gradient(180deg, var(--ice-white) 0%, white 100%);
+  position: relative;
+}
+
+[data-theme='dark'] .uspSection {
+  background: linear-gradient(180deg, var(--ice-white) 0%, var(--ifm-background-color) 100%);
+}
+
+.uspContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.uspTitle {
+  font-size: 2.5rem;
+  font-weight: 800;
+  text-align: center;
+  background: linear-gradient(135deg, var(--frost-blue) 0%, var(--frost-accent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 1rem;
+}
+
+.uspSubtitle {
+  text-align: center;
+  font-size: 1.2rem;
+  color: var(--ifm-color-emphasis-700);
+  margin-bottom: 3rem;
+}
+
+.problemSolutionGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 3rem;
+  margin-top: 3rem;
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.problemSide,
+.solutionSide {
+  background: white;
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  transition: all 0.3s ease;
+}
+
+[data-theme='dark'] .problemSide,
+[data-theme='dark'] .solutionSide {
+  background: #1a1a2e;
+}
+
+.problemSide:hover,
+.solutionSide:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+}
+
+.sideTag {
+  text-align: center;
+  padding: 0.75rem 1.5rem;
+  border-radius: 30px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+}
+
+.problemTag {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(220, 38, 38, 0.1) 100%);
+  border: 2px solid #ef4444;
+  color: #dc2626;
+}
+
+.solutionTag {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(6, 182, 212, 0.1) 100%);
+  border: 2px solid var(--frost-blue);
+  color: var(--frost-blue);
+}
+
+.explanationText {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--ifm-color-emphasis-700);
+  text-align: center;
+  margin: 0;
+  padding: 0 1rem;
+}
+
+.splitWorld {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.03) 0%, rgba(6, 182, 212, 0.03) 100%);
+  border-radius: 16px;
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  position: relative;
+  min-height: 180px;
+}
+
+.worldHalf {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.halfIcon {
+  font-size: 4rem;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+}
+
+.halfLabel {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--ifm-heading-color);
+  margin-bottom: 0.25rem;
+}
+
+.halfDesc {
+  font-size: 0.8rem;
+  color: var(--ifm-color-emphasis-600);
+  font-style: italic;
+}
+
+.dividerLine {
+  width: 2px;
+  height: 100px;
+  background: repeating-linear-gradient(
+    transparent,
+    transparent 6px,
+    #fca5a5 6px,
+    #fca5a5 12px
+  );
+  position: relative;
+}
+
+.dividerLine::before,
+.dividerLine::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: #ef4444;
+  border-radius: 50%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.dividerLine::before {
+  top: -6px;
+}
+
+.dividerLine::after {
+  bottom: -6px;
+}
+
+.bridgeLine {
+  width: 60px;
+  height: 100px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bridgeLine::before {
+  content: '';
+  position: absolute;
+  width: 4px;
+  height: 100%;
+  background: linear-gradient(180deg, var(--frost-blue) 0%, var(--frost-accent) 100%);
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+  animation: bridgeGlow 2s ease-in-out infinite;
+}
+
+@keyframes bridgeGlow {
+  0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.4); }
+  50% { box-shadow: 0 0 30px rgba(59, 130, 246, 0.6); }
+}
+
+.bridgeBadge {
+  background: white;
+  border: 2px solid var(--frost-blue);
+  border-radius: 30px;
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--frost-blue);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+}
+
+[data-theme='dark'] .bridgeBadge {
+  background: #1a1a2e;
+}
+
+.bridgeIcon {
+  font-size: 1.2rem;
+}
+
+.disconnectIndicator,
+.connectIndicator {
+  text-align: center;
+  padding: 1.25rem;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.disconnectIndicator {
+  background: rgba(239, 68, 68, 0.05);
+  border: 2px dashed #ef4444;
+}
+
+.connectIndicator {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(6, 182, 212, 0.05) 100%);
+  border: 2px solid var(--frost-blue);
+}
+
+.disconnectIcon,
+.connectIcon {
+  font-size: 2.5rem;
+}
+
+.disconnectText,
+.connectText {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ifm-heading-color);
+  margin-bottom: 0.25rem;
+}
+
+.indicatorSubtext {
+  font-size: 0.8rem;
+  color: var(--ifm-color-emphasis-600);
+  font-style: italic;
+}
+
+.outcomeCard {
+  padding: 1.75rem 2rem;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.5;
+  transition: all 0.3s ease;
+}
+
+.outcomeCard.badOutcome {
+  background: rgba(239, 68, 68, 0.08);
+  border: 2px solid #ef4444;
+  color: #dc2626;
+}
+
+.outcomeCard.goodOutcome {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(5, 150, 105, 0.08) 100%);
+  border: 2px solid #10b981;
+  color: #059669;
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.15);
+}
+
+.outcomeCard:hover {
+  transform: scale(1.02);
+}
+
 .demoSection {
   padding: 4rem 2rem;
   background: white;
@@ -319,6 +602,132 @@
   .heroButton {
     padding: 0.875rem 2rem;
     font-size: 1rem;
+  }
+  
+  .uspSection {
+    padding: 3rem 1rem;
+  }
+  
+  .uspTitle {
+    font-size: 2rem;
+  }
+  
+  .uspSubtitle {
+    font-size: 1rem;
+    margin-bottom: 2rem;
+  }
+  
+  .problemSolutionGrid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .problemSide,
+  .solutionSide {
+    padding: 1.5rem;
+  }
+  
+  .sideTag {
+    font-size: 0.95rem;
+    padding: 0.6rem 1.25rem;
+  }
+  
+  .explanationText {
+    font-size: 0.85rem;
+    padding: 0 0.5rem;
+  }
+  
+  .splitWorld {
+    padding: 1.5rem;
+    min-height: 150px;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .halfIcon {
+    font-size: 3rem;
+  }
+  
+  .halfLabel {
+    font-size: 1rem;
+  }
+  
+  .halfDesc {
+    font-size: 0.75rem;
+  }
+  
+  .dividerLine {
+    width: 100%;
+    height: 2px;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 6px,
+      #fca5a5 6px,
+      #fca5a5 12px
+    );
+  }
+  
+  .dividerLine::before,
+  .dividerLine::after {
+    width: 10px;
+    height: 10px;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  .dividerLine::before {
+    left: -5px;
+  }
+  
+  .dividerLine::after {
+    left: auto;
+    right: -5px;
+  }
+  
+  .bridgeLine {
+    width: 100%;
+    height: 60px;
+  }
+  
+  .bridgeLine::before {
+    width: 100%;
+    height: 3px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  .bridgeBadge {
+    font-size: 0.75rem;
+    padding: 0.4rem 0.75rem;
+  }
+  
+  .bridgeIcon {
+    font-size: 1rem;
+  }
+  
+  .disconnectIndicator,
+  .connectIndicator {
+    padding: 1rem;
+  }
+  
+  .disconnectIcon,
+  .connectIcon {
+    font-size: 2rem;
+  }
+  
+  .disconnectText,
+  .connectText {
+    font-size: 0.85rem;
+  }
+  
+  .indicatorSubtext {
+    font-size: 0.75rem;
+  }
+  
+  .outcomeCard {
+    padding: 1.5rem;
+    font-size: 0.95rem;
   }
   
   .demoSection {
