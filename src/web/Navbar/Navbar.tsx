@@ -69,7 +69,7 @@ const Navbar: React.FC<NavbarProps> = ({
     // },
     {
       label: 'Documentation',
-      href: 'https://defrost.dreamsportslabs.com/',
+      href: 'https://defrost.dreamhorizon.org/',
       hasDropdown: false,
     },
   ];

@@ -11,10 +11,10 @@ const config: Config = {
     v4: true,
   },
 
-  url: 'https://deFrost.dreamsportslabs.com',
+  url: 'https://deFrost.dreamhorizon.org',
   baseUrl: '/',
 
-  organizationName: 'ds-horizon',
+  organizationName: 'dream-horizon-org',
   projectName: 'deFrost',
 
   onBrokenLinks: 'throw',
@@ -59,7 +59,7 @@ const config: Config = {
           label: 'Documentation',
         },
         {
-          href: 'https://github.com/ds-horizon/deFrost',
+          href: 'https://github.com/dream-horizon-org/deFrost',
           label: 'GitHub',
           position: 'right',
         },
@@ -95,7 +95,7 @@ const config: Config = {
             },
             {
               label: 'GitHub',
-              href: 'https://github.com/ds-horizon/deFrost',
+              href: 'https://github.com/dream-horizon-org/deFrost',
             },
           ],
         },
